@@ -1,0 +1,23 @@
+#import <Availability.h>
+
+#ifdef __OBJC__
+
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+
+    // Shared access to Config
+    #import "Config.h"
+
+    // Debug log only displayed in Debug builds
+    #ifdef DEBUG
+        #define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #else
+        #define DLog(...)
+    #endif
+
+    // Release log displayed regardless of build type
+    #define RLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
+    #define SharedDelegate ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+
+#endif

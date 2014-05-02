@@ -1,0 +1,112 @@
+//
+//  AuthenticationChallengeHandler.m
+//  VVK
+//
+//  Created by Eigen Lenk on 2/12/14.
+//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
+//
+
+#import "AuthenticationChallengeHandler.h"
+
+@implementation AuthenticationChallengeHandler
+
++ (AuthenticationChallengeHandler *)sharedInstance
+{
+    static AuthenticationChallengeHandler *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[AuthenticationChallengeHandler alloc] init];
+    });
+    
+    return sharedInstance;
+}
+
+
+#pragma mark - Request authentication delegate
+
+- (BOOL)request:(Request *)request canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+{
+    return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
+}
+
+- (void)request:(Request *)request didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    {
+        NSURLProtectionSpace * protectionSpace  = challenge.protectionSpace;
+        SecTrustRef trust                       = protectionSpace.serverTrust;
+        CFIndex numCerts                        = SecTrustGetCertificateCount(trust);
+        NSMutableArray* _certs                  = [NSMutableArray arrayWithCapacity: numCerts];
+        
+        DLog(@"%@", protectionSpace);
+
+        for (CFIndex idx = 0; idx < numCerts; ++idx)
+        {
+            SecCertificateRef cert = SecTrustGetCertificateAtIndex(trust, idx);
+            
+            [_certs addObject: CFBridgingRelease(cert)];
+        }
+        
+        SecPolicyRef policy = SecPolicyCreateSSL(true, (request.validHost ? (__bridge CFStringRef)request.validHost : NULL));
+        
+        OSStatus err = SecTrustCreateWithCertificates(CFBridgingRetain(_certs), policy, &trust);
+        
+        CFRelease(policy);
+        
+        if (err != noErr)
+        {
+            [challenge.sender cancelAuthenticationChallenge: challenge];
+            
+            return;
+        }
+        
+        NSData * _data1 = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:CA_CERTIFICATE_FILE1]];
+        NSData * _data2 = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:CA_CERTIFICATE_FILE2]];
+        
+        if ([_data1 length] == 0 || [_data2 length] == 0)
+        {
+            [challenge.sender cancelAuthenticationChallenge: challenge];
+            
+            return;
+        }
+        
+        SecCertificateRef mRootCert1 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data1);
+        SecCertificateRef mRootCert2 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data2);
+        
+        NSArray* rootCerts = @[CFBridgingRelease(mRootCert1), CFBridgingRelease(mRootCert2)];
+        
+        err = SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)rootCerts);
+        
+        if (err == noErr)
+        {
+            SecTrustResultType trustResult;
+            
+            err = SecTrustEvaluate(trust, &trustResult);
+            
+            NSURLCredential* credential = [NSURLCredential credentialForTrust:trust];
+            
+            CFRelease(trust);
+            
+            bool trusted = (err == noErr) && (trustResult == kSecTrustResultProceed || trustResult == kSecTrustResultUnspecified);
+            
+            if (trusted)
+            {
+                [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
+                
+                return;
+            }
+        }
+        
+        [challenge.sender cancelAuthenticationChallenge:challenge];
+        
+        return;
+    }
+    
+    [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+    
+    return;
+}
+
+
+@end

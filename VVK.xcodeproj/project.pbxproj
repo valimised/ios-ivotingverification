@@ -1,0 +1,616 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3718ACFF6200EDAD25 /* ico_note.png */; };
+		CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */; };
+		CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3918ACFF6200EDAD25 /* spinner.png */; };
+		CF39BE3E18ACFF6200EDAD25 /* spinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */; };
+		CF48A47818FE70310062057A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A46F18FE70310062057A /* Default-568h@2x.png */; };
+		CF48A47918FE70310062057A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47018FE70310062057A /* Default.png */; };
+		CF48A47A18FE70310062057A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47118FE70310062057A /* Default@2x.png */; };
+		CF48A47B18FE70310062057A /* ico_76x76.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47218FE70310062057A /* ico_76x76.png */; };
+		CF48A47C18FE70310062057A /* ico_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47318FE70310062057A /* ico_120x120.png */; };
+		CF48A47D18FE70310062057A /* ico_152x152.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47418FE70310062057A /* ico_152x152.png */; };
+		CF48A47E18FE70310062057A /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47518FE70310062057A /* icon_57.png */; };
+		CF48A47F18FE70310062057A /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47618FE70310062057A /* icon_114.png */; };
+		CF48A48018FE70310062057A /* icon_1024.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47718FE70310062057A /* icon_1024.png */; };
+		CF4FEE071907D4C1008884D5 /* ca.cer in Resources */ = {isa = PBXBuildFile; fileRef = CF4FEE061907D4C1008884D5 /* ca.cer */; };
+		CF510B1F1896873300B13BAC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B1E1896873300B13BAC /* Foundation.framework */; };
+		CF510B211896873300B13BAC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B201896873300B13BAC /* CoreGraphics.framework */; };
+		CF510B231896873300B13BAC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B221896873300B13BAC /* UIKit.framework */; };
+		CF657DA1189FC5BC002C2394 /* VoteVerificationResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF657D9F189FC5BC002C2394 /* VoteVerificationResultsViewController.m */; };
+		CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF657DA0189FC5BC002C2394 /* VoteVerificationResultsViewController.xib */; };
+		CF657DA518A10D81002C2394 /* QRScanResult.m in Sources */ = {isa = PBXBuildFile; fileRef = CF657DA418A10D80002C2394 /* QRScanResult.m */; };
+		CF657DA818A1269F002C2394 /* Crypto.mm in Sources */ = {isa = PBXBuildFile; fileRef = CF657DA718A1269F002C2394 /* Crypto.mm */; };
+		CF657DAD18A22FAF002C2394 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CF657DAC18A22FAF002C2394 /* libresolv.dylib */; };
+		CF657DB218A392EF002C2394 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF657DB018A392EF002C2394 /* libcrypto.a */; };
+		CF657DB318A392EF002C2394 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF657DB118A392EF002C2394 /* libssl.a */; };
+		CF6F86ED1897B28C0021925E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F86EC1897B28C0021925E /* libiconv.dylib */; };
+		CF6F86EF1897B29D0021925E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F86EE1897B29D0021925E /* AVFoundation.framework */; };
+		CF8AF46C1898EFFB00E19FB3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF46A1898EFFB00E19FB3 /* AppDelegate.m */; };
+		CF8AF4701898F00800E19FB3 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF46F1898F00800E19FB3 /* Request.m */; };
+		CF8AF4761898F02300E19FB3 /* config.txt in Resources */ = {isa = PBXBuildFile; fileRef = CF8AF4751898F02300E19FB3 /* config.txt */; };
+		CF8AF47A1898F02C00E19FB3 /* ScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4781898F02C00E19FB3 /* ScannerViewController.m */; };
+		CF8AF47B1898F02C00E19FB3 /* ScannerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF8AF4791898F02C00E19FB3 /* ScannerViewController.xib */; };
+		CF8AF47E1898F03500E19FB3 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF47D1898F03500E19FB3 /* Config.m */; };
+		CF8AF4821898F05200E19FB3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF47F1898F05200E19FB3 /* main.m */; };
+		CF8AF4851898F0A400E19FB3 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF8AF4841898F0A400E19FB3 /* libzbar.a */; };
+		CF8AF49218990F4000E19FB3 /* ALCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF49118990F4000E19FB3 /* ALCustomAlertView.m */; };
+		CF8AF49B18994E6600E19FB3 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */; };
+		CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4AB189A877B00E19FB3 /* VoteContainer.m */; };
+		CF8AF4AF189A884400E19FB3 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */; };
+		CF8AF4B3189BB72A00E19FB3 /* RegexMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */; };
+		CFCA4A1218ABA4320017C2ED /* VerificationResultCandidateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCA4A1118ABA4320017C2ED /* VerificationResultCandidateCell.m */; };
+		CFCA4A1418ABA4560017C2ED /* VerificationResultCandidateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFCA4A1318ABA4560017C2ED /* VerificationResultCandidateCell.xib */; };
+		CFCA4A1718ABC4630017C2ED /* AuthenticationChallengeHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCA4A1618ABC4630017C2ED /* AuthenticationChallengeHandler.m */; };
+		CFCA4A1C18ACC0110017C2ED /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCA4A1A18ACC0110017C2ED /* HelpViewController.m */; };
+		CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFCA4A1B18ACC0110017C2ED /* HelpViewController.xib */; };
+		CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */ = {isa = PBXBuildFile; fileRef = CFEB5B4A18D305D2003278CD /* btn_close.png */; };
+		CFEB5B4D18D305D2003278CD /* btn_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CFEB5B4B18D305D2003278CD /* btn_close@2x.png */; };
+		CFF60A7A190E575800205084 /* Juur-SK.der.crt in Resources */ = {isa = PBXBuildFile; fileRef = CFF60A78190E575800205084 /* Juur-SK.der.crt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CF39BE3718ACFF6200EDAD25 /* ico_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_note.png; path = VVK/images/ico_note.png; sourceTree = SOURCE_ROOT; };
+		CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ico_note@2x.png"; path = "VVK/images/ico_note@2x.png"; sourceTree = SOURCE_ROOT; };
+		CF39BE3918ACFF6200EDAD25 /* spinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spinner.png; path = VVK/images/spinner.png; sourceTree = SOURCE_ROOT; };
+		CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "spinner@2x.png"; path = "VVK/images/spinner@2x.png"; sourceTree = SOURCE_ROOT; };
+		CF48A46F18FE70310062057A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "VVK/images/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		CF48A47018FE70310062057A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = VVK/images/Default.png; sourceTree = SOURCE_ROOT; };
+		CF48A47118FE70310062057A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "VVK/images/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		CF48A47218FE70310062057A /* ico_76x76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_76x76.png; path = VVK/images/ico_76x76.png; sourceTree = SOURCE_ROOT; };
+		CF48A47318FE70310062057A /* ico_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_120x120.png; path = VVK/images/ico_120x120.png; sourceTree = SOURCE_ROOT; };
+		CF48A47418FE70310062057A /* ico_152x152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_152x152.png; path = VVK/images/ico_152x152.png; sourceTree = SOURCE_ROOT; };
+		CF48A47518FE70310062057A /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57.png; path = VVK/images/icon_57.png; sourceTree = SOURCE_ROOT; };
+		CF48A47618FE70310062057A /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_114.png; path = VVK/images/icon_114.png; sourceTree = SOURCE_ROOT; };
+		CF48A47718FE70310062057A /* icon_1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_1024.png; path = VVK/images/icon_1024.png; sourceTree = SOURCE_ROOT; };
+		CF4FEE061907D4C1008884D5 /* ca.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = ca.cer; path = VVK/cert/ca.cer; sourceTree = SOURCE_ROOT; };
+		CF510B1B1896873300B13BAC /* VVK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VVK.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF510B1E1896873300B13BAC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CF510B201896873300B13BAC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CF510B221896873300B13BAC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CF657D9E189FC5BC002C2394 /* VoteVerificationResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoteVerificationResultsViewController.h; path = VVK/VoteVerificationResultsViewController.h; sourceTree = SOURCE_ROOT; };
+		CF657D9F189FC5BC002C2394 /* VoteVerificationResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoteVerificationResultsViewController.m; path = VVK/VoteVerificationResultsViewController.m; sourceTree = SOURCE_ROOT; };
+		CF657DA0189FC5BC002C2394 /* VoteVerificationResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VoteVerificationResultsViewController.xib; path = VVK/VoteVerificationResultsViewController.xib; sourceTree = SOURCE_ROOT; };
+		CF657DA318A10D80002C2394 /* QRScanResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRScanResult.h; path = VVK/QRScanResult.h; sourceTree = SOURCE_ROOT; };
+		CF657DA418A10D80002C2394 /* QRScanResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QRScanResult.m; path = VVK/QRScanResult.m; sourceTree = SOURCE_ROOT; };
+		CF657DA618A1269F002C2394 /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Crypto.h; path = VVK/Crypto.h; sourceTree = SOURCE_ROOT; };
+		CF657DA718A1269F002C2394 /* Crypto.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Crypto.mm; path = VVK/Crypto.mm; sourceTree = SOURCE_ROOT; };
+		CF657DAC18A22FAF002C2394 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		CF657DB018A392EF002C2394 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = VVK/libs/openssl/lib/libcrypto.a; sourceTree = "<group>"; };
+		CF657DB118A392EF002C2394 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = VVK/libs/openssl/lib/libssl.a; sourceTree = "<group>"; };
+		CF6F86EC1897B28C0021925E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		CF6F86EE1897B29D0021925E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CF8AF4691898EFFB00E19FB3 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = VVK/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		CF8AF46A1898EFFB00E19FB3 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = VVK/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		CF8AF46E1898F00800E19FB3 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Request.h; path = VVK/Request.h; sourceTree = SOURCE_ROOT; };
+		CF8AF46F1898F00800E19FB3 /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Request.m; path = VVK/Request.m; sourceTree = SOURCE_ROOT; };
+		CF8AF4751898F02300E19FB3 /* config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.txt; path = VVK/conf/config.txt; sourceTree = SOURCE_ROOT; };
+		CF8AF4771898F02C00E19FB3 /* ScannerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScannerViewController.h; path = VVK/ScannerViewController.h; sourceTree = SOURCE_ROOT; };
+		CF8AF4781898F02C00E19FB3 /* ScannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScannerViewController.m; path = VVK/ScannerViewController.m; sourceTree = SOURCE_ROOT; };
+		CF8AF4791898F02C00E19FB3 /* ScannerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ScannerViewController.xib; path = VVK/ScannerViewController.xib; sourceTree = SOURCE_ROOT; };
+		CF8AF47C1898F03500E19FB3 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = VVK/Config.h; sourceTree = SOURCE_ROOT; };
+		CF8AF47D1898F03500E19FB3 /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Config.m; path = VVK/Config.m; sourceTree = SOURCE_ROOT; };
+		CF8AF47F1898F05200E19FB3 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = VVK/main.m; sourceTree = SOURCE_ROOT; };
+		CF8AF4801898F05200E19FB3 /* VVK-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "VVK-Info.plist"; path = "VVK/VVK-Info.plist"; sourceTree = SOURCE_ROOT; };
+		CF8AF4811898F05200E19FB3 /* VVK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "VVK-Prefix.pch"; path = "VVK/VVK-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		CF8AF4841898F0A400E19FB3 /* libzbar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzbar.a; path = VVK/libs/ZBarSDK/libzbar.a; sourceTree = "<group>"; };
+		CF8AF49018990F4000E19FB3 /* ALCustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ALCustomAlertView.h; path = VVK/ALCustomAlertView.h; sourceTree = SOURCE_ROOT; };
+		CF8AF49118990F4000E19FB3 /* ALCustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ALCustomAlertView.m; path = VVK/ALCustomAlertView.m; sourceTree = SOURCE_ROOT; };
+		CF8AF49918994E6600E19FB3 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+Hex.h"; path = "VVK/UIColor+Hex.h"; sourceTree = SOURCE_ROOT; };
+		CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Hex.m"; path = "VVK/UIColor+Hex.m"; sourceTree = SOURCE_ROOT; };
+		CF8AF4AA189A877B00E19FB3 /* VoteContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoteContainer.h; path = VVK/VoteContainer.h; sourceTree = SOURCE_ROOT; };
+		CF8AF4AB189A877B00E19FB3 /* VoteContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoteContainer.m; path = VVK/VoteContainer.m; sourceTree = SOURCE_ROOT; };
+		CF8AF4AD189A884400E19FB3 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+URLEncoding.h"; path = "VVK/NSString+URLEncoding.h"; sourceTree = SOURCE_ROOT; };
+		CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+URLEncoding.m"; path = "VVK/NSString+URLEncoding.m"; sourceTree = SOURCE_ROOT; };
+		CF8AF4B1189BB72A00E19FB3 /* RegexMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexMatcher.h; path = VVK/RegexMatcher.h; sourceTree = SOURCE_ROOT; };
+		CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexMatcher.m; path = VVK/RegexMatcher.m; sourceTree = SOURCE_ROOT; };
+		CFCA4A1018ABA4320017C2ED /* VerificationResultCandidateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VerificationResultCandidateCell.h; path = VVK/VerificationResultCandidateCell.h; sourceTree = SOURCE_ROOT; };
+		CFCA4A1118ABA4320017C2ED /* VerificationResultCandidateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VerificationResultCandidateCell.m; path = VVK/VerificationResultCandidateCell.m; sourceTree = SOURCE_ROOT; };
+		CFCA4A1318ABA4560017C2ED /* VerificationResultCandidateCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VerificationResultCandidateCell.xib; path = VVK/VerificationResultCandidateCell.xib; sourceTree = SOURCE_ROOT; };
+		CFCA4A1518ABC4630017C2ED /* AuthenticationChallengeHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthenticationChallengeHandler.h; path = VVK/AuthenticationChallengeHandler.h; sourceTree = SOURCE_ROOT; };
+		CFCA4A1618ABC4630017C2ED /* AuthenticationChallengeHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthenticationChallengeHandler.m; path = VVK/AuthenticationChallengeHandler.m; sourceTree = SOURCE_ROOT; };
+		CFCA4A1918ACC0110017C2ED /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpViewController.h; path = VVK/HelpViewController.h; sourceTree = SOURCE_ROOT; };
+		CFCA4A1A18ACC0110017C2ED /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpViewController.m; path = VVK/HelpViewController.m; sourceTree = SOURCE_ROOT; };
+		CFCA4A1B18ACC0110017C2ED /* HelpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HelpViewController.xib; path = VVK/HelpViewController.xib; sourceTree = SOURCE_ROOT; };
+		CFEB5B4A18D305D2003278CD /* btn_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = btn_close.png; path = VVK/images/btn_close.png; sourceTree = SOURCE_ROOT; };
+		CFEB5B4B18D305D2003278CD /* btn_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "btn_close@2x.png"; path = "VVK/images/btn_close@2x.png"; sourceTree = SOURCE_ROOT; };
+		CFF60A78190E575800205084 /* Juur-SK.der.crt */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Juur-SK.der.crt"; path = "VVK/cert/Juur-SK.der.crt"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CF510B181896873300B13BAC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF657DB218A392EF002C2394 /* libcrypto.a in Frameworks */,
+				CF657DB318A392EF002C2394 /* libssl.a in Frameworks */,
+				CF657DAD18A22FAF002C2394 /* libresolv.dylib in Frameworks */,
+				CF6F86EF1897B29D0021925E /* AVFoundation.framework in Frameworks */,
+				CF510B211896873300B13BAC /* CoreGraphics.framework in Frameworks */,
+				CF8AF4851898F0A400E19FB3 /* libzbar.a in Frameworks */,
+				CF510B231896873300B13BAC /* UIKit.framework in Frameworks */,
+				CF510B1F1896873300B13BAC /* Foundation.framework in Frameworks */,
+				CF6F86ED1897B28C0021925E /* libiconv.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CF39BE3618ACFF5900EDAD25 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				CF48A46F18FE70310062057A /* Default-568h@2x.png */,
+				CF48A47018FE70310062057A /* Default.png */,
+				CF48A47118FE70310062057A /* Default@2x.png */,
+				CF48A47218FE70310062057A /* ico_76x76.png */,
+				CF48A47318FE70310062057A /* ico_120x120.png */,
+				CF48A47418FE70310062057A /* ico_152x152.png */,
+				CF48A47518FE70310062057A /* icon_57.png */,
+				CF48A47618FE70310062057A /* icon_114.png */,
+				CF48A47718FE70310062057A /* icon_1024.png */,
+				CFEB5B4A18D305D2003278CD /* btn_close.png */,
+				CFEB5B4B18D305D2003278CD /* btn_close@2x.png */,
+				CF39BE3718ACFF6200EDAD25 /* ico_note.png */,
+				CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */,
+				CF39BE3918ACFF6200EDAD25 /* spinner.png */,
+				CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		CF510B121896873300B13BAC = {
+			isa = PBXGroup;
+			children = (
+				CF510B241896873300B13BAC /* VVK */,
+				CF510B1D1896873300B13BAC /* Frameworks */,
+				CF510B1C1896873300B13BAC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CF510B1C1896873300B13BAC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CF510B1B1896873300B13BAC /* VVK.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF510B1D1896873300B13BAC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF657DB018A392EF002C2394 /* libcrypto.a */,
+				CF657DB118A392EF002C2394 /* libssl.a */,
+				CF8AF4841898F0A400E19FB3 /* libzbar.a */,
+				CF657DAC18A22FAF002C2394 /* libresolv.dylib */,
+				CF6F86EC1897B28C0021925E /* libiconv.dylib */,
+				CF6F86EE1897B29D0021925E /* AVFoundation.framework */,
+				CF510B1E1896873300B13BAC /* Foundation.framework */,
+				CF510B201896873300B13BAC /* CoreGraphics.framework */,
+				CF510B221896873300B13BAC /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CF510B241896873300B13BAC /* VVK */ = {
+			isa = PBXGroup;
+			children = (
+				CFCA4A1818ACBFF20017C2ED /* Help Screen */,
+				CF8AF4B0189BB71600E19FB3 /* Utils */,
+				CF8AF49F189A792F00E19FB3 /* Vote */,
+				CF8AF48C1899084500E19FB3 /* Additions */,
+				CF8AF488189907E000E19FB3 /* Custom Alert View */,
+				CF6F86F41897C5150021925E /* Request */,
+				CF6F86F01897BF1B0021925E /* Config */,
+				CF657D9D189FC590002C2394 /* Vote Verification Results */,
+				CF6F86E61897AFBD0021925E /* QR Code Scanner */,
+				CF8AF4691898EFFB00E19FB3 /* AppDelegate.h */,
+				CF8AF46A1898EFFB00E19FB3 /* AppDelegate.m */,
+				CF510B251896873300B13BAC /* Supporting Files */,
+			);
+			name = VVK;
+			path = iVotingVerification;
+			sourceTree = "<group>";
+		};
+		CF510B251896873300B13BAC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CF39BE3618ACFF5900EDAD25 /* Images */,
+				CF8AF47F1898F05200E19FB3 /* main.m */,
+				CF8AF4801898F05200E19FB3 /* VVK-Info.plist */,
+				CF8AF4811898F05200E19FB3 /* VVK-Prefix.pch */,
+				CF6F86FD1897EB630021925E /* cert */,
+				CF6F86F81897CA700021925E /* conf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CF657D9D189FC590002C2394 /* Vote Verification Results */ = {
+			isa = PBXGroup;
+			children = (
+				CFCA4A0F18ABA4050017C2ED /* Candidate Cell */,
+				CF657D9E189FC5BC002C2394 /* VoteVerificationResultsViewController.h */,
+				CF657D9F189FC5BC002C2394 /* VoteVerificationResultsViewController.m */,
+				CF657DA0189FC5BC002C2394 /* VoteVerificationResultsViewController.xib */,
+			);
+			name = "Vote Verification Results";
+			sourceTree = "<group>";
+		};
+		CF6F86E61897AFBD0021925E /* QR Code Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				CF657DA318A10D80002C2394 /* QRScanResult.h */,
+				CF657DA418A10D80002C2394 /* QRScanResult.m */,
+				CF8AF4771898F02C00E19FB3 /* ScannerViewController.h */,
+				CF8AF4781898F02C00E19FB3 /* ScannerViewController.m */,
+				CF8AF4791898F02C00E19FB3 /* ScannerViewController.xib */,
+			);
+			name = "QR Code Scanner";
+			sourceTree = "<group>";
+		};
+		CF6F86F01897BF1B0021925E /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF47C1898F03500E19FB3 /* Config.h */,
+				CF8AF47D1898F03500E19FB3 /* Config.m */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
+		CF6F86F41897C5150021925E /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF46E1898F00800E19FB3 /* Request.h */,
+				CF8AF46F1898F00800E19FB3 /* Request.m */,
+				CFCA4A1518ABC4630017C2ED /* AuthenticationChallengeHandler.h */,
+				CFCA4A1618ABC4630017C2ED /* AuthenticationChallengeHandler.m */,
+			);
+			name = Request;
+			sourceTree = "<group>";
+		};
+		CF6F86F81897CA700021925E /* conf */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF4751898F02300E19FB3 /* config.txt */,
+			);
+			path = conf;
+			sourceTree = "<group>";
+		};
+		CF6F86FD1897EB630021925E /* cert */ = {
+			isa = PBXGroup;
+			children = (
+				CFF60A78190E575800205084 /* Juur-SK.der.crt */,
+				CF4FEE061907D4C1008884D5 /* ca.cer */,
+			);
+			name = cert;
+			sourceTree = "<group>";
+		};
+		CF8AF488189907E000E19FB3 /* Custom Alert View */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF49018990F4000E19FB3 /* ALCustomAlertView.h */,
+				CF8AF49118990F4000E19FB3 /* ALCustomAlertView.m */,
+			);
+			name = "Custom Alert View";
+			sourceTree = "<group>";
+		};
+		CF8AF48C1899084500E19FB3 /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF4AD189A884400E19FB3 /* NSString+URLEncoding.h */,
+				CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */,
+				CF8AF49918994E6600E19FB3 /* UIColor+Hex.h */,
+				CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */,
+			);
+			name = Additions;
+			sourceTree = "<group>";
+		};
+		CF8AF49F189A792F00E19FB3 /* Vote */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF4AA189A877B00E19FB3 /* VoteContainer.h */,
+				CF8AF4AB189A877B00E19FB3 /* VoteContainer.m */,
+			);
+			name = Vote;
+			sourceTree = "<group>";
+		};
+		CF8AF4B0189BB71600E19FB3 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				CF8AF4B1189BB72A00E19FB3 /* RegexMatcher.h */,
+				CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */,
+				CF657DA618A1269F002C2394 /* Crypto.h */,
+				CF657DA718A1269F002C2394 /* Crypto.mm */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		CFCA4A0F18ABA4050017C2ED /* Candidate Cell */ = {
+			isa = PBXGroup;
+			children = (
+				CFCA4A1018ABA4320017C2ED /* VerificationResultCandidateCell.h */,
+				CFCA4A1118ABA4320017C2ED /* VerificationResultCandidateCell.m */,
+				CFCA4A1318ABA4560017C2ED /* VerificationResultCandidateCell.xib */,
+			);
+			name = "Candidate Cell";
+			sourceTree = "<group>";
+		};
+		CFCA4A1818ACBFF20017C2ED /* Help Screen */ = {
+			isa = PBXGroup;
+			children = (
+				CFCA4A1918ACC0110017C2ED /* HelpViewController.h */,
+				CFCA4A1A18ACC0110017C2ED /* HelpViewController.m */,
+				CFCA4A1B18ACC0110017C2ED /* HelpViewController.xib */,
+			);
+			name = "Help Screen";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CF510B1A1896873300B13BAC /* VVK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF510B471896873400B13BAC /* Build configuration list for PBXNativeTarget "VVK" */;
+			buildPhases = (
+				CF510B171896873300B13BAC /* Sources */,
+				CF510B181896873300B13BAC /* Frameworks */,
+				CF510B191896873300B13BAC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VVK;
+			productName = iVotingVerification;
+			productReference = CF510B1B1896873300B13BAC /* VVK.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CF510B131896873300B13BAC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = "";
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Applaud OÜ";
+			};
+			buildConfigurationList = CF510B161896873300B13BAC /* Build configuration list for PBXProject "VVK" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF510B121896873300B13BAC;
+			productRefGroup = CF510B1C1896873300B13BAC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CF510B1A1896873300B13BAC /* VVK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CF510B191896873300B13BAC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF48A47F18FE70310062057A /* icon_114.png in Resources */,
+				CF39BE3E18ACFF6200EDAD25 /* spinner@2x.png in Resources */,
+				CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */,
+				CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */,
+				CFCA4A1418ABA4560017C2ED /* VerificationResultCandidateCell.xib in Resources */,
+				CFEB5B4D18D305D2003278CD /* btn_close@2x.png in Resources */,
+				CF48A48018FE70310062057A /* icon_1024.png in Resources */,
+				CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */,
+				CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */,
+				CF8AF4761898F02300E19FB3 /* config.txt in Resources */,
+				CF48A47818FE70310062057A /* Default-568h@2x.png in Resources */,
+				CF8AF47B1898F02C00E19FB3 /* ScannerViewController.xib in Resources */,
+				CF48A47C18FE70310062057A /* ico_120x120.png in Resources */,
+				CF48A47D18FE70310062057A /* ico_152x152.png in Resources */,
+				CF4FEE071907D4C1008884D5 /* ca.cer in Resources */,
+				CFF60A7A190E575800205084 /* Juur-SK.der.crt in Resources */,
+				CF48A47918FE70310062057A /* Default.png in Resources */,
+				CF48A47B18FE70310062057A /* ico_76x76.png in Resources */,
+				CF48A47A18FE70310062057A /* Default@2x.png in Resources */,
+				CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */,
+				CF48A47E18FE70310062057A /* icon_57.png in Resources */,
+				CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CF510B171896873300B13BAC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF657DA818A1269F002C2394 /* Crypto.mm in Sources */,
+				CF8AF4AF189A884400E19FB3 /* NSString+URLEncoding.m in Sources */,
+				CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */,
+				CF657DA1189FC5BC002C2394 /* VoteVerificationResultsViewController.m in Sources */,
+				CF8AF4821898F05200E19FB3 /* main.m in Sources */,
+				CF8AF4701898F00800E19FB3 /* Request.m in Sources */,
+				CF8AF47E1898F03500E19FB3 /* Config.m in Sources */,
+				CFCA4A1C18ACC0110017C2ED /* HelpViewController.m in Sources */,
+				CF657DA518A10D81002C2394 /* QRScanResult.m in Sources */,
+				CFCA4A1218ABA4320017C2ED /* VerificationResultCandidateCell.m in Sources */,
+				CFCA4A1718ABC4630017C2ED /* AuthenticationChallengeHandler.m in Sources */,
+				CF8AF46C1898EFFB00E19FB3 /* AppDelegate.m in Sources */,
+				CF8AF49B18994E6600E19FB3 /* UIColor+Hex.m in Sources */,
+				CF8AF47A1898F02C00E19FB3 /* ScannerViewController.m in Sources */,
+				CF8AF4B3189BB72A00E19FB3 /* RegexMatcher.m in Sources */,
+				CF8AF49218990F4000E19FB3 /* ALCustomAlertView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CF510B451896873400B13BAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		CF510B461896873400B13BAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CF510B481896873400B13BAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VVK/VVK-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/eigen/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					VVK/libs/ZBarSDK/Headers/ZBarSDK,
+					VVK/libs/openssl/include,
+				);
+				INFOPLIST_FILE = "VVK/VVK-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs/ZBarSDK,
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs,
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs/openssl/lib,
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = VVK;
+				PROVISIONING_PROFILE = "05DDEA9C-6E34-4C51-8981-09982F3D983F";
+				VALID_ARCHS = "armv7 armv6";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		CF510B491896873400B13BAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Applaud OU (VX6DFPUL8A)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VVK/VVK-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/eigen/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					VVK/libs/ZBarSDK/Headers/ZBarSDK,
+					VVK/libs/openssl/include,
+				);
+				INFOPLIST_FILE = "VVK/VVK-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs/ZBarSDK,
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs,
+					/Users/eigen/Projektid/VVK_iOS/VVK/libs/openssl/lib,
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = VVK;
+				PROVISIONING_PROFILE = "08064104-A3CB-4663-81D4-0C84DEAC2E4E";
+				VALID_ARCHS = "armv7 armv6";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CF510B161896873300B13BAC /* Build configuration list for PBXProject "VVK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF510B451896873400B13BAC /* Debug */,
+				CF510B461896873400B13BAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF510B471896873400B13BAC /* Build configuration list for PBXNativeTarget "VVK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF510B481896873400B13BAC /* Debug */,
+				CF510B491896873400B13BAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CF510B131896873300B13BAC /* Project object */;
+}

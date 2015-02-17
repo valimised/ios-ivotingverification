@@ -23,21 +23,24 @@ static RSA * publicKeyRSA = NULL;
     return [NSString stringWithFormat:@"%@", hex];
 }
 
-+ (NSString *)hexToString:(NSString *)hexString
++ (NSData *)hexToString:(NSString *)hexString
 {
-    NSMutableString * newString = [[NSMutableString alloc] init];
+    NSMutableData * decodedData = [[NSMutableData alloc] init];
     
-    int i = 0;
-    while (i < [hexString length])
+    unsigned char whole_byte;
+    char byte_chars[3] = {'\0','\0','\0'};
+
+    for (int i=0; i < ([hexString length] / 2); i++)
     {
-        NSString * hexChar = [hexString substringWithRange: NSMakeRange(i, 2)];
-        int value = 0;
-        sscanf([hexChar cStringUsingEncoding:NSASCIIStringEncoding], "%x", &value);
-        [newString appendFormat:@"%c", (char)value];
-        i+=2;
+        byte_chars[0] = [hexString characterAtIndex:i*2];
+        byte_chars[1] = [hexString characterAtIndex:i*2+1];
+        
+        whole_byte = strtol(byte_chars, NULL, 16);
+        
+        [decodedData appendBytes:&whole_byte length:1];
     }
     
-    return newString;
+    return decodedData;
 }
 
 static int MGF1(unsigned char *mask, long len, const unsigned char *seed, long seedlen) {
@@ -187,10 +190,17 @@ err:
 
 + (NSString *)encryptVote:(in NSString *)vote withSeed:(in NSString *)seed
 {
+    // DLog(@"Vote: %@", vote);
+    // DLog(@"Seed: %@", seed);
+    
     int outlen = 0;
     char * outbuf = NULL;
 
-    NSString * decodedSeed = [Crypto hexToString:seed];
+    NSData * decodedSeed = [Crypto hexToString:seed];
+    
+    
+
+    
     
     // Prepare output buffer
     outbuf = (char *)malloc(RSA_size(publicKeyRSA));
@@ -200,7 +210,7 @@ err:
                                      (unsigned char*)[vote cStringUsingEncoding:NSUTF8StringEncoding],
                                      (unsigned char *)outbuf,
                                      publicKeyRSA,
-                                     (unsigned char*)[decodedSeed cStringUsingEncoding:NSMacOSRomanStringEncoding]);
+                                     (unsigned char *)[decodedSeed bytes]);
 
     decodedSeed = nil;
     
@@ -216,6 +226,8 @@ err:
         [hex appendFormat:@"%02X", ((unsigned char)outbuf[i]) & 0x00FF];
 
     free(outbuf);
+    
+    // DLog(@"Output: %@", hex);
     
     return hex;
 }

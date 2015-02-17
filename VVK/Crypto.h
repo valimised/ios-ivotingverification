@@ -10,7 +10,7 @@
 
 @interface Crypto : NSObject
 
-+ (NSString *)hexToString:(NSString *)hexString;
++ (NSData *)hexToString:(NSString *)hexString;
 + (NSString *)stringToHex:(NSString *)string;
 
 + (NSString *)encryptVote:(in NSString *)vote withSeed:(in NSString *)seed;

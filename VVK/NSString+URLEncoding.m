@@ -20,16 +20,21 @@
     {
 		if ([key isKindOfClass:[NSString class]])
         {
-            NSString * value = (NSString*)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)dictionary[key], NULL, CFSTR("+=&"), kCFStringEncodingUTF8));
+            NSString * value = dictionary[key]; // (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)dictionary[key], NULL, CFSTR("+=&"), kCFStringEncodingUTF8));
             
             if (ch)
+            {
                 [outString appendFormat:@"%c", ch];
+            }
             
             [outString appendFormat:@"%@=%@", key, value];
             
-            ch = (ch == '=') ? '&' : '=';
+            ch = '&'; // (ch == '=') ? '&' : '=';
         }
 	}
+    
+    DLog(@"outString: %@", outString);
+    DLog(@"percent escaped outString: %@", [outString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
 	
 	return [outString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }

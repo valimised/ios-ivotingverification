@@ -21,6 +21,10 @@
     {
         electionIdentificator = identificator;
         hex = hexCode;
+        
+        DLog(@"electionIdentificator = %@", electionIdentificator);
+        DLog(@"hex = %@", hex);
+        DLog(@" ");
     }
     
     return self;

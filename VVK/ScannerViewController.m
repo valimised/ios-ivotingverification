@@ -9,6 +9,7 @@
 #import "ScannerViewController.h"
 #import "VoteContainer.h"
 #import "QRScanResult.h"
+#import "RegexMatcher.h"
 #import "AppDelegate.h"
 
 @interface ScannerViewController (Private)
@@ -250,21 +251,90 @@
     didReadSymbols:(ZBarSymbolSet *)symbols
          fromImage:(UIImage *)image
 {
+    DLog(@"symbols count: %d", symbols.count);
+    
     for (ZBarSymbol * sym in symbols)
     {
         [self setReticleVisible:NO];
         
-        QRScanResult * scanResult = [[QRScanResult alloc] initWithSymbolData:sym.data];
+        NSString * scanResultString = sym.data;
         
-        VoteContainer * voteContainer = [[VoteContainer alloc] initWithScanResult:scanResult];
 
-        [self setScannerEnabled:NO];
         
-        [SharedDelegate showLoaderWithClearStyle:NO];
+        //
+        // Validate QR scan result
+        //
         
-        [SharedDelegate setCurrentVoteContainer:voteContainer];
+        BOOL validScanResult = YES;
+        
+        NSArray * components = [scanResultString componentsSeparatedByString:@"\n"];
+        
+        // Validate number of line components
+        if (components.count < 2) {
+            validScanResult = NO;
+        }
+        
+        // Validate vote identificator
+        else if ([RegexMatcher is40Characters:components[0]] == NO) {
+            validScanResult = NO;
+        }
+        
+        else
+        {
+            for (NSUInteger i = 1; i < components.count; ++i)
+            {
+                if ([components[i] length] == 0)
+                {
+                    if (i >= 2)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        validScanResult = NO;
+                        break;
+                    }
+                }
+                
+                NSArray * verificationEntryComponents = [components[i] componentsSeparatedByString:@"\t"];
+                
+                if (verificationEntryComponents.count != 2)
+                {
+                    validScanResult = NO;
+                    break;
+                }
+                
+                else
+                {
+                    if ([RegexMatcher is40Characters:verificationEntryComponents[1]] == NO)
+                    {
+                        validScanResult = NO;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
     
-        [voteContainer download];
+        if (validScanResult == YES)
+        {
+            QRScanResult * scanResult = [[QRScanResult alloc] initWithSymbolData:scanResultString];
+            
+            VoteContainer * voteContainer = [[VoteContainer alloc] initWithScanResult:scanResult];
+
+            [self setScannerEnabled:NO];
+            
+            [SharedDelegate showLoaderWithClearStyle:NO];
+            
+            [SharedDelegate setCurrentVoteContainer:voteContainer];
+        
+            [voteContainer download];
+        }
+        else
+        {
+             [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"problem_qrcode_message"]];
+        }
         
         break;
     }

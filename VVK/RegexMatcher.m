@@ -40,6 +40,8 @@
 
 + (BOOL)is40Characters:(NSString *)input
 {
+    DLog(@"%@", input);
+    
     NSError * regexError = nil;
     NSRegularExpression * expression = [NSRegularExpression regularExpressionWithPattern:@"^[0-9A-Za-z]{40}$" options:0 error:&regexError];
     NSRange inputRange = NSMakeRange(0, input.length);

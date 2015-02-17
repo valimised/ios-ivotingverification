@@ -139,11 +139,11 @@
 
 - (void)download
 {
-    NSURL * containerDownloadURL = [NSURL URLWithString:[[Config sharedInstance] getParameter:@"app_url"]];
+    NSURL * containerDownloadURL = [NSURL URLWithString:[[Config sharedInstance] getParameter:@"app_url"] /*@"https://portal.cyber.ee/hes-verify-vote.cgi"*/];
     
     Request * request = [[Request alloc] initWithURL:containerDownloadURL
                                              options:@{kRequestType: @"POST",
-                                                       kRequestPOST: @{@"vote": scanResult.voteIdentificator}}];
+                                                       kRequestPOST: @{@"verify": scanResult.voteIdentificator}}];
     
     request.delegate = self;
     request.authenticationDelegate = [AuthenticationChallengeHandler sharedInstance];
@@ -180,10 +180,15 @@
       
         for (Candidate * candidate in candidates)
         {
-            if ([candidate.ballot.name isEqualToString:ballot.name] == NO) {
+            if ([candidate.ballot.name isEqualToString:ballot.name] == NO)
+            {
+                DLog(@"Different ballot name: %@ VS. %@", candidate.ballot.name, ballot.name);
                 continue;
             }
 
+            // DLog(@"");
+            // DLog(@"Candidate: %@", candidate.name);
+            
             NSString * votePlaintext = [NSString stringWithFormat:@"%d\n%@\n%@\n", versionNumber, v.electionIdentificator, candidate.number];
             NSString * encryptedVote = [Crypto encryptVote:votePlaintext
                                                   withSeed:v.hex];
@@ -248,6 +253,13 @@
 - (void)parseVerificationRequestResult:(in NSString *)resultString
 {
     DLog(@"|%@|", resultString);
+    
+    if (resultString == nil || [resultString length] == 0)
+    {
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        
+        return;
+    }
     
     NSArray * components = [resultString componentsSeparatedByString:@"\n"];
     

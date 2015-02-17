@@ -540,20 +540,20 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/eigen/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					VVK/libs/ZBarSDK/Headers/ZBarSDK,
-					VVK/libs/openssl/include,
+					"$(SRCROOT)/VVK/libs/ZBarSDK/Headers/ZBarSDK",
+					"$(SRCROOT)/VVK/libs/openssl/include",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs/ZBarSDK,
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs,
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs/openssl/lib,
+					"$(SRCROOT)/VVK/libs",
+					"$(SRCROOT)/VVK/libs/openssl/lib",
+					"$(SRCROOT)/VVK/libs/ZBarSDK",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = VVK;
-				PROVISIONING_PROFILE = "05DDEA9C-6E34-4C51-8981-09982F3D983F";
+				PROVISIONING_PROFILE = "779ebc73-4662-4f75-a8f3-2851fd77c356";
 				VALID_ARCHS = "armv7 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -570,20 +570,20 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/eigen/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					VVK/libs/ZBarSDK/Headers/ZBarSDK,
-					VVK/libs/openssl/include,
+					"$(SRCROOT)/VVK/libs/ZBarSDK/Headers/ZBarSDK",
+					"$(SRCROOT)/VVK/libs/openssl/include",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs/ZBarSDK,
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs,
-					/Users/eigen/Projektid/VVK_iOS/VVK/libs/openssl/lib,
+					"$(SRCROOT)/VVK/libs",
+					"$(SRCROOT)/VVK/libs/openssl/lib",
+					"$(SRCROOT)/VVK/libs/ZBarSDK",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = VVK;
-				PROVISIONING_PROFILE = "08064104-A3CB-4663-81D4-0C84DEAC2E4E";
+				PROVISIONING_PROFILE = "d1874c64-a94c-4896-8338-d5a148a4f0a0";
 				VALID_ARCHS = "armv7 armv6";
 				WRAPPER_EXTENSION = app;
 			};

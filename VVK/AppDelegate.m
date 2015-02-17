@@ -47,7 +47,7 @@
     backgroundStartTime = [[NSDate date] timeIntervalSince1970];
     
     [[Config sharedInstance] requestRemoteConfigurationFile];
-    
+   
     return YES;
 }
 
@@ -89,7 +89,7 @@
 
 - (void)presentError:(in NSString *)errorMessage
 {
-    DLog(@"presentError: %@", errorMessage);
+    DLog(@"%@", errorMessage);
     
     ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: errorMessage,
                                                                              kAlertViewConfrimButtonTitle: [[Config sharedInstance] textForKey:@"btn_next"],
@@ -105,7 +105,7 @@
 
 - (void)presentVoteVerificationResults:(in NSArray *)results
 {
-    DLog(@"presentVoteVerificationResults");
+    DLog(@"");
     
     [voteVerificationResultsViewController handleResults:results];
     

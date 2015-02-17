@@ -49,12 +49,17 @@
         
         if ([options[@"requestType"] isEqualToString:@"POST"])
         {
-            NSString * urlEncodedPostData = [NSString URLEncodedStringWithDictionary:options[kRequestPOST]];
+            DLog(@"POST OPTIONS: %@", options[kRequestPOST]);
+
+            NSString * urlEncodedPostData = [NSString stringWithFormat:@"verify=%@", options[kRequestPOST][@"verify"]]; //[NSString URLEncodedStringWithDictionary:options[kRequestPOST]];
+            
+            DLog(@"urlEncodedPostData (%d): %@", [urlEncodedPostData length], urlEncodedPostData);
 
             postData = [urlEncodedPostData dataUsingEncoding:NSUTF8StringEncoding];
             httpBodyInputStream = [NSInputStream inputStreamWithData:postData];
             
             [request setHTTPMethod:@"POST"];
+            // [request setHTTPBody:postData];
             [request setHTTPBodyStream:httpBodyInputStream];
             [request addValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
             [request addValue:@"close" forHTTPHeaderField:@"Connection"];

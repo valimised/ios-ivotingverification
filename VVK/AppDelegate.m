@@ -1,29 +1,30 @@
 //
 //  AppDelegate.m
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/27/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "AppDelegate.h"
 #import "ScannerViewController.h"
 #import "VoteVerificationResultsViewController.h"
 #import "HelpViewController.h"
-
+#import <openssl/evp.h>
 
 @interface AppDelegate (NotificationObserver)
 - (void)didLoadConfigurationFile;
 @end
 
 
-@implementation AppDelegate
+@implementation AppDelegate {
+    BOOL error;
+    NSObject* errorLock;
+}
 
 @synthesize currentVoteContainer;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    error = NO;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    OpenSSL_add_all_algorithms();
 
     scannerViewController = [[ScannerViewController alloc] initWithNibName:@"ScannerViewController" bundle:nil];
     voteVerificationResultsViewController = [[VoteVerificationResultsViewController alloc] initWithNibName:@"VoteVerificationResultsViewController" bundle:nil];
@@ -69,7 +70,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval timeInBackground = fabsf(now - backgroundStartTime);
+    NSTimeInterval timeInBackground = fabs(now - backgroundStartTime);
     
     DLog(@"timeInBackground = %f", timeInBackground);
     
@@ -89,21 +90,29 @@
 
 - (void)presentError:(in NSString *)errorMessage
 {
-    DLog(@"%@", errorMessage);
+    if (!error) {
+        @synchronized (errorLock) {
+            if (!error) {
+                error = YES;
+                DLog(@"%@", errorMessage);
+
+                ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: errorMessage,
+                                                                                         kAlertViewConfrimButtonTitle: [[Config sharedInstance] textForKey:@"btn_next"],
+                                                                                         kAlertViewBackgroundColor: [[Config sharedInstance] colorForKey:@"error_window"],
+                                                                                         kAlertViewForegroundColor: [[Config sharedInstance] colorForKey:@"error_window_foreground"]}];
     
-    ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: errorMessage,
-                                                                             kAlertViewConfrimButtonTitle: [[Config sharedInstance] textForKey:@"btn_next"],
-                                                                             kAlertViewBackgroundColor: [[Config sharedInstance] colorForKey:@"error_window"],
-                                                                             kAlertViewForegroundColor: [[Config sharedInstance] colorForKey:@"error_window_foreground"]}];
-    
-    [alert setDelegate:self];
-    [alert setTag:1000];
-    [alert show];
-    
-    [self setCurrentVoteContainer:nil];
+                [alert setDelegate:self];
+                [alert setTag:1000];
+                [alert show];
+
+                currentVoteContainer = nil;
+
+            }
+        }
+    }
 }
 
-- (void)presentVoteVerificationResults:(in NSArray *)results
+- (void)presentVoteVerificationResults:(in NSDictionary *)results
 {
     DLog(@"");
     
@@ -235,10 +244,12 @@
     }
     else
     {
+        NSShadow *shadow = [NSShadow new];
+        [shadow setShadowColor: [UIColor colorWithWhite:0.0 alpha:0.4]];
+        [shadow setShadowOffset: CGSizeMake(0.0, -0.5)];
         [[UINavigationBar appearance] setTitleTextAttributes:@{
-                                                               UITextAttributeTextColor: [[Config sharedInstance] colorForKey:@"main_window_foreground"],
-                                                               UITextAttributeTextShadowColor: [UIColor colorWithWhite:0.0 alpha:0.4],
-                                                               UITextAttributeTextShadowOffset: [NSValue valueWithCGSize:CGSizeMake(0.0, -0.5)]
+                                                               NSForegroundColorAttributeName: [[Config sharedInstance] colorForKey:@"main_window_foreground"],
+                                                               NSShadowAttributeName: shadow
                                                                }];
         
         resultContainerNavigationController.navigationBar.tintColor = navBarColor;
@@ -254,9 +265,10 @@
     // Closing an error message
     if (alertView.tag == 1000 && buttonIndex == 1)
     {
+        error = NO;
         if ([voteVerificationResultsViewController presentedModally])
         {
-            [resultContainerNavigationController dismissModalViewControllerAnimated:YES];
+            [resultContainerNavigationController dismissViewControllerAnimated:YES completion:nil];
         }
 
         [scannerViewController setScannerEnabled:YES];

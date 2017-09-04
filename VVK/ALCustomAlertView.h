@@ -1,10 +1,7 @@
 //
 //  UICustomAlertView.h
 //  v 1.0
-//
-//  Created by Sander Hunt on 9/5/13.
-//  Copyright (c) 2013 Applaud. All rights reserved.
-//
+
 @class ALCustomAlertView;
 
 @protocol ALCustomAlertViewDelegate <NSObject>

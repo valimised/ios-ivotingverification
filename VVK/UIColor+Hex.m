@@ -1,10 +1,6 @@
 //
 //  UIColor+UIColor_Hex.m
 //  VVK
-//
-//  Created by Eigen Lenk on 1/29/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "UIColor+Hex.h"
 

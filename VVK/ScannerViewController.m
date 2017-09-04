@@ -1,10 +1,6 @@
 //
 //  ScannerViewController.m
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/28/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "ScannerViewController.h"
 #import "VoteContainer.h"
@@ -18,6 +14,7 @@
 - (void)showWelcomeMessage;
 - (void)shouldRestartApplicationState;
 - (void)setReticleVisible:(BOOL)visible;
+- (void)verifyQrString:(NSString*)qrStr;
 
 @end
 
@@ -42,7 +39,7 @@
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
     }
     
-    [zBarReaderView start];
+    [session startRunning];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -63,7 +60,7 @@
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     }
     
-    [zBarReaderView stop];
+    [session stopRunning];
 }
 
 - (void)viewDidLoad
@@ -104,50 +101,28 @@
 {
 #if !(TARGET_IPHONE_SIMULATOR)
     
-    captureDevice = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo][0];
+    session = [[AVCaptureSession alloc] init];
     
-    ZBarImageScanner * scanner = [ZBarImageScanner new];
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *error = nil;
     
-    // We're only interested in QR code scanning with full ASCII set
-    [scanner setSymbology:ZBAR_NONE config:ZBAR_CFG_ENABLE to:0];
-    [scanner setSymbology:ZBAR_QRCODE config:ZBAR_CFG_ENABLE to:1];
-    [scanner setSymbology:ZBAR_QRCODE config:ZBAR_CFG_ASCII to:1];
+    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
     
-    zBarReaderView = [[ZBarReaderView alloc] initWithImageScanner:scanner];
+    if(input) {
+        // Add the input to the session
+        [session addInput:input];
+    } else {
+        NSLog(@"error: %@", error);
+        [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"bad_device_message"]];
+        return;
+    }
     
-    zBarReaderView.device = captureDevice;
-    zBarReaderView.zoom = 1.15f;
-    zBarReaderView.tracksSymbols = NO;
-    zBarReaderView.allowsPinchZoom = NO;
-    zBarReaderView.frame = self.view.bounds;
-    zBarReaderView.torchMode = 0;
-    zBarReaderView.readerDelegate = self;
-    zBarReaderView.scanCrop = CGRectZero;
-   
-    [zBarReaderView start];
-    
-    [[self view] addSubview:zBarReaderView];
-    
-#else
-    
-    captureDevice = nil;
-    
-    ZBarImageScanner * scanner = [ZBarImageScanner new];
-    
-    zBarReaderView = [[ZBarReaderView alloc] initWithImageScanner:scanner];
-
-    zBarReaderView.zoom = 1.15f;
-    zBarReaderView.tracksSymbols = NO;
-    zBarReaderView.allowsPinchZoom = NO;
-    zBarReaderView.frame = self.view.bounds;
-    zBarReaderView.torchMode = 0;
-    zBarReaderView.readerDelegate = self;
-    zBarReaderView.scanCrop = CGRectZero;
-    
-    [zBarReaderView start];
-    
-    [[self view] addSubview:zBarReaderView];
-    
+    AVCaptureVideoPreviewLayer* _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:session];
+    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    _previewLayer.bounds = self.view.bounds;
+    _previewLayer.position = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+    [self.view.layer addSublayer:_previewLayer];
+    [session startRunning];
 #endif
     
 }
@@ -160,11 +135,11 @@
     
     welcomeMessagePresented = YES;
     
-    NSString * appURL = [[Config sharedInstance] getParameter:@"app_url"];
+    NSArray * appURL = [[Config sharedInstance] getParameter:@"verification_url"];
     
     ALCustomAlertView * alert;
     
-    if (appURL == nil || [appURL length] == 0)
+    if (appURL == nil || [appURL count] == 0)
     {
         alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: [[Config sharedInstance] textForKey:@"welcome_message"],
                                                              kAlertViewCancelButtonTitle: [[Config sharedInstance] textForKey:@"btn_more"],
@@ -187,25 +162,25 @@
 - (void)setScannerEnabled:(BOOL)enabled
 {
     DLog(@"setScannerEnabled: %d", enabled);
-    
+#if !(TARGET_IPHONE_SIMULATOR)
     if (enabled == YES)
     {
         [self setReticleVisible:YES];
         
-        zBarReaderView.scanCrop = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
-    
-#if TARGET_IPHONE_SIMULATOR
-        if ([zBarReaderView respondsToSelector:@selector(scanImage:)]) {
-            [zBarReaderView performSelector:@selector(scanImage:) withObject:[UIImage imageNamed:@"scantest.png"]];
-        }
-#endif
+        output = [[AVCaptureMetadataOutput alloc] init];
+        [session addOutput:output];
+        [output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]];
+        [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     }
     else
     {
-        zBarReaderView.scanCrop = CGRectZero;
+        [self setReticleVisible:NO];
+        [session removeOutput:output];
     }
-    
-    return;
+#else
+    NSString* qrStr = @""; // paste the qr data represented with QR here
+    [self verifyQrString:qrStr];
+#endif
 }
 
 - (void)shouldRestartApplicationState
@@ -226,7 +201,7 @@
     {
         reticleView.hidden = NO;
         reticleView.alpha = 0.0f;
-        
+
         [UIView animateWithDuration:0.4 animations:^{
             reticleView.alpha = 1.0f;
         } completion:^(BOOL finished) {
@@ -236,7 +211,7 @@
     {
         reticleView.hidden = NO;
         reticleView.alpha = 1.0f;
-        
+
         [UIView animateWithDuration:0.4 animations:^{
             reticleView.alpha = 0.0f;
         } completion:^(BOOL finished) {
@@ -245,96 +220,63 @@
     }
 }
 
-#pragma mark - ZBar delegate
-
-- (void)readerView:(ZBarReaderView *)view
-    didReadSymbols:(ZBarSymbolSet *)symbols
-         fromImage:(UIImage *)image
+- (void)verifyQrString:(NSString *)qrStr
 {
-    DLog(@"symbols count: %d", symbols.count);
-    
-    for (ZBarSymbol * sym in symbols)
-    {
-        [self setReticleVisible:NO];
-        
-        NSString * scanResultString = sym.data;
-        
+    BOOL validScanResult = YES;
 
-        
-        //
-        // Validate QR scan result
-        //
-        
-        BOOL validScanResult = YES;
-        
-        NSArray * components = [scanResultString componentsSeparatedByString:@"\n"];
-        
-        // Validate number of line components
-        if (components.count < 2) {
-            validScanResult = NO;
-        }
-        
-        // Validate vote identificator
-        else if ([RegexMatcher is40Characters:components[0]] == NO) {
-            validScanResult = NO;
-        }
-        
-        else
+    NSArray * components = [qrStr componentsSeparatedByString:@"\n"];
+
+    // Validate number of line components
+    if (components.count != 3) {
+        validScanResult = NO;
+    }
+
+    // Validate encoding
+    else
+    {
+        for (NSUInteger i = 1; i < components.count; ++i)
         {
-            for (NSUInteger i = 1; i < components.count; ++i)
-            {
-                if ([components[i] length] == 0)
-                {
-                    if (i >= 2)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        validScanResult = NO;
-                        break;
-                    }
-                }
-                
-                NSArray * verificationEntryComponents = [components[i] componentsSeparatedByString:@"\t"];
-                
-                if (verificationEntryComponents.count != 2)
-                {
-                    validScanResult = NO;
-                    break;
-                }
-                
-                else
-                {
-                    if ([RegexMatcher is40Characters:verificationEntryComponents[1]] == NO)
-                    {
-                        validScanResult = NO;
-                        break;
-                    }
-                }
+            if (![RegexMatcher isBase64Encoded:components[i]]) {
+                validScanResult = NO;
+                break;
             }
         }
-        
-        
-    
-        if (validScanResult == YES)
-        {
-            QRScanResult * scanResult = [[QRScanResult alloc] initWithSymbolData:scanResultString];
-            
-            VoteContainer * voteContainer = [[VoteContainer alloc] initWithScanResult:scanResult];
+    }
 
-            [self setScannerEnabled:NO];
-            
-            [SharedDelegate showLoaderWithClearStyle:NO];
-            
-            [SharedDelegate setCurrentVoteContainer:voteContainer];
+    if (validScanResult == YES)
+    {
+        QRScanResult * scanResult = [[QRScanResult alloc] initWithSymbolData:qrStr];
+
+        VoteContainer * voteContainer = [[VoteContainer alloc] initWithScanResult:scanResult];
+
+        [SharedDelegate showLoaderWithClearStyle:NO];
+
+        [SharedDelegate setCurrentVoteContainer:voteContainer];
+
+        [voteContainer download];
+    }
+    else
+    {
+        [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"problem_qrcode_message"]];
+    }
+
+}
+
+#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput
+didOutputMetadataObjects:(NSArray *)metadataObjects
+       fromConnection:(AVCaptureConnection *)connection
+{
+    for (AVMetadataObject *metadata in metadataObjects)
+    {
+        if (![metadata.type isEqualToString:AVMetadataObjectTypeQRCode]) {
+            continue;
+        }
+        [self setScannerEnabled:NO];
         
-            [voteContainer download];
-        }
-        else
-        {
-             [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"problem_qrcode_message"]];
-        }
+        NSString * scanResultString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
+        [self verifyQrString:scanResultString];
         
         break;
     }
@@ -354,7 +296,7 @@
     else if (buttonIndex == 1)
     {
         readyToScan = YES;
-        
+
         [self setScannerEnabled:YES];
     }
 }

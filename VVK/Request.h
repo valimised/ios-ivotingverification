@@ -1,10 +1,6 @@
 //
 //  Request.h
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/28/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 

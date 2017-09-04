@@ -1,0 +1,16 @@
+//
+//  PkixNonce.m
+//  VVK
+//
+//  Created on 7/17/17.
+//
+
+#import "PkixNonce.h"
+#import <openssl/x509.h>
+
+ASN1_SEQUENCE(PKIX_NONCE) = {
+    ASN1_SIMPLE(PKIX_NONCE, alg, X509_ALGOR),
+    ASN1_SIMPLE(PKIX_NONCE, sig, ASN1_OCTET_STRING),
+} ASN1_SEQUENCE_END(PKIX_NONCE)
+
+IMPLEMENT_ASN1_FUNCTIONS(PKIX_NONCE)

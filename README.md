@@ -1,45 +1,8 @@
-Valimiste Hääletuskontrollrakendus (iOS)
-========================================
+ivoteverification
+=================
 
-Requirements
-------------
+iOS based vote verification application for Estonian i-voting system
 
-- Xcode 6.1.1
-- iOS SDK 7.1
-- OS X Mountain Lion (10.8) or newer
+The intention behind this repository is to make source code of the official i-vote verification application for Estonian internet-voting system available for public review.
 
-
-Library dependencies
---------------------
-
-- OpenSSL for iPhone 1.0.1f (or newer)
-- ZBar iPhone SDK 1.2
-
-
-Building
---------
-
-- Checkout VVK repository, open the Xcode project and build
-- To run the application on device a valid wildcard provisioning profile must be included.
-
-
-Configuration
--------------
-
-- The default root CA certificate is located in "VVK/cert" in the main project directory. The certificate should be in X.509 DER (binary) format. The filename of the certificate used is definied as CA_CERTIFICATE_FILE in AuthenticationChallengeHandler.h It is "ca.cer" by default. When including a new certificate make sure the file is in fact copied to the application bundle by checking the Target Membership checkbox for the given file.
-- The URL for the remote configuration file is defined in "VVK/conf/config.txt" in the main project directory.
-- After replacing or changing certificates or renaming files it is advisable to first clean the project before building.
-
-
-Additional information
-----------------------
-
-- ZBar is used for efficient QR code scanning
-
-
-Contributors
---------
-
-- Eigen Lenk - code
-- Raimo Tammel - design
-- Sven Heiberg and Joonas Trussmann - project leads
+The repository is not used for active development, but will be kept up to date, so the code that can be found here is the code that is used for election. As the voting system used for legally binding elections must strictly follow the legislation, the actual development of Estonian i-voting system and i-vote verification application is supervised by Estonian State Electoral Office (ESEO, www.valimised.ee). Please refer to www.valimised.ee for further information.

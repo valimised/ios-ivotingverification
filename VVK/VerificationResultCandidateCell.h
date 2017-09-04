@@ -1,10 +1,6 @@
 //
 //  VerificationResultCandidateCell.h
 //  VVK
-//
-//  Created by Eigen Lenk on 2/12/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 

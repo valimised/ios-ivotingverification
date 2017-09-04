@@ -1,10 +1,6 @@
 //
 //  AppDelegate.h
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/27/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 
@@ -42,7 +38,7 @@
 
 - (void)presentError:(in NSString *)errorMessage;
 
-- (void)presentVoteVerificationResults:(in NSArray *)results;
+- (void)presentVoteVerificationResults:(in NSDictionary *)results;
 
 - (void)showLoaderWithClearStyle:(BOOL)clearStyle;
 

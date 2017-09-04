@@ -1,10 +1,6 @@
 //
 //  AuthenticationChallengeHandler.m
 //  VVK
-//
-//  Created by Eigen Lenk on 2/12/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "AuthenticationChallengeHandler.h"
 
@@ -62,9 +58,8 @@
         }
         
         NSData * _data1 = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:CA_CERTIFICATE_FILE1]];
-        NSData * _data2 = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:CA_CERTIFICATE_FILE2]];
         
-        if ([_data1 length] == 0 || [_data2 length] == 0)
+        if ([_data1 length] == 0)
         {
             [challenge.sender cancelAuthenticationChallenge: challenge];
             
@@ -72,9 +67,8 @@
         }
         
         SecCertificateRef mRootCert1 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data1);
-        SecCertificateRef mRootCert2 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data2);
         
-        NSArray* rootCerts = @[CFBridgingRelease(mRootCert1), CFBridgingRelease(mRootCert2)];
+        NSArray* rootCerts = @[CFBridgingRelease(mRootCert1)];
         
         err = SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)rootCerts);
         

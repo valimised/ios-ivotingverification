@@ -1,10 +1,6 @@
 //
 //  VoteVerificationViewController.m
 //  VVK
-//
-//  Created by Eigen Lenk on 2/3/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "VoteVerificationResultsViewController.h"
 #import "VoteContainer.h"
@@ -206,10 +202,6 @@
         emptyHeader.backgroundColor = [UIColor clearColor];
         return emptyHeader;
     }
-    
-    NSString * key = [groups allKeys][section - 1];
-    VoteContainer * voteContainer = [SharedDelegate currentVoteContainer];
-    Ballot * electionDetails = voteContainer.ballots[key];
 
     UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
     
@@ -231,7 +223,7 @@
     
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:14.0];
-    titleLabel.text = electionDetails.name;
+    titleLabel.text = [groups allKeys][section - 1];
     titleLabel.textColor = [UIColor colorWithHexString:@"#717171"];
     
     [headerView addSubview:bgView];
@@ -243,22 +235,22 @@
 
 #pragma mark - Public methods
 
-- (void)handleResults:(in NSArray *)results
+- (void)handleResults:(in NSDictionary *)results
 {
     NSMutableDictionary * _groups = [NSMutableDictionary dictionary];
 
-    for (Candidate * candidate in results)
+    for (NSString* key in results)
     {
-        NSMutableArray * matchesForElection = _groups[candidate.ballot.name];
+        NSMutableArray * matchesForElection = _groups[key];
         
         if (!matchesForElection)
         {
             matchesForElection = [NSMutableArray array];
             
-            [_groups setObject:matchesForElection forKey:candidate.ballot.name];
+            [_groups setObject:matchesForElection forKey:key];
         }
         
-        [matchesForElection addObject:candidate];
+        [matchesForElection addObject:[results objectForKey:key]];
     }
 
     groups = _groups;
@@ -292,7 +284,7 @@
         
         closeTickTimer = nil;
         
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:shouldRestartApplicationState object:nil];
         
@@ -312,7 +304,7 @@
     
     closeTickTimer = nil;
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:shouldRestartApplicationState object:nil];
 }

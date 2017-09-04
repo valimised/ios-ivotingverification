@@ -1,10 +1,6 @@
 //
 //  Config.m
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/28/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "Config.h"
 #import "Request.h"
@@ -104,6 +100,11 @@
 - (NSString *)publicKey
 {
     return config[kConfigRootKey][kConfigParamsKey][kPublicKeyKey];
+}
+
+- (NSString *)electionForKey:(NSString *)key
+{
+    return config[kConfigRootKey][kConfigElectionsKey][key];
 }
 
 

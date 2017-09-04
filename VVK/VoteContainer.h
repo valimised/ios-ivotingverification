@@ -1,33 +1,27 @@
 //
 //  Vote.h
 //  VVK
-//
-//  Created by Eigen Lenk on 1/30/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
 #import "ALCustomAlertView.h"
+#import "ElGamalCiphertext.h"
 
 @interface Ballot : NSObject
 {
     @private
-    __strong NSString * name;
-    __strong NSString * hex;
+    __strong NSString* name;
+    ELGAMAL_CIPHER* vote;
 }
 
 #pragma mark - Properties
 
-@property (nonatomic, readonly) NSString * name;
-@property (nonatomic, readonly) NSString * hex;
-
+@property (nonatomic, readonly) NSString* name;
+@property (nonatomic, readonly) ELGAMAL_CIPHER* vote;
 
 #pragma mark - Methods
 
-- (id)initWithName:(NSString *)ballotName andHex:(NSString *)hexCode;
-
-- (NSString *)description;
+- (id)initWithName:(NSString*)ballotName andVote:(ELGAMAL_CIPHER*)vote;
 
 @end
 
@@ -39,7 +33,6 @@
     __strong NSString * name;
     __strong NSString * party;
     __strong NSString * number;
-    __weak Ballot * ballot;
 }
 
 #pragma mark - Properties
@@ -47,12 +40,10 @@
 @property (nonatomic, readonly) NSString * name;
 @property (nonatomic, readonly) NSString * party;
 @property (nonatomic, readonly) NSString * number;
-@property (nonatomic, readonly) Ballot * ballot;
-
 
 #pragma mark - Methods
 
-- (id)initWithComponents:(NSArray *)components andElection:(in Ballot *)election;
+- (id)initWithComponents:(NSArray *)components;
 
 @end
 
@@ -61,22 +52,17 @@
 
 @class QRScanResult;
 
-@interface VoteContainer : NSObject <RequestDelegate, ALCustomAlertViewDelegate>
+@interface VoteContainer : NSObject <ALCustomAlertViewDelegate, NSStreamDelegate>
 {
     @private
     __strong QRScanResult * scanResult;
-    __strong NSDictionary * ballots;
-    __strong NSArray * candidates;
-    NSInteger versionNumber;
-    NSInteger controlState;
+    __strong NSMutableArray * ballots;
 }
 
 #pragma mark - Properties
 
-@property (nonatomic, readonly) NSDictionary * ballots;
-@property (nonatomic, readonly) NSArray * candidates;
 @property (nonatomic, readonly) QRScanResult * scanResult;
-
+@property (nonatomic, readonly) NSMutableArray * ballots;
 
 #pragma mark - Methods
 
@@ -84,6 +70,6 @@
 
 - (void)download;
 
-- (NSArray *)bruteForceVerification;
+- (NSDictionary *)bruteForceVerification;
 
 @end

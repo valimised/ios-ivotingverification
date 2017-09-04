@@ -1,32 +1,31 @@
 //
 //  Vote.m
 //  VVK
-//
-//  Created by Eigen Lenk on 1/30/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "VoteContainer.h"
-#import "Request.h"
-#import "RegexMatcher.h"
 #import "AppDelegate.h"
 #import "QRScanResult.h"
 #import "Crypto.h"
-#import "AuthenticationChallengeHandler.h"
+#import "TlsSocket.h"
+#import "JsonRpc.h"
+#import "Bdoc.h"
+#import "ElgamalPub.h"
+#import "OcspHelper.h"
+#import "PkixHelper.h"
 
 @implementation Ballot
 
 @synthesize name;
-@synthesize hex;
+@synthesize vote;
 
-- (id)initWithName:(NSString *)ballotName andHex:(NSString *)hexCode
+- (id)initWithName:(NSString *)ballotName andVote:(ELGAMAL_CIPHER *)voteCipher;
 {
     self = [super init];
     
     if (self)
     {
         name = ballotName;
-        hex = hexCode;
+        vote = voteCipher;
     }
     
     return self;
@@ -37,11 +36,7 @@
     DLog(@"");
 
     name = nil;
-    hex = nil;
-}
-
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<Election: %p> {name: %@, hex: %@}", self, name, hex];
+    vote = nil;
 }
 
 @end
@@ -54,24 +49,16 @@
 @synthesize name;
 @synthesize party;
 @synthesize number;
-@synthesize ballot;
 
-- (id)initWithComponents:(in NSArray *)components andElection:(in Ballot *)election
+- (id)initWithComponents:(in NSArray *)components
 {
     self = [super init];
     
     if (self)
     {
-        name = components[4];
-        number = components[3];
-        
-        if ([components count] > 4) {
-            party = components[5];
-        } else {
-            party = nil;
-        }
-        
-        ballot = election;
+        number = components[0];
+        party = components[1];
+        name = components[2];
     }
     
     return self;
@@ -82,7 +69,6 @@
     name = nil;
     number = nil;
     party = nil;
-    ballot = nil;
 }
 
 - (NSString *)description {
@@ -96,18 +82,26 @@
 
 @interface VoteContainer (Private)
 
-- (void)parseVerificationRequestResult:(in NSString *)resultString;
-- (void)parseElections:(in NSArray *)components;
-- (void)parseCandidates:(in NSArray *)components;
 - (void)presentError:(in NSString *)errorMessage;
+- (void)downloadComplete;
+- (void)tearDown:(TlsSocket*)stream;
+- (void)closeSocket:(TlsSocket*)stream;
 
 @end
 
 @implementation VoteContainer
+{
+    TlsSocket* voteSocket;
+    NSData* voteRpc;
+    BOOL voteDownloaded;
+    NSObject* lock;
+    NSObject* writeLock;
+    BOOL written;
+    BOOL error;
+}
 
 @synthesize ballots;
 @synthesize scanResult;
-@synthesize candidates;
 
 #pragma mark - Initialization
 
@@ -118,6 +112,7 @@
     if (self)
     {
         scanResult = result;
+        ballots = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -129,9 +124,6 @@
     
     scanResult = nil;
     ballots = nil;
-    candidates = nil;
-    versionNumber = -1;
-    controlState = -1;
 }
 
 
@@ -139,269 +131,167 @@
 
 - (void)download
 {
-    NSURL * containerDownloadURL = [NSURL URLWithString:[[Config sharedInstance] getParameter:@"app_url"] /*@"https://portal.cyber.ee/hes-verify-vote.cgi"*/];
-    
-    Request * request = [[Request alloc] initWithURL:containerDownloadURL
-                                             options:@{kRequestType: @"POST",
-                                                       kRequestPOST: @{@"verify": scanResult.voteIdentificator}}];
-    
-    request.delegate = self;
-    request.authenticationDelegate = [AuthenticationChallengeHandler sharedInstance];
-    request.validHost = containerDownloadURL.host;
-    
-    [request start];
+    voteDownloaded = NO;
+    error = NO;
+    written = NO;
+    [self downloadVote:[scanResult sessionId] logId:[scanResult logId]];
 }
 
-- (NSArray *)bruteForceVerification
+- (NSDictionary *)bruteForceVerification
 {
-    NSArray * matchingCandidates = [NSArray array];
-    
-    if (![Crypto initPublicKey:[[Config sharedInstance] publicKey]])
-    {
+    NSMutableDictionary * matchingCandidates = [NSMutableDictionary dictionary];
+
+    ElgamalPub* pub = [[ElgamalPub alloc] initWithPemString:[[Config sharedInstance] publicKey]];
+    if (!pub) {
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        
         return nil;
     }
     
-    for (VerificationEntry * v in scanResult.verificationEntries)
+    for (Ballot* b in ballots)
     {
-        if ([RegexMatcher is40Characters:v.hex] == NO)
-        {
-            [Crypto clearPublicKey];
-            
-            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-            
+        NSString* m = [Crypto decryptVote:b.vote->cipher->b->data voteLen:b.vote->cipher->b->length withRnd:scanResult.rndSeed key:pub];
+        if (m == NULL) {
+            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
             return nil;
         }
-        
-        Ballot * ballot = ballots[v.electionIdentificator];
-        
-        NSString * encryptedVoteToCompare = ballot.hex;
-      
-        for (Candidate * candidate in candidates)
-        {
-            if ([candidate.ballot.name isEqualToString:ballot.name] == NO)
-            {
-                DLog(@"Different ballot name: %@ VS. %@", candidate.ballot.name, ballot.name);
-                continue;
-            }
-
-            // DLog(@"");
-            // DLog(@"Candidate: %@", candidate.name);
-            
-            NSString * votePlaintext = [NSString stringWithFormat:@"%d\n%@\n%@\n", versionNumber, v.electionIdentificator, candidate.number];
-            NSString * encryptedVote = [Crypto encryptVote:votePlaintext
-                                                  withSeed:v.hex];
-
-            if (encryptedVote && [[encryptedVote lowercaseString] isEqualToString:encryptedVoteToCompare])
-            {
-                matchingCandidates = [matchingCandidates arrayByAddingObject:candidate];
-            }
+        NSArray* choiceSplit = [m componentsSeparatedByString:@"\x1F"];
+        if ([choiceSplit count] != 3) {
+            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
+            return nil;
         }
-    }
-    
-    [Crypto clearPublicKey];
-    
-    if ([matchingCandidates count] == 0)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
-        
-        return nil;
+        [matchingCandidates setObject:[[Candidate alloc] initWithComponents:choiceSplit] forKey:b.name];
     }
 
     return matchingCandidates;
 }
 
-
-#pragma mark - Request delegate
-
-- (void)requestDidFinish:(Request *)request
-{
-    [SharedDelegate hideLoader];
-    
-    DLog(@"request.responseStatusCode = %d", request.responseStatusCode);
-    
-    if (request.responseStatusCode != 200)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-    }
-    else
-    {
-        [self parseVerificationRequestResult:[[NSString alloc] initWithData:request.responseData encoding:NSUTF8StringEncoding]];
-    }
-}
-
-- (void)request:(Request *)request didFailWithError:(NSError *)error
-{
-    [SharedDelegate hideLoader];
-    
-    if (error.code == NSURLErrorNotConnectedToInternet)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"no_network_message"]];
-    }
-    else
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-    }
-    
-    return;
-}
-
-
 #pragma mark - Private methods
 
-- (void)parseVerificationRequestResult:(in NSString *)resultString
-{
-    DLog(@"|%@|", resultString);
-    
-    if (resultString == nil || [resultString length] == 0)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        
-        return;
-    }
-    
-    NSArray * components = [resultString componentsSeparatedByString:@"\n"];
-    
-    DLog(@"components = %@", components);
-    
-    if ([components count] < 2)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        
-        return;
-    }
-    
-    // Read and assert version number
-
-    if ([RegexMatcher isSingleOrDoubleDigit:components[0]] == NO)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        
-        return;
-    }
-    
-    versionNumber = [components[0] integerValue];
-
-    
-    
-    // Read and assert control state (0 = OK, 1 = ERROR)
-    
-    if ([RegexMatcher isSingleDigit:components[1]] == NO)
-    {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        
-        return;
-    }
-    
-    controlState = [components[1] integerValue];
-    
-    
-    
-    
-    // State is OK
-    if (controlState == 0)
-    {
-        if ([components count] < 4)
-        {
-            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-            
-            return;
-        }
-
-        [self parseElections:components];
-        [self parseCandidates:components];
-        
-        if ([ballots count] == 0 || [candidates count] == 0)
-        {
-            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-            
-            return;
-        }
-        
-        ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: [[Config sharedInstance] textForKey:@"verify_message"],
-                                                                                 kAlertViewConfrimButtonTitle: [[Config sharedInstance] textForKey:@"btn_verify"],
-                                                                                 kAlertViewBackgroundColor: [[Config sharedInstance] colorForKey:@"main_window"],
-                                                                                 kAlertViewForegroundColor: [[Config sharedInstance] colorForKey:@"main_window_foreground"]}];
-        
-        [alert setDelegate:self];
-        [alert setTag:1001];
-        [alert show];
-    }
-    // State indicates an error
-    else
-    {
-        NSString * errorMessage = components[2];
-        
-        [self presentError:errorMessage];
-    }
-    
-    return;
+- (void)downloadVote:(NSString*)voteId logId:(NSString*)logId {
+    NSDictionary* params = @{@"sessionid": logId, @"voteid": voteId};
+    voteRpc = [JsonRpc createRequest:[JsonRpc METHOD_VERIFY] withParams:params];
+    NSString* url = [[Config sharedInstance] getParameter:@"verification_url"][0];
+    NSArray* urlParts = [url componentsSeparatedByString:@":"];
+    voteSocket = [[TlsSocket alloc] initWithHost:@"verification.ivxv.invalid"
+                                              ip:urlParts[0]
+                                            port:[urlParts[1] integerValue]
+                                    certStrArray:[[Config sharedInstance] getParameter:@"verification_tls"]];
+    [voteSocket setDelegate:self];
+    [voteSocket scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [voteSocket open];
 }
 
-
-
-
-- (void)parseElections:(in NSArray *)components
+- (void)downloadComplete
 {
-    NSMutableDictionary * _ballots = [NSMutableDictionary dictionary];
-    
-    ballots = [[NSDictionary alloc] init];
-    
-    NSUInteger numberOfElections = [[components[2] componentsSeparatedByString:@"\t"] count];
-    
-    for (NSUInteger i = 0; i < numberOfElections; ++i)
-    {
-        NSString * electionRow = components[3 + i];
-        
-        if ([electionRow length] == 0)
-            continue;
-        
-        NSArray * electionComponents = [electionRow componentsSeparatedByString:@"\t"];
-        
-        if ([electionComponents count] == 0)
-            continue;
-
-        Ballot * ballot = [[Ballot alloc] initWithName:electionComponents[0] andHex:electionComponents[1]];
-        
-        [_ballots setObject:ballot forKey:electionComponents[0]];
-        
-        ballot = nil;
+    NSDictionary* voteResp = [JsonRpc unmarshalResponse:[voteSocket data]];
+    voteSocket = NULL;
+    DLog("%@", voteResp);
+    if (voteResp == nil) {
+        DLog(@"Bad jsonRpc response from server");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
     }
     
-    ballots = _ballots;
-    
-    _ballots = nil;
-}
-
-- (void)parseCandidates:(in NSArray *)components
-{
-    candidates = [[NSArray alloc] init];
-    
-    NSUInteger i = (2 + [ballots count] + 1 + 1);
-    
-    for (; i<components.count; ++i)
-    {
-        if ([components[i] length] == 0)
-            continue;
-        
-        NSArray * rowComponents = [components[i] componentsSeparatedByString:@"\t"];
-        
-        Ballot * ballot = ballots[rowComponents[0]];
-        
-        Candidate * candidate = [[Candidate alloc] initWithComponents:rowComponents andElection:ballot];
-        
-        candidates = [candidates arrayByAddingObject:candidate];
-        
-        candidate = nil;
+    if (![voteResp[@"error"] isMemberOfClass:[NSNull class]]) {
+        DLog(@"Vote jsonRpc resp with error: %@", voteResp[@"error"]);
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
     }
+    
+    // VOTE ----------------------------------
+    NSData* containerData = [[NSData alloc] initWithBase64EncodedString:voteResp[@"result"][@"Vote"] options:0];
+    NSData* ocspData = [[NSData alloc] initWithBase64EncodedString:voteResp[@"result"][@"Qualification"][@"ocsp"] options:0];
+    NSData* regData = [[NSData alloc] initWithBase64EncodedString:voteResp[@"result"][@"Qualification"][@"tspreg"] options:0];
+    
+    if (containerData == nil || ocspData == nil || regData == nil) {
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    ElgamalPub* pub = [[ElgamalPub alloc] initWithPemString:[[Config sharedInstance] publicKey]];
+    if (!pub) {
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    Bdoc* bdoc = [[Bdoc alloc] initWithData:containerData electionId:[pub elId]];
+    if (![bdoc validateBdoc]) {
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    NSArray* ocspCerts = [[Config sharedInstance] getParameter:@"ocsp_service_cert"];
+    ASN1_GENERALIZEDTIME* ocsp_producedAt = nil;
+    BOOL res = [OcspHelper verifyResp:ocspData responderCertData:ocspCerts requestedCert:bdoc.cert producedAt:ocsp_producedAt];
+    if (!res) {
+        DLog("Ocsp response verification failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    NSData* pkixCert = [[[Config sharedInstance] getParameter:@"tspreg_service_cert"] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData* collectorRegCert = [[[Config sharedInstance] getParameter:@"tspreg_client_cert"] dataUsingEncoding:NSUTF8StringEncoding];
+
+    ASN1_GENERALIZEDTIME* pkix_genTime = nil;
+    res = [PkixHelper verifyResp:regData collectorRegCert:collectorRegCert pkixCert:pkixCert data:[bdoc signatureValue] genTime:pkix_genTime];
+    if (!res) {
+        DLog("Pkix response verification failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    int pday, psec;
+    ASN1_TIME_diff(&pday, &psec, ocsp_producedAt, pkix_genTime);
+
+    if (psec < 0) {
+        DLog("PKIX predates OCSP");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+    if (pday != 0 || psec > 60 * 15) {
+        DLog("PKIX and OCSP timestamps too far apart");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+    
+    for (NSString* key in bdoc.votes) {
+        NSData* vote = [bdoc.votes objectForKey:key];
+        BIO* cBio = BIO_new_mem_buf([vote bytes], (int)[vote length]);
+        ELGAMAL_CIPHER* c = d2i_ELGAMAL_CIPHER_bio(cBio, NULL);
+        NSString* questionDesc = [[Config sharedInstance] electionForKey:key];
+        if (!questionDesc) {
+            questionDesc = key;
+        }
+        Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:c];
+        [ballots addObject:ballot];
+    }
+    
+    X509_NAME* name = X509_get_subject_name(bdoc.cert);
+    int pos = X509_NAME_get_index_by_NID(name, NID_commonName, -1);
+    X509_NAME_ENTRY* e = X509_NAME_get_entry(name, pos);
+
+    NSString* signer = [[NSString alloc] initWithBytes:e->value->data length:e->value->length encoding:NSUTF8StringEncoding];
+
+    NSString* verifyMessage = [[[[[Config sharedInstance] textForKey:@"lbl_vote_txt"]
+      stringByAppendingString:@"\n"]
+      stringByAppendingString:[[Config sharedInstance] textForKey:@"lbl_vote_signer"]]
+      stringByAppendingString:signer];
+
+    ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewMessage: verifyMessage,
+                                                                             kAlertViewConfrimButtonTitle: [[Config sharedInstance] textForKey:@"btn_verify"],
+                                                                             kAlertViewBackgroundColor: [[Config sharedInstance] colorForKey:@"main_window"],
+                                                                             kAlertViewForegroundColor: [[Config sharedInstance] colorForKey:@"main_window_foreground"]}];
+    
+    [alert setDelegate:self];
+    [alert setTag:1001];
+    [alert show];
 }
 
 - (void)presentError:(in NSString *)errorMessage
 {
+    voteSocket = NULL;
+    [SharedDelegate hideLoader];
     [SharedDelegate presentError:errorMessage];
-    
-    // [[NSNotificationCenter defaultCenter] postNotificationName:shouldRestartApplicationState object:nil];
 }
 
 
@@ -413,7 +303,7 @@
     {
         [SharedDelegate showLoaderWithClearStyle:NO];
         
-        NSArray * results = [self bruteForceVerification];
+        NSDictionary * results = [self bruteForceVerification];
         
         [SharedDelegate hideLoader];
         
@@ -424,6 +314,163 @@
             results = nil;
         }
     }
+}
+
+#pragma mark - NSStream delefate
+
+- (void) stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    BOOL shouldClose = NO;
+    switch (eventCode) {
+        case NSStreamEventEndEncountered: {
+            DLog(@"NSStreamEventEndEncountered");
+
+            if ([aStream isKindOfClass:[NSInputStream class]]) {
+                shouldClose = YES;
+                if (![((NSInputStream*) aStream) hasBytesAvailable]) {
+                    break;
+                }
+            } else {
+                [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+                [aStream setDelegate:nil];
+                [aStream close];
+                break;
+            }
+        }
+        case NSStreamEventHasBytesAvailable:
+        {
+            DLog(@"NSStreamEventHasBytesAvailable");
+
+            NSInputStream* inStream = (NSInputStream*) aStream;
+            NSMutableData* data = [voteSocket data];
+            int len = 1024;
+            uint8_t buffer[len];
+            while ([inStream hasBytesAvailable]) {
+                int bytesRead = (int)[inStream read:buffer maxLength:len];
+                [data appendBytes:buffer length:bytesRead];
+            }
+            break;
+        }
+        case NSStreamEventHasSpaceAvailable:
+        {
+            DLog(@"NSStreamEventHasSpaceAvailable");
+
+            if (!written) {
+                @synchronized (writeLock) {
+                    if (!written) {
+                        written = YES;
+                        NSOutputStream* outStream = (NSOutputStream*) aStream;
+                        SecTrustRef trust = (__bridge SecTrustRef)[outStream propertyForKey:(__bridge NSString *)kCFStreamPropertySSLPeerTrust];
+                        trust = addAnchorToTrust(trust, [voteSocket certs]);
+                        if (trust == NULL) {
+                            [self tearDown:voteSocket];
+                            break;
+                        }
+                        SecTrustResultType res = kSecTrustResultInvalid;
+                        if (SecTrustEvaluate(trust, &res)) {
+                            [self tearDown:voteSocket];
+                            break;
+                        }
+                        
+                        if (res != kSecTrustResultProceed && res != kSecTrustResultUnspecified) {
+                            [self tearDown:voteSocket];
+                        } else {
+                            NSData* outData = voteRpc;
+                            
+                            [outStream write:[outData bytes] maxLength:[outData length]];
+                        }
+                    }
+                }
+            }
+            break;
+            
+        }
+        case NSStreamEventErrorOccurred:
+        {
+            DLog(@"NSStreamEventErrorOccurred: %@", [aStream streamError]);
+            [self tearDown:voteSocket];
+            break;
+        }
+        case NSStreamEventNone:
+        {
+            DLog(@"NSStreamEventNone");
+            break;
+        }
+        case NSStreamEventOpenCompleted:
+        {
+            DLog(@"NSStreamEventOpenCompleted");
+            break;
+        }
+    }
+    if (shouldClose) {
+        [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [aStream setDelegate:nil];
+        [aStream close];
+        @synchronized (lock) {
+            if (!voteDownloaded && !error) {
+                voteDownloaded = YES;
+                [SharedDelegate hideLoader];
+                [self closeSocket:voteSocket];
+                [self downloadComplete];
+            }
+        }
+    }
+}
+
+- (void) tearDown:(TlsSocket*)socket
+{
+    @synchronized (lock) {
+        error = YES;
+    }
+    [self closeSocket:socket];
+    [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+}
+
+- (void) closeSocket:(TlsSocket*) socket
+{
+    [[socket inStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [[socket inStream] setDelegate:nil];
+    [[socket inStream] close];
+    [[socket outStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [[socket outStream] setDelegate:nil];
+    [[socket outStream] close];
+}
+
+SecTrustRef addAnchorToTrust(SecTrustRef trust, NSArray* trustedCerts)
+{
+#ifdef PRE_10_6_COMPAT
+    CFArrayRef oldAnchorArray = NULL;
+    
+    /* In OS X prior to 10.6, copy the built-in
+     anchors into a new array. */
+    if (SecTrustCopyAnchorCertificates(&oldAnchorArray) != errSecSuccess) {
+        /* Something went wrong. */
+        return NULL;
+    }
+    
+    CFMutableArrayRef newAnchorArray = CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, oldAnchorArray);
+    CFRelease(oldAnchorArray);
+#else
+    /* In iOS and OS X v10.6 and later, just create an empty
+     array. */
+    CFMutableArrayRef newAnchorArray = CFArrayCreateMutable (kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+#endif
+    
+    CFArrayAppendArray(newAnchorArray, (__bridge CFArrayRef)trustedCerts, CFRangeMake(0, [trustedCerts count]));
+    
+    SecTrustSetAnchorCertificates(trust, newAnchorArray);
+    
+#ifndef PRE_10_6_COMPAT
+    /* In iOS or OS X v10.6 and later, reenable the
+     built-in anchors after adding your own.
+     */
+    SecTrustSetAnchorCertificatesOnly(trust, false);
+#endif
+    
+    return trust;
+}
+
+void myCFHostClientCallBack(CFHostRef theHost, CFHostInfoType typeInfo, const CFStreamError *error, void* info) {
+    
 }
 
 @end

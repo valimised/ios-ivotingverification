@@ -1,10 +1,6 @@
 //
 //  Config.h
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/28/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
@@ -17,6 +13,7 @@ static NSString * kConfigColorsKey = @"colors";
 static NSString * kConfigErrorsKey = @"errors";
 static NSString * kConfigTextsKey = @"texts";
 static NSString * kConfigParamsKey = @"params";
+static NSString * kConfigElectionsKey = @"elections";
 static NSString * kPublicKeyKey = @"public_key";
 
 // Notification keys
@@ -44,5 +41,6 @@ static NSString * shouldRestartApplicationState = @"VVK_shouldRestartApplication
 - (NSString *)textForKey:(NSString *)key;
 - (id)getParameter:(NSString *)key;
 - (NSString *)publicKey;
+- (NSString *)electionForKey:(NSString *)key;
 
 @end

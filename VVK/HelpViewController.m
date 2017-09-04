@@ -1,10 +1,6 @@
 //
 //  HelpViewController.m
 //  VVK
-//
-//  Created by Eigen Lenk on 2/13/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "HelpViewController.h"
 
@@ -44,7 +40,7 @@
     [super viewWillAppear:animated];
     
     self.navigationItem.title = [[Config sharedInstance] textForKey:@"btn_more"];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[[Config sharedInstance] textForKey:@"close_button"] style:UIBarButtonItemStyleDone target:self action:@selector(close)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Sulge" style:UIBarButtonItemStyleDone target:self action:@selector(close)];
     
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[[Config sharedInstance] getParameter:@"help_url"]]]];
 }
@@ -53,7 +49,7 @@
 #pragma mark - Private methods
 
 - (void)close {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

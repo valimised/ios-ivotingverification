@@ -1,10 +1,6 @@
 //
 //  Request.m
 //  iVotingVerification
-//
-//  Created by Eigen Lenk on 1/28/14.
-//  Copyright (c) 2014 Applaud OÜ. All rights reserved.
-//
 
 #import "Request.h"
 
@@ -53,7 +49,7 @@
 
             NSString * urlEncodedPostData = [NSString stringWithFormat:@"verify=%@", options[kRequestPOST][@"verify"]]; //[NSString URLEncodedStringWithDictionary:options[kRequestPOST]];
             
-            DLog(@"urlEncodedPostData (%d): %@", [urlEncodedPostData length], urlEncodedPostData);
+            DLog(@"urlEncodedPostData (%lu): %@", (unsigned long)[urlEncodedPostData length], urlEncodedPostData);
 
             postData = [urlEncodedPostData dataUsingEncoding:NSUTF8StringEncoding];
             httpBodyInputStream = [NSInputStream inputStreamWithData:postData];
@@ -61,7 +57,7 @@
             [request setHTTPMethod:@"POST"];
             // [request setHTTPBody:postData];
             [request setHTTPBodyStream:httpBodyInputStream];
-            [request addValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
+            [request addValue:[NSString stringWithFormat:@"%lu", (unsigned long)postData.length] forHTTPHeaderField:@"Content-Length"];
             [request addValue:@"close" forHTTPHeaderField:@"Connection"];
         }
     }

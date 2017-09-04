@@ -1,10 +1,6 @@
 //
 //  UICustomAlertView.m
 //  v 1.0
-//
-//  Created by Sander Hunt on 9/5/13.
-//  Copyright (c) 2013 Applaud. All rights reserved.
-//
 
 #import "ALCustomAlertView.h"
 #import <QuartzCore/QuartzCore.h>
@@ -15,7 +11,7 @@
 
 @implementation ALCustomAlertView
 
-static const float kCustomAlertViewMinWidth = 160.0f;
+//static const float kCustomAlertViewMinWidth = 160.0f;
 static bool isKeyboardVisible = false;
 
 @synthesize mTitle;
@@ -515,7 +511,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
 
 - (CGRect)alertViewFrameForAdjustingKeyboard {
     
-    UIInterfaceOrientation orientation = [self getRootViewController].interfaceOrientation;
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     float keyboardY = 0.0f;
     
     if(UIInterfaceOrientationLandscapeLeft == orientation) {
@@ -524,10 +520,10 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
     else if(UIInterfaceOrientationLandscapeRight == orientation) {
         keyboardY = [UIScreen mainScreen].bounds.size.width - mKeyboardEndFrame.size.width;
     }
-    else if(UIInterfaceOrientationPortrait) {
+    else if(UIInterfaceOrientationPortrait == orientation) {
         keyboardY = mKeyboardEndFrame.origin.y;
     }
-    else if(UIInterfaceOrientationPortraitUpsideDown) {
+    else {
         keyboardY = [UIScreen mainScreen].bounds.size.height - mKeyboardEndFrame.size.height;
     }
     
@@ -633,7 +629,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         masterView = [[[UIApplication sharedApplication] delegate] window];
     }
     
-    [self changeFrameForOrientation:[self getRootViewController].interfaceOrientation];
+    [self changeFrameForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     
     if(mDelegate!=nil && [mDelegate respondsToSelector:@selector(willShow:)]) [mDelegate willShow:self];
     [masterView addSubview:self];

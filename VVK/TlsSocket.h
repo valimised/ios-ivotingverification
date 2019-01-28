@@ -21,5 +21,6 @@
 - (void)setDelegate:(id<NSStreamDelegate>)delegate;
 - (void)scheduleInRunLoop:(NSRunLoop *)aRunLoop forMode:(NSRunLoopMode)mode;
 - (void)open;
+- (void)close;
 
 @end

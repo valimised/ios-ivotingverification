@@ -58,7 +58,9 @@
 
         contentTableView.backgroundView = nil;
     }
-    
+
+    [contentTableView setEstimatedRowHeight:78];
+
     return;
 }
 
@@ -142,25 +144,41 @@
     cell.numberLabel.text = [NSString stringWithFormat:@"#%@", [candidate.number componentsSeparatedByString:@"."][1]];
     cell.numberLabel.textColor = [[Config sharedInstance] colorForKey:@"main_window"];
 
+
+
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+    {
+        return;
+    }
+
+    NSString * key = [groups allKeys][indexPath.section - 1];
+    NSArray * candidates = groups[key];
     if (indexPath.row == [candidates count] - 1)
     {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:cell.contentBackgroundView.bounds byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(7.0, 7.0)];
-        
+        VerificationResultCandidateCell* customCell = (VerificationResultCandidateCell*) cell;
+        CGRect frame = [customCell bounds];
+        frame.size.width -= 20;
+
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(7.0, 7.0)];
+
         CAShapeLayer * maskLayer = [CAShapeLayer layer];
         maskLayer.frame = cell.layer.bounds;
         maskLayer.path = maskPath.CGPath;
-        cell.contentBackgroundView.layer.mask = maskLayer;
-        // cell.contentBackgroundView.backgroundColor = [UIColor redColor];
+        customCell.contentBackgroundView.layer.mask = maskLayer;
+        // customCell.contentBackgroundView.backgroundColor = [UIColor redColor];
     }
-    
-    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section >= 1)
     {
-        return 78.f;
+        return UITableViewAutomaticDimension;
     }
     
     return 44.f;
@@ -184,7 +202,7 @@
 {
     if (section == 0)
     {
-        UIView * emptyFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        UIView * emptyFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 20)];
         
         emptyFooter.backgroundColor = [UIColor clearColor];
         
@@ -196,18 +214,19 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    CGFloat w = tableView.bounds.size.width;
     if (section == 0)
     {
-        UIView * emptyHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];
+        UIView * emptyHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, w, 10)];
         emptyHeader.backgroundColor = [UIColor clearColor];
         return emptyHeader;
     }
 
-    UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, w, 30)];
     
     headerView.backgroundColor = tableView.backgroundColor;
     
-    UIView * bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 5, 300, 30)];
+    UIView * bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 5, w - 20, 30)];
     
     bgView.backgroundColor = [UIColor colorWithHexString:@"#f1f1f1"];
     
@@ -219,7 +238,7 @@
     bgView.layer.mask = maskLayer;
 
     
-    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 250, 30)];
+    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, w - 20, 30)];
     
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:14.0];

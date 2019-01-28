@@ -4,12 +4,18 @@
 
 #import "OcspHelper.h"
 #import <openssl/ocsp.h>
-#include <openssl/pem.h>
-#include <openssl/err.h>
+#import <openssl/pem.h>
+#import <openssl/err.h>
+
+@interface OcspHelper()
++(int)checkAIAresponder:(OCSP_BASICRESP*)resp issuer:(X509*)issuer;
+@end
+
 @implementation OcspHelper
 
 + (BOOL)verifyResp:(NSData *)respData responderCertData:(NSArray *)responderCerts
- requestedCert:(X509 *)requestedCert producedAt:(ASN1_GENERALIZEDTIME *)producedAt
+     requestedCert:(X509 *)requestedCert issuerCert:(X509 *)issuerCert
+        producedAt:(ASN1_GENERALIZEDTIME *)producedAt
 {
     BOOL ret = NO;
     OCSP_RESPONSE* resp = NULL;
@@ -73,6 +79,10 @@
 
     i = OCSP_basic_verify(bs, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
     if (i <= 0) {
+        i = [self checkAIAresponder:bs issuer:issuerCert];
+    }
+
+    if (i <= 0) {
         DLog(@"OCSP basic response verification failed");
         goto end;
     }
@@ -117,7 +127,39 @@ end:
     OCSP_CERTID_free(reqCertId);
     
     return ret;
+}
+
++(int)checkAIAresponder:(OCSP_BASICRESP *)resp issuer:(X509 *)issuer
+{
+    int ret = 0;
+    STACK_OF(X509)* trustedCerts = sk_X509_new_null();
+    if (trustedCerts == NULL) {
+        DLog(@"Couldn't create STACK_OF(X509) obj");
+        goto end;
+    }
     
+    for (int i = 0; i < sk_X509_num(resp->certs); i++) {
+        X509 *responderCert = sk_X509_value(resp->certs, i);
+        // is signed by same issuer as the cert whose ocsp we are checking
+        int retval = X509_check_issued(issuer, responderCert);
+        if (retval == X509_V_OK) {
+            // and has proper signature of the responder
+            sk_X509_push(trustedCerts, responderCert);
+            int res = OCSP_basic_verify(resp, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
+            sk_X509_pop(trustedCerts);
+            if (res > 0) {
+                // and responder has proper key extension
+                X509_check_purpose(responderCert, -1, 0);
+                if ((responderCert->ex_flags & EXFLAG_XKUSAGE) && (responderCert->ex_xkusage & XKU_OCSP_SIGN)) {
+                    ret = 1;
+                    break;
+                }
+            }
+        }
+    }
+end:
+    sk_X509_free(trustedCerts);
+    return ret;
 }
 
 @end

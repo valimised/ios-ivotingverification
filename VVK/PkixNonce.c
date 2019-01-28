@@ -1,9 +1,6 @@
 //
 //  PkixNonce.m
 //  VVK
-//
-//  Created on 7/17/17.
-//
 
 #import "PkixNonce.h"
 #import <openssl/x509.h>

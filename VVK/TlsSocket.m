@@ -58,8 +58,15 @@
     [outStream open];
 }
 
+- (void)close {
+    [inStream close];
+    [outStream close];
+}
+
 -(SecCertificateRef)parseCertString:(NSString*)certStr {
-    NSArray* array = [certStr componentsSeparatedByString:@"\n"];
+    // It is okay to trim all "\" and "n", because the string has to begin and end with "-".
+    NSString* trimmed = [certStr stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
+    NSArray* array = [trimmed componentsSeparatedByString:@"\n"];
     NSString* base64Str = [[array subarrayWithRange:NSMakeRange(1, [array count] - 2)] componentsJoinedByString:@""];
     NSData *certData = [[NSData alloc] initWithBase64EncodedString:base64Str options:0];
 

@@ -38,7 +38,7 @@
     if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 7.0) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
     }
-    
+    [self setupScanner];
     [session startRunning];
 }
 
@@ -67,7 +67,6 @@
 {
     [super viewDidLoad];
     
-    [self setupScanner];
     
     readyToScan = NO;
     
@@ -85,8 +84,9 @@
     reticleView.layer.borderWidth = 1.0f;
     reticleView.layer.cornerRadius = 16.f;
     reticleView.alpha = 0.0f;
-    
+
     [self.view addSubview:reticleView];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,13 +107,16 @@
     NSError *error = nil;
     
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-    
     if(input) {
         // Add the input to the session
         [session addInput:input];
     } else {
         NSLog(@"error: %@", error);
-        [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"bad_device_message"]];
+        NSString* err = [[Config sharedInstance] errorMessageForKey:@"bad_device_message"];
+        if (!err) {
+            err = @"Kaamera kasutamine ebaõnnestus. Palun taaskäivitage rakendus.";
+        }
+        [SharedDelegate presentDefaultError:err];
         return;
     }
     
@@ -129,7 +132,7 @@
 
 - (void)showWelcomeMessage
 {
-    if ([SharedDelegate currentVoteContainer] || welcomeMessagePresented || readyToScan) {
+    if ([SharedDelegate currentVoteContainer] || welcomeMessagePresented || readyToScan || [SharedDelegate error]) {
         return;
     }
     
@@ -166,8 +169,12 @@
     if (enabled == YES)
     {
         [self setReticleVisible:YES];
-        
         output = [[AVCaptureMetadataOutput alloc] init];
+        if (!output) {
+            NSString* err = [[Config sharedInstance] errorMessageForKey:@"bad_device_message"];
+            [SharedDelegate presentError:err];
+            return;
+        }
         [session addOutput:output];
         [output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]];
         [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
@@ -203,7 +210,7 @@
         reticleView.alpha = 0.0f;
 
         [UIView animateWithDuration:0.4 animations:^{
-            reticleView.alpha = 1.0f;
+            self->reticleView.alpha = 1.0f;
         } completion:^(BOOL finished) {
         }];
     }
@@ -213,9 +220,9 @@
         reticleView.alpha = 1.0f;
 
         [UIView animateWithDuration:0.4 animations:^{
-            reticleView.alpha = 0.0f;
+            self->reticleView.alpha = 0.0f;
         } completion:^(BOOL finished) {
-            reticleView.hidden = YES;
+            self->reticleView.hidden = YES;
         }];
     }
 }

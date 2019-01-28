@@ -1,9 +1,6 @@
 //
 //  ElGamalCiphertext.c
 //  VVK
-//
-//  Created on 6/14/17.
-//
 
 #import "ElGamalCiphertext.h"
 #import <openssl/x509.h>

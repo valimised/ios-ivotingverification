@@ -35,7 +35,6 @@
         CFIndex numCerts                        = SecTrustGetCertificateCount(trust);
         NSMutableArray* _certs                  = [NSMutableArray arrayWithCapacity: numCerts];
         
-        DLog(@"%@", protectionSpace);
 
         for (CFIndex idx = 0; idx < numCerts; ++idx)
         {
@@ -59,19 +58,16 @@
         
         NSData * _data1 = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:CA_CERTIFICATE_FILE1]];
         
-        if ([_data1 length] == 0)
+        if ([_data1 length] > 0)
         {
-            [challenge.sender cancelAuthenticationChallenge: challenge];
+            DLog(@"Replacing system trust store with contents of %@", CA_CERTIFICATE_FILE1);
+            SecCertificateRef mRootCert1 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data1);
             
-            return;
+            NSArray* rootCerts = @[CFBridgingRelease(mRootCert1)];
+
+            err = SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)rootCerts);
         }
-        
-        SecCertificateRef mRootCert1 = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)_data1);
-        
-        NSArray* rootCerts = @[CFBridgingRelease(mRootCert1)];
-        
-        err = SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)rootCerts);
-        
+
         if (err == noErr)
         {
             SecTrustResultType trustResult;
@@ -80,25 +76,28 @@
             
             NSURLCredential* credential = [NSURLCredential credentialForTrust:trust];
             
+            CFArrayRef pa = SecTrustCopyProperties(trust);
+            DLog(@"errDataRef=%@", pa);
             CFRelease(trust);
             
+            DLog("%d", trustResult);
             bool trusted = (err == noErr) && (trustResult == kSecTrustResultProceed || trustResult == kSecTrustResultUnspecified);
             
             if (trusted)
             {
                 [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-                
+
                 return;
             }
         }
         
         [challenge.sender cancelAuthenticationChallenge:challenge];
-        
+
         return;
     }
     
     [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
-    
+
     return;
 }
 

@@ -7,6 +7,7 @@
 #import "VoteVerificationResultsViewController.h"
 #import "HelpViewController.h"
 #import <openssl/evp.h>
+#import "UIColor+Hex.h"
 
 @interface AppDelegate (NotificationObserver)
 - (void)didLoadConfigurationFile;
@@ -14,11 +15,12 @@
 
 
 @implementation AppDelegate {
-    BOOL error;
     NSObject* errorLock;
 }
 
 @synthesize currentVoteContainer;
+@synthesize error;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -48,7 +50,7 @@
     backgroundStartTime = [[NSDate date] timeIntervalSince1970];
     
     [[Config sharedInstance] requestRemoteConfigurationFile];
-   
+
     return YES;
 }
 
@@ -107,6 +109,25 @@
 
                 currentVoteContainer = nil;
 
+            }
+        }
+    }
+}
+
+- (void)presentDefaultError:(in NSString *)errorMessage
+{
+    if (!error) {
+        @synchronized (errorLock) {
+            if (!error) {
+                error = YES;
+                DLog(@"%@", errorMessage);
+                
+                ALCustomAlertView * alert = [[ALCustomAlertView alloc] initWithOptions:@{kAlertViewTitle: @"Viga",
+                                                                                         kAlertViewMessage: errorMessage,
+                                                                                         kAlertViewBackgroundColor: [UIColor colorWithHexString:@"#FF0000"],
+                                                                                         kAlertViewForegroundColor: [UIColor colorWithHexString:@"#FFFFFF"]}];
+                [alert setDelegate:self];
+                [alert show];
             }
         }
     }
@@ -203,8 +224,8 @@
     loaderBG.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
     
     [UIView animateWithDuration:0.2f animations:^{
-        loaderBG.alpha = 1.0f;
-        loaderBG.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+        self->loaderBG.alpha = 1.0f;
+        self->loaderBG.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     }];
 }
 
@@ -214,11 +235,11 @@
     loaderBG.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
     
     [UIView animateWithDuration:0.2f animations:^{
-        loaderBG.alpha = 0.0f;
-        loaderBG.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
+        self->loaderBG.alpha = 0.0f;
+        self->loaderBG.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
     } completion:^(BOOL finished) {
-        [loaderBG removeFromSuperview];
-        loaderBG = nil;
+        [self->loaderBG removeFromSuperview];
+        self->loaderBG = nil;
     }];
 }
 

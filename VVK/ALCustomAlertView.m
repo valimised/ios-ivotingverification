@@ -254,12 +254,13 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
     
     UILabel * contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 260, 0)];
     
-    // Suggested boundingRectWithSize:options:attributes:context: is only available in iOS7
-    // but we're supporting older verisions of the OS.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-    CGSize textSize = [message sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, MAXFLOAT)];
-#pragma clang diagnostic pop
+    NSAttributedString *attributedText =
+    [[NSAttributedString alloc] initWithString:message
+                                    attributes:@{NSFontAttributeName: contentLabel.font}];
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize){contentLabel.bounds.size.width, MAXFLOAT}
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                               context:nil];
+    CGSize textSize = rect.size;
     
     CGRect labelFrame = CGRectMake(0, 0, contentLabel.bounds.size.width, textSize.height);
     
@@ -502,7 +503,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
 - (void)adjustForKeyboard
 {
     [UIView animateWithDuration:0.225f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        mAlertView.frame = [self alertViewFrameForAdjustingKeyboard];
+        self->mAlertView.frame = [self alertViewFrameForAdjustingKeyboard];
     } completion:^(BOOL finished) {
         
     }];
@@ -594,7 +595,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
                          self.alpha = 1.0f;
                      }
                      completion:^(BOOL finished) {
-                         if(mDelegate!=nil && [mDelegate respondsToSelector:@selector(didShow:)]) [mDelegate didShow:self];
+                         if(self->mDelegate!=nil && [self->mDelegate respondsToSelector:@selector(didShow:)]) [self->mDelegate didShow:self];
                      }];
 }
 
@@ -612,7 +613,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
                      completion:^(BOOL finished) {
                          self.hidden = YES;
                          [self removeFromSuperview];
-                         if(mDelegate!=nil && [mDelegate respondsToSelector:@selector(didHide:)]) [mDelegate didHide:self];
+                         if(self->mDelegate!=nil && [self->mDelegate respondsToSelector:@selector(didHide:)]) [self->mDelegate didHide:self];
                      }];
 }
 
@@ -652,7 +653,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
 - (void)layoutSubviewsWithAnimation
 {
     [UIView animateWithDuration:0.225f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
-         mAlertView.frame = [self alertViewFrameForLayoutSubviews];
+        self->mAlertView.frame = [self alertViewFrameForLayoutSubviews];
     } completion:^(BOOL finished) {
         
     }];

@@ -12,6 +12,8 @@
 #import "ElgamalPub.h"
 #import "OcspHelper.h"
 #import "PkixHelper.h"
+#import "DNSResolver.h"
+#import "NSMutableArray+Shuffle.h"
 
 @implementation Ballot
 
@@ -86,6 +88,8 @@
 - (void)downloadComplete;
 - (void)tearDown:(TlsSocket*)stream;
 - (void)closeSocket:(TlsSocket*)stream;
+- (void)handleConnectionTimeout;
+- (void)handleConnection;
 
 @end
 
@@ -98,6 +102,10 @@
     NSObject* writeLock;
     BOOL written;
     BOOL error;
+    NSMutableArray* ipArray;
+    NSEnumerator* ipEnumarator;
+    NSTimer* connectionTimeoutTimer;
+    double timeoutLen;
 }
 
 @synthesize ballots;
@@ -121,7 +129,7 @@
 - (void)dealloc
 {
     DLog(@"");
-    
+    [self stopConnectionTimeoutTimer];
     scanResult = nil;
     ballots = nil;
 }
@@ -170,11 +178,81 @@
 - (void)downloadVote:(NSString*)voteId logId:(NSString*)logId {
     NSDictionary* params = @{@"sessionid": logId, @"voteid": voteId};
     voteRpc = [JsonRpc createRequest:[JsonRpc METHOD_VERIFY] withParams:params];
-    NSString* url = [[Config sharedInstance] getParameter:@"verification_url"][0];
-    NSArray* urlParts = [url componentsSeparatedByString:@":"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        self->ipArray = [[NSMutableArray alloc] init];
+        NSArray* urls = [[Config sharedInstance] getParameter:@"verification_url"];
+        DNSResolver* resolver;
+        for (NSString* url in urls) {
+            resolver = [[DNSResolver alloc] init];
+            resolver.hostname = url;
+            if (![resolver lookup]) {
+                DLog("%@", resolver.error);
+                continue;
+            }
+            [self->ipArray addObjectsFromArray:resolver.addresses];
+        }
+        [self->ipArray shuffle];
+        self->ipEnumarator = [self->ipArray objectEnumerator];
+        self->timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_1"] intValue] / 1000.0);
+        [self handleConnection];
+    });
+}
+
+- (void)startConnectionTimeoutTimer:(NSTimeInterval) interval
+{
+    DLog("startcontimeout");
+    [self stopConnectionTimeoutTimer];
+    
+    connectionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                              target:self
+                                                            selector:@selector(handleConnection)
+                                                            userInfo:nil
+                                                             repeats:NO];
+}
+
+- (void)handleConnection
+{
+    DLog("handle");
+    [self stopConnectionTimeoutTimer];
+    if (voteSocket != nil) {
+        [voteSocket close];
+        voteSocket = nil;
+    }
+    NSString* addr = [ipEnumarator nextObject];
+    if (!addr) {
+        if (timeoutLen == ([[[Config sharedInstance] getParameter:@"con_timeout_1"] intValue] / 1000.0)) {
+            timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_2"] intValue] / 1000.0);
+            ipEnumarator = [ipArray objectEnumerator];
+            [self handleConnection];
+            return;
+        } else {
+            DLog(@"Couldn't connect to any collector service");
+            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+            return;
+        }
+    } else {
+        [self connectTo:addr];
+        [self startConnectionTimeoutTimer:timeoutLen];
+    }
+}
+
+- (void)stopConnectionTimeoutTimer
+{
+    if (connectionTimeoutTimer)
+    {
+        [connectionTimeoutTimer invalidate];
+        connectionTimeoutTimer = nil;
+    }
+}
+
+- (void)connectTo:(NSString*) addr
+{
+    DLog("%@", addr);
+    NSArray* addrParts = [addr componentsSeparatedByString:@":"];
     voteSocket = [[TlsSocket alloc] initWithHost:@"verification.ivxv.invalid"
-                                              ip:urlParts[0]
-                                            port:[urlParts[1] integerValue]
+                                              ip:addrParts[0]
+                                            port:[addrParts[1] integerValue]
                                     certStrArray:[[Config sharedInstance] getParameter:@"verification_tls"]];
     [voteSocket setDelegate:self];
     [voteSocket scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -221,8 +299,11 @@
     }
 
     NSArray* ocspCerts = [[Config sharedInstance] getParameter:@"ocsp_service_cert"];
+    if (ocspCerts == nil) {
+        ocspCerts = [NSArray new];
+    }
     ASN1_GENERALIZEDTIME* ocsp_producedAt = nil;
-    BOOL res = [OcspHelper verifyResp:ocspData responderCertData:ocspCerts requestedCert:bdoc.cert producedAt:ocsp_producedAt];
+    BOOL res = [OcspHelper verifyResp:ocspData responderCertData:ocspCerts requestedCert:bdoc.cert issuerCert:bdoc.issuer producedAt:ocsp_producedAt];
     if (!res) {
         DLog("Ocsp response verification failed");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
@@ -398,6 +479,7 @@
         case NSStreamEventOpenCompleted:
         {
             DLog(@"NSStreamEventOpenCompleted");
+            [self stopConnectionTimeoutTimer];
             break;
         }
     }

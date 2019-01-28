@@ -7,15 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */; };
+		3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882821A5963200972490 /* esteid2018.pem.crt */; };
+		3BA6882D21A5963300972490 /* TEST_of_ESTEID2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */; };
+		3BA6882F21A5993700972490 /* conf_server_certificate.der.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */; };
 		3BAFBA481F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */; };
 		3BAFBA491F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */; };
+		3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE786FA1F98A5B800034531 /* DNSResolver.m */; };
 		CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3718ACFF6200EDAD25 /* ico_note.png */; };
 		CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */; };
 		CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3918ACFF6200EDAD25 /* spinner.png */; };
 		CF39BE3E18ACFF6200EDAD25 /* spinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */; };
-		CF48A47818FE70310062057A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A46F18FE70310062057A /* Default-568h@2x.png */; };
-		CF48A47918FE70310062057A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47018FE70310062057A /* Default.png */; };
-		CF48A47A18FE70310062057A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47118FE70310062057A /* Default@2x.png */; };
 		CF48A47B18FE70310062057A /* ico_76x76.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47218FE70310062057A /* ico_76x76.png */; };
 		CF48A47C18FE70310062057A /* ico_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47318FE70310062057A /* ico_120x120.png */; };
 		CF48A47D18FE70310062057A /* ico_152x152.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47418FE70310062057A /* ico_152x152.png */; };
@@ -58,7 +60,6 @@
 		EA2BD0771E49FB150056055C /* JsonRpc.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2BD0761E49FB150056055C /* JsonRpc.m */; };
 		EA3DDDF91F28900500D55F7B /* ESTEID-SK_2011.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = EA3DDDF71F28900500D55F7B /* ESTEID-SK_2011.pem.crt */; };
 		EA3DDDFA1F28900500D55F7B /* ESTEID-SK_2015.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */; };
-		EA3DDDFC1F2B6AF800D55F7B /* eh.valimised.ee.der.cer in Resources */ = {isa = PBXBuildFile; fileRef = EA3DDDFB1F2B6AF800D55F7B /* eh.valimised.ee.der.cer */; };
 		EA415AB11EEACF6000A19F92 /* OcspHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EA415AB01EEACF5F00A19F92 /* OcspHelper.m */; };
 		EA61A7A41EF1679500165678 /* ElGamalCiphertext.c in Sources */ = {isa = PBXBuildFile; fileRef = EA61A7A21EF1679500165678 /* ElGamalCiphertext.c */; };
 		EA61A7AD1F01352000165678 /* PkixHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EA61A7AC1F01352000165678 /* PkixHelper.m */; };
@@ -70,15 +71,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = VVK/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
+		3BA6882821A5963200972490 /* esteid2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = esteid2018.pem.crt; path = VVK/cert/esteid2018.pem.crt; sourceTree = SOURCE_ROOT; };
+		3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TEST_of_ESTEID2018.pem.crt; path = VVK/cert/TEST_of_ESTEID2018.pem.crt; sourceTree = SOURCE_ROOT; };
+		3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */ = {isa = PBXFileReference; lastKnownFileType = file; name = conf_server_certificate.der.crt; path = VVK/cert/conf_server_certificate.der.crt; sourceTree = SOURCE_ROOT; };
 		3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "TEST_of_ESTEID-SK_2011.pem.crt"; path = "VVK/cert/TEST_of_ESTEID-SK_2011.pem.crt"; sourceTree = SOURCE_ROOT; };
 		3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "TEST_of_ESTEID-SK_2015.pem.crt"; path = "VVK/cert/TEST_of_ESTEID-SK_2015.pem.crt"; sourceTree = SOURCE_ROOT; };
+		3BE786F91F98A5B700034531 /* DNSResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNSResolver.h; path = VVK/DNSResolver.h; sourceTree = SOURCE_ROOT; };
+		3BE786FA1F98A5B800034531 /* DNSResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DNSResolver.m; path = VVK/DNSResolver.m; sourceTree = SOURCE_ROOT; };
 		CF39BE3718ACFF6200EDAD25 /* ico_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_note.png; path = VVK/images/ico_note.png; sourceTree = SOURCE_ROOT; };
 		CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ico_note@2x.png"; path = "VVK/images/ico_note@2x.png"; sourceTree = SOURCE_ROOT; };
 		CF39BE3918ACFF6200EDAD25 /* spinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spinner.png; path = VVK/images/spinner.png; sourceTree = SOURCE_ROOT; };
 		CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "spinner@2x.png"; path = "VVK/images/spinner@2x.png"; sourceTree = SOURCE_ROOT; };
-		CF48A46F18FE70310062057A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "VVK/images/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
-		CF48A47018FE70310062057A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = VVK/images/Default.png; sourceTree = SOURCE_ROOT; };
-		CF48A47118FE70310062057A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "VVK/images/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		CF48A47218FE70310062057A /* ico_76x76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_76x76.png; path = VVK/images/ico_76x76.png; sourceTree = SOURCE_ROOT; };
 		CF48A47318FE70310062057A /* ico_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_120x120.png; path = VVK/images/ico_120x120.png; sourceTree = SOURCE_ROOT; };
 		CF48A47418FE70310062057A /* ico_152x152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_152x152.png; path = VVK/images/ico_152x152.png; sourceTree = SOURCE_ROOT; };
@@ -222,7 +226,6 @@
 		EA2BD0761E49FB150056055C /* JsonRpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JsonRpc.m; path = VVK/JsonRpc.m; sourceTree = SOURCE_ROOT; };
 		EA3DDDF71F28900500D55F7B /* ESTEID-SK_2011.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ESTEID-SK_2011.pem.crt"; path = "VVK/cert/ESTEID-SK_2011.pem.crt"; sourceTree = SOURCE_ROOT; };
 		EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ESTEID-SK_2015.pem.crt"; path = "VVK/cert/ESTEID-SK_2015.pem.crt"; sourceTree = SOURCE_ROOT; };
-		EA3DDDFB1F2B6AF800D55F7B /* eh.valimised.ee.der.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = eh.valimised.ee.der.cer; path = VVK/cert/eh.valimised.ee.der.cer; sourceTree = SOURCE_ROOT; };
 		EA415AAF1EEACF5F00A19F92 /* OcspHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OcspHelper.h; path = VVK/OcspHelper.h; sourceTree = SOURCE_ROOT; };
 		EA415AB01EEACF5F00A19F92 /* OcspHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OcspHelper.m; path = VVK/OcspHelper.m; sourceTree = SOURCE_ROOT; };
 		EA61A7A21EF1679500165678 /* ElGamalCiphertext.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ElGamalCiphertext.c; path = VVK/ElGamalCiphertext.c; sourceTree = SOURCE_ROOT; };
@@ -260,9 +263,6 @@
 		CF39BE3618ACFF5900EDAD25 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				CF48A46F18FE70310062057A /* Default-568h@2x.png */,
-				CF48A47018FE70310062057A /* Default.png */,
-				CF48A47118FE70310062057A /* Default@2x.png */,
 				CF48A47218FE70310062057A /* ico_76x76.png */,
 				CF48A47318FE70310062057A /* ico_120x120.png */,
 				CF48A47418FE70310062057A /* ico_152x152.png */,
@@ -337,6 +337,7 @@
 		CF510B251896873300B13BAC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */,
 				CF39BE3618ACFF5900EDAD25 /* Images */,
 				CF8AF47F1898F05200E19FB3 /* main.m */,
 				CF8AF4801898F05200E19FB3 /* VVK-Info.plist */,
@@ -382,6 +383,8 @@
 		CF6F86F41897C5150021925E /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				3BE786F91F98A5B700034531 /* DNSResolver.h */,
+				3BE786FA1F98A5B800034531 /* DNSResolver.m */,
 				CF8AF46E1898F00800E19FB3 /* Request.h */,
 				CF8AF46F1898F00800E19FB3 /* Request.m */,
 				CFCA4A1518ABC4630017C2ED /* AuthenticationChallengeHandler.h */,
@@ -405,9 +408,11 @@
 		CF6F86FD1897EB630021925E /* cert */ = {
 			isa = PBXGroup;
 			children = (
+				3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */,
+				3BA6882821A5963200972490 /* esteid2018.pem.crt */,
+				3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */,
 				3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */,
 				3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */,
-				EA3DDDFB1F2B6AF800D55F7B /* eh.valimised.ee.der.cer */,
 				EA3DDDF71F28900500D55F7B /* ESTEID-SK_2011.pem.crt */,
 				EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */,
 			);
@@ -641,11 +646,12 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = "";
-				LastUpgradeCheck = 0830;
-				ORGANIZATIONNAME = Cybernetica;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					CF510B1A1896873300B13BAC = {
 						DevelopmentTeam = 5YYXE2JG54;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -681,19 +687,19 @@
 				EA3DDDFA1F28900500D55F7B /* ESTEID-SK_2015.pem.crt in Resources */,
 				EA3DDDF91F28900500D55F7B /* ESTEID-SK_2011.pem.crt in Resources */,
 				CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */,
+				3BA6882D21A5963300972490 /* TEST_of_ESTEID2018.pem.crt in Resources */,
 				CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */,
 				CF8AF4761898F02300E19FB3 /* config.txt in Resources */,
 				3BAFBA481F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt in Resources */,
-				CF48A47818FE70310062057A /* Default-568h@2x.png in Resources */,
 				CF8AF47B1898F02C00E19FB3 /* ScannerViewController.xib in Resources */,
 				CF48A47C18FE70310062057A /* ico_120x120.png in Resources */,
+				3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */,
 				CF48A47D18FE70310062057A /* ico_152x152.png in Resources */,
-				CF48A47918FE70310062057A /* Default.png in Resources */,
+				3BA6882F21A5993700972490 /* conf_server_certificate.der.crt in Resources */,
 				CF48A47B18FE70310062057A /* ico_76x76.png in Resources */,
-				CF48A47A18FE70310062057A /* Default@2x.png in Resources */,
 				CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */,
+				3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */,
 				3BAFBA491F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt in Resources */,
-				EA3DDDFC1F2B6AF800D55F7B /* eh.valimised.ee.der.cer in Resources */,
 				CF48A47E18FE70310062057A /* icon_57.png in Resources */,
 				CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */,
 			);
@@ -711,6 +717,7 @@
 				EA10E6C21E5C63A800411179 /* Bdoc.m in Sources */,
 				EA10E6BD1E549B8200411179 /* ElgamalPub.m in Sources */,
 				CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */,
+				3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */,
 				CF657DA1189FC5BC002C2394 /* VoteVerificationResultsViewController.m in Sources */,
 				CF8AF4821898F05200E19FB3 /* main.m in Sources */,
 				CF8AF4701898F00800E19FB3 /* Request.m in Sources */,
@@ -747,14 +754,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -778,7 +793,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -792,14 +807,22 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -824,8 +847,9 @@
 		CF510B481896873400B13BAC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -850,6 +874,8 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 arm64 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -859,8 +885,9 @@
 		CF510B491896873400B13BAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -885,6 +912,8 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 arm64 armv7s";
 				WRAPPER_EXTENSION = app;

@@ -21,6 +21,7 @@
     __strong UINavigationController * helpContainerNavigationController;
     
     @private
+    BOOL error;
     VoteContainer * currentVoteContainer;
     UIView * loaderBG;
     NSTimeInterval backgroundStartTime;
@@ -30,13 +31,15 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) VoteContainer * currentVoteContainer;
-
+@property (nonatomic) BOOL error;
 
 #pragma mark - Public methods
 
 - (void)presentHelpScreen;
 
 - (void)presentError:(in NSString *)errorMessage;
+
+- (void)presentDefaultError:(in NSString *)errorMessage;
 
 - (void)presentVoteVerificationResults:(in NSDictionary *)results;
 

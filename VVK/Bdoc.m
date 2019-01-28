@@ -62,6 +62,7 @@ static xmlChar* const XPATH_SIGNATUREMETHOD = (xmlChar*)"//ds:SignatureMethod";
 @synthesize votes;
 @synthesize cert;
 @synthesize signatureValue;
+@synthesize issuer;
 
 - (id)initWithData:(NSData *)data electionId:(NSString*)elId
 {
@@ -458,6 +459,8 @@ end:
         X509 *ch = sk_X509_value(skCerts, i);
         int retval = X509_check_issued(ch, cert_);
         if (retval == X509_V_OK) {
+            issuer = ch;
+            sk_X509_delete(skCerts, i);
             issuerFound = YES;
             goto end;
         }
@@ -476,38 +479,42 @@ end:
     if (ret == NULL) {
         return NULL;
     }
-    NSData* data = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/ESTEID-SK_2011.pem.crt"]];
+
+    for (NSString* path in @[
+                             @"/ESTEID-SK_2011.pem.crt",
+                             @"/ESTEID-SK_2015.pem.crt",
+                             @"/esteid2018.pem.crt",
+#ifdef DEBUG
+                             @"/TEST_of_ESTEID-SK_2011.pem.crt",
+                             @"/TEST_of_ESTEID-SK_2015.pem.crt",
+                             @"/TEST_of_ESTEID2018.pem.crt",
+#endif
+                             ]) {
+        X509* cert_ = [self getCert:path];
+        if (cert_ == NULL) {
+            sk_X509_free(ret);
+            return NULL;
+        }
+        sk_X509_push(ret, cert_);
+        DLog(@"Loaded SK certificate %@", path);
+    }
+    return ret;
+}
+
+-(X509*)getCert:(NSString *)path
+{
+    NSData* data = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:path]];
     BIO* certBio = BIO_new_mem_buf([data bytes], (int)[data length]);
     if (certBio == NULL) {
         DLog(@"Couldn't create BIO");
-        goto err;
+        return NULL;
     }
     X509* cert_ = PEM_read_bio_X509_AUX(certBio, NULL, NULL, NULL);
     BIO_free(certBio);
     if (cert_ == NULL) {
-        DLog(@"Couldn't load sk estid X509 cert");
-        goto err;
+        DLog(@"Couldn't load X509 cert");
+        return NULL;
     }
-    sk_X509_push(ret, cert_);
-
-    data = [[NSData alloc] initWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/ESTEID-SK_2015.pem.crt"]];
-    certBio = BIO_new_mem_buf([data bytes], (int)[data length]);
-    if (certBio == NULL) {
-        DLog(@"Couldn't create BIO");
-        goto err;
-    }
-    cert_ = PEM_read_bio_X509_AUX(certBio, NULL, NULL, NULL);
-    BIO_free(certBio);
-    if (cert_ == NULL) {
-        DLog(@"Couldn't load sk estid X509 cert");
-        goto err;
-    }
-    sk_X509_push(ret, cert_);
-    
-    return ret;
-    
-err:
-    sk_X509_free(ret);
-    return NULL;
+    return cert_;
 }
 @end

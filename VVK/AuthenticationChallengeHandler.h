@@ -6,7 +6,7 @@
 
 #import "Request.h"
 
-#define CA_CERTIFICATE_FILE1 @"/eh.valimised.ee.der.cer"
+#define CA_CERTIFICATE_FILE1 @"/conf_server_certificate.der.crt"
 
 @interface AuthenticationChallengeHandler : NSObject <RequestDelegate>
 

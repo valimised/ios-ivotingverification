@@ -8,8 +8,8 @@
 
 + (NSString*) METHOD_VERIFY;
 
-+ (NSData*)createRequest:(NSString*)method withParams:(NSDictionary*)params;
-+ (NSDictionary*)unmarshalResponse:(NSData*)inStream;
++ (NSData*) createRequest:(NSString*)method withParams:(NSDictionary*)params;
++ (NSDictionary*) unmarshalResponse:(NSData*)inStream;
 
 
 @end

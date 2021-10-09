@@ -5,7 +5,8 @@
 #import <Foundation/Foundation.h>
 #import <openssl/bn.h>
 
-@interface ElgamalPub : NSObject {
+@interface ElgamalPub : NSObject
+{
     BIGNUM* p;
     BIGNUM* q;
     BIGNUM* g;
@@ -19,6 +20,6 @@
 @property (atomic, readonly) BIGNUM* y;
 @property (atomic, readonly) NSString* elId;
 
-- (id)initWithPemString:(NSString*)pemStr;
+- (id) initWithPemString:(NSString*)pemStr;
 
 @end

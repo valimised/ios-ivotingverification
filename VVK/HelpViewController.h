@@ -2,10 +2,10 @@
 //  HelpViewController.h
 //  VVK
 
-#import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 @interface HelpViewController : UIViewController
 {
-    IBOutlet UIWebView * webView;
+    IBOutlet WKWebView* webView;
 }
 @end

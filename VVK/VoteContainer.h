@@ -9,7 +9,7 @@
 
 @interface Ballot : NSObject
 {
-    @private
+@private
     __strong NSString* name;
     ELGAMAL_CIPHER* vote;
 }
@@ -21,7 +21,7 @@
 
 #pragma mark - Methods
 
-- (id)initWithName:(NSString*)ballotName andVote:(ELGAMAL_CIPHER*)vote;
+- (id) initWithName:(NSString*)ballotName andVote:(ELGAMAL_CIPHER*)vote;
 
 @end
 
@@ -30,20 +30,20 @@
 
 @interface Candidate : NSObject
 {
-    __strong NSString * name;
-    __strong NSString * party;
-    __strong NSString * number;
+    __strong NSString* name;
+    __strong NSString* party;
+    __strong NSString* number;
 }
 
 #pragma mark - Properties
 
-@property (nonatomic, readonly) NSString * name;
-@property (nonatomic, readonly) NSString * party;
-@property (nonatomic, readonly) NSString * number;
+@property (nonatomic, readonly) NSString* name;
+@property (nonatomic, readonly) NSString* party;
+@property (nonatomic, readonly) NSString* number;
 
 #pragma mark - Methods
 
-- (id)initWithComponents:(NSArray *)components;
+- (id) initWithComponents:(NSArray*)components;
 
 @end
 
@@ -54,22 +54,22 @@
 
 @interface VoteContainer : NSObject <ALCustomAlertViewDelegate, NSStreamDelegate>
 {
-    @private
-    __strong QRScanResult * scanResult;
-    __strong NSMutableArray * ballots;
+@private
+    __strong QRScanResult* scanResult;
+    __strong NSMutableArray* ballots;
 }
 
 #pragma mark - Properties
 
-@property (nonatomic, readonly) QRScanResult * scanResult;
-@property (nonatomic, readonly) NSMutableArray * ballots;
+@property (nonatomic, readonly) QRScanResult* scanResult;
+@property (nonatomic, readonly) NSMutableArray* ballots;
 
 #pragma mark - Methods
 
-- (id)initWithScanResult:(QRScanResult *)result;
+- (id) initWithScanResult:(QRScanResult*)result;
 
-- (void)download;
+- (void) download;
 
-- (NSDictionary *)bruteForceVerification;
+- (NSDictionary*) ballotDecryptionWithRandomness;
 
 @end

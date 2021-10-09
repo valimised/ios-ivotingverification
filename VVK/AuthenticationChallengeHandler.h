@@ -10,6 +10,6 @@
 
 @interface AuthenticationChallengeHandler : NSObject <RequestDelegate>
 
-+ (AuthenticationChallengeHandler *)sharedInstance;
++ (AuthenticationChallengeHandler*) sharedInstance;
 
 @end

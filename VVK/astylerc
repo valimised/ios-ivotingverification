@@ -1,0 +1,33 @@
+
+max-code-length=100
+break-after-logical
+
+style=stroustrup
+indent=spaces=4
+attach-namespaces
+attach-classes
+attach-inlines
+attach-extern-c
+#attach-closing-while
+indent-cases
+break-blocks
+pad-oper
+pad-comma
+pad-header
+delete-empty-lines
+align-pointer=type
+#break-closing-braces (-y)
+-y
+break-one-line-headers
+#add-braces (-j)
+-j
+convert-tabs
+lineend=linux
+
+#Objective-C
+
+pad-method-prefix
+pad-return-type
+unpad-param-type
+pad-method-colon=none
+pad-method-colon=none

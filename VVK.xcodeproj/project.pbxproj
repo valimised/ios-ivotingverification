@@ -7,23 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		263D67A326AF57D8004E6CBC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 263D67A226AF57D8004E6CBC /* WebKit.framework */; };
+		2660F39C26EB9F420013AD30 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2660F39B26EB9F420013AD30 /* Media.xcassets */; };
 		3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */; };
 		3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882821A5963200972490 /* esteid2018.pem.crt */; };
-		3BA6882D21A5963300972490 /* TEST_of_ESTEID2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */; };
-		3BA6882F21A5993700972490 /* conf_server_certificate.der.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */; };
-		3BAFBA481F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */; };
-		3BAFBA491F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */; };
 		3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE786FA1F98A5B800034531 /* DNSResolver.m */; };
 		CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3718ACFF6200EDAD25 /* ico_note.png */; };
 		CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */; };
 		CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3918ACFF6200EDAD25 /* spinner.png */; };
 		CF39BE3E18ACFF6200EDAD25 /* spinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */; };
-		CF48A47B18FE70310062057A /* ico_76x76.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47218FE70310062057A /* ico_76x76.png */; };
-		CF48A47C18FE70310062057A /* ico_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47318FE70310062057A /* ico_120x120.png */; };
-		CF48A47D18FE70310062057A /* ico_152x152.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47418FE70310062057A /* ico_152x152.png */; };
-		CF48A47E18FE70310062057A /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47518FE70310062057A /* icon_57.png */; };
-		CF48A47F18FE70310062057A /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47618FE70310062057A /* icon_114.png */; };
-		CF48A48018FE70310062057A /* icon_1024.png in Resources */ = {isa = PBXBuildFile; fileRef = CF48A47718FE70310062057A /* icon_1024.png */; };
 		CF510B1F1896873300B13BAC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B1E1896873300B13BAC /* Foundation.framework */; };
 		CF510B211896873300B13BAC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B201896873300B13BAC /* CoreGraphics.framework */; };
 		CF510B231896873300B13BAC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF510B221896873300B13BAC /* UIKit.framework */; };
@@ -42,7 +34,6 @@
 		CF8AF49218990F4000E19FB3 /* ALCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF49118990F4000E19FB3 /* ALCustomAlertView.m */; };
 		CF8AF49B18994E6600E19FB3 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */; };
 		CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4AB189A877B00E19FB3 /* VoteContainer.m */; };
-		CF8AF4AF189A884400E19FB3 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */; };
 		CF8AF4B3189BB72A00E19FB3 /* RegexMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */; };
 		CFCA4A1218ABA4320017C2ED /* VerificationResultCandidateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCA4A1118ABA4320017C2ED /* VerificationResultCandidateCell.m */; };
 		CFCA4A1418ABA4560017C2ED /* VerificationResultCandidateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFCA4A1318ABA4560017C2ED /* VerificationResultCandidateCell.xib */; };
@@ -67,28 +58,19 @@
 		EA86348A1E5C91B000D843C9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8634891E5C91B000D843C9 /* libz.tbd */; };
 		EA86348C1E646A4E00D843C9 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EA86348B1E646A4E00D843C9 /* libxml2.2.tbd */; };
 		EA86C7361F26252100816BFE /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = EA86C7351F26252100816BFE /* NSMutableArray+Shuffle.m */; };
-		EAAF61D21F1CE2ED006D077E /* PkixNonce.c in Sources */ = {isa = PBXBuildFile; fileRef = EAAF61D11F1CE2ED006D077E /* PkixNonce.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		263D67A226AF57D8004E6CBC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		2660F39B26EB9F420013AD30 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = SOURCE_ROOT; };
 		3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = VVK/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
 		3BA6882821A5963200972490 /* esteid2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = esteid2018.pem.crt; path = VVK/cert/esteid2018.pem.crt; sourceTree = SOURCE_ROOT; };
-		3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TEST_of_ESTEID2018.pem.crt; path = VVK/cert/TEST_of_ESTEID2018.pem.crt; sourceTree = SOURCE_ROOT; };
-		3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */ = {isa = PBXFileReference; lastKnownFileType = file; name = conf_server_certificate.der.crt; path = VVK/cert/conf_server_certificate.der.crt; sourceTree = SOURCE_ROOT; };
-		3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "TEST_of_ESTEID-SK_2011.pem.crt"; path = "VVK/cert/TEST_of_ESTEID-SK_2011.pem.crt"; sourceTree = SOURCE_ROOT; };
-		3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "TEST_of_ESTEID-SK_2015.pem.crt"; path = "VVK/cert/TEST_of_ESTEID-SK_2015.pem.crt"; sourceTree = SOURCE_ROOT; };
 		3BE786F91F98A5B700034531 /* DNSResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNSResolver.h; path = VVK/DNSResolver.h; sourceTree = SOURCE_ROOT; };
 		3BE786FA1F98A5B800034531 /* DNSResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DNSResolver.m; path = VVK/DNSResolver.m; sourceTree = SOURCE_ROOT; };
 		CF39BE3718ACFF6200EDAD25 /* ico_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_note.png; path = VVK/images/ico_note.png; sourceTree = SOURCE_ROOT; };
 		CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ico_note@2x.png"; path = "VVK/images/ico_note@2x.png"; sourceTree = SOURCE_ROOT; };
 		CF39BE3918ACFF6200EDAD25 /* spinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spinner.png; path = VVK/images/spinner.png; sourceTree = SOURCE_ROOT; };
 		CF39BE3A18ACFF6200EDAD25 /* spinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "spinner@2x.png"; path = "VVK/images/spinner@2x.png"; sourceTree = SOURCE_ROOT; };
-		CF48A47218FE70310062057A /* ico_76x76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_76x76.png; path = VVK/images/ico_76x76.png; sourceTree = SOURCE_ROOT; };
-		CF48A47318FE70310062057A /* ico_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_120x120.png; path = VVK/images/ico_120x120.png; sourceTree = SOURCE_ROOT; };
-		CF48A47418FE70310062057A /* ico_152x152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_152x152.png; path = VVK/images/ico_152x152.png; sourceTree = SOURCE_ROOT; };
-		CF48A47518FE70310062057A /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57.png; path = VVK/images/icon_57.png; sourceTree = SOURCE_ROOT; };
-		CF48A47618FE70310062057A /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_114.png; path = VVK/images/icon_114.png; sourceTree = SOURCE_ROOT; };
-		CF48A47718FE70310062057A /* icon_1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_1024.png; path = VVK/images/icon_1024.png; sourceTree = SOURCE_ROOT; };
 		CF510B1B1896873300B13BAC /* EH kontrollrakendus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EH kontrollrakendus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF510B1E1896873300B13BAC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CF510B201896873300B13BAC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -122,8 +104,6 @@
 		CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Hex.m"; path = "VVK/UIColor+Hex.m"; sourceTree = SOURCE_ROOT; };
 		CF8AF4AA189A877B00E19FB3 /* VoteContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoteContainer.h; path = VVK/VoteContainer.h; sourceTree = SOURCE_ROOT; };
 		CF8AF4AB189A877B00E19FB3 /* VoteContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoteContainer.m; path = VVK/VoteContainer.m; sourceTree = SOURCE_ROOT; };
-		CF8AF4AD189A884400E19FB3 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+URLEncoding.h"; path = "VVK/NSString+URLEncoding.h"; sourceTree = SOURCE_ROOT; };
-		CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+URLEncoding.m"; path = "VVK/NSString+URLEncoding.m"; sourceTree = SOURCE_ROOT; };
 		CF8AF4B1189BB72A00E19FB3 /* RegexMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexMatcher.h; path = VVK/RegexMatcher.h; sourceTree = SOURCE_ROOT; };
 		CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexMatcher.m; path = VVK/RegexMatcher.m; sourceTree = SOURCE_ROOT; };
 		CFCA4A1018ABA4320017C2ED /* VerificationResultCandidateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VerificationResultCandidateCell.h; path = VVK/VerificationResultCandidateCell.h; sourceTree = SOURCE_ROOT; };
@@ -236,8 +216,6 @@
 		EA86348B1E646A4E00D843C9 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		EA86C7341F26252100816BFE /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Shuffle.h"; path = "VVK/NSMutableArray+Shuffle.h"; sourceTree = SOURCE_ROOT; };
 		EA86C7351F26252100816BFE /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+Shuffle.m"; path = "VVK/NSMutableArray+Shuffle.m"; sourceTree = SOURCE_ROOT; };
-		EAAF61D01F1CE2ED006D077E /* PkixNonce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PkixNonce.h; path = VVK/PkixNonce.h; sourceTree = SOURCE_ROOT; };
-		EAAF61D11F1CE2ED006D077E /* PkixNonce.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PkixNonce.c; path = VVK/PkixNonce.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +223,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				263D67A326AF57D8004E6CBC /* WebKit.framework in Frameworks */,
 				EA86348C1E646A4E00D843C9 /* libxml2.2.tbd in Frameworks */,
 				EA86348A1E5C91B000D843C9 /* libz.tbd in Frameworks */,
 				EA8634881E5C8DC900D843C9 /* libZipZap.a in Frameworks */,
@@ -263,12 +242,6 @@
 		CF39BE3618ACFF5900EDAD25 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				CF48A47218FE70310062057A /* ico_76x76.png */,
-				CF48A47318FE70310062057A /* ico_120x120.png */,
-				CF48A47418FE70310062057A /* ico_152x152.png */,
-				CF48A47518FE70310062057A /* icon_57.png */,
-				CF48A47618FE70310062057A /* icon_114.png */,
-				CF48A47718FE70310062057A /* icon_1024.png */,
 				CFEB5B4A18D305D2003278CD /* btn_close.png */,
 				CFEB5B4B18D305D2003278CD /* btn_close@2x.png */,
 				CF39BE3718ACFF6200EDAD25 /* ico_note.png */,
@@ -299,6 +272,7 @@
 		CF510B1D1896873300B13BAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				263D67A226AF57D8004E6CBC /* WebKit.framework */,
 				EA86348B1E646A4E00D843C9 /* libxml2.2.tbd */,
 				EA8634891E5C91B000D843C9 /* libz.tbd */,
 				EA10E6C91E5C815D00411179 /* libZipZap.a */,
@@ -329,6 +303,7 @@
 				CF8AF4691898EFFB00E19FB3 /* AppDelegate.h */,
 				CF8AF46A1898EFFB00E19FB3 /* AppDelegate.m */,
 				CF510B251896873300B13BAC /* Supporting Files */,
+				2660F39B26EB9F420013AD30 /* Media.xcassets */,
 			);
 			name = VVK;
 			path = iVotingVerification;
@@ -408,11 +383,7 @@
 		CF6F86FD1897EB630021925E /* cert */ = {
 			isa = PBXGroup;
 			children = (
-				3BA6882E21A5993700972490 /* conf_server_certificate.der.crt */,
 				3BA6882821A5963200972490 /* esteid2018.pem.crt */,
-				3BA6882A21A5963300972490 /* TEST_of_ESTEID2018.pem.crt */,
-				3BAFBA461F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt */,
-				3BAFBA471F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt */,
 				EA3DDDF71F28900500D55F7B /* ESTEID-SK_2011.pem.crt */,
 				EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */,
 			);
@@ -431,8 +402,6 @@
 		CF8AF48C1899084500E19FB3 /* Additions */ = {
 			isa = PBXGroup;
 			children = (
-				CF8AF4AD189A884400E19FB3 /* NSString+URLEncoding.h */,
-				CF8AF4AE189A884400E19FB3 /* NSString+URLEncoding.m */,
 				CF8AF49918994E6600E19FB3 /* UIColor+Hex.h */,
 				CF8AF49A18994E6600E19FB3 /* UIColor+Hex.m */,
 				EA10E62E1E4DC74B00411179 /* NSData+Hex.h */,
@@ -613,8 +582,6 @@
 			children = (
 				EA61A7A31EF1679500165678 /* ElGamalCiphertext.h */,
 				EA61A7A21EF1679500165678 /* ElGamalCiphertext.c */,
-				EAAF61D01F1CE2ED006D077E /* PkixNonce.h */,
-				EAAF61D11F1CE2ED006D077E /* PkixNonce.c */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -646,21 +613,21 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = "";
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					CF510B1A1896873300B13BAC = {
-						DevelopmentTeam = 5YYXE2JG54;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = CF510B161896873300B13BAC /* Build configuration list for PBXProject "VVK" */;
 			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF510B121896873300B13BAC;
 			productRefGroup = CF510B1C1896873300B13BAC /* Products */;
@@ -677,30 +644,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF48A47F18FE70310062057A /* icon_114.png in Resources */,
 				CF39BE3E18ACFF6200EDAD25 /* spinner@2x.png in Resources */,
 				CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */,
 				CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */,
 				CFCA4A1418ABA4560017C2ED /* VerificationResultCandidateCell.xib in Resources */,
 				CFEB5B4D18D305D2003278CD /* btn_close@2x.png in Resources */,
-				CF48A48018FE70310062057A /* icon_1024.png in Resources */,
 				EA3DDDFA1F28900500D55F7B /* ESTEID-SK_2015.pem.crt in Resources */,
 				EA3DDDF91F28900500D55F7B /* ESTEID-SK_2011.pem.crt in Resources */,
 				CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */,
-				3BA6882D21A5963300972490 /* TEST_of_ESTEID2018.pem.crt in Resources */,
 				CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */,
 				CF8AF4761898F02300E19FB3 /* config.txt in Resources */,
-				3BAFBA481F30C5E200E5F92F /* TEST_of_ESTEID-SK_2011.pem.crt in Resources */,
 				CF8AF47B1898F02C00E19FB3 /* ScannerViewController.xib in Resources */,
-				CF48A47C18FE70310062057A /* ico_120x120.png in Resources */,
 				3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */,
-				CF48A47D18FE70310062057A /* ico_152x152.png in Resources */,
-				3BA6882F21A5993700972490 /* conf_server_certificate.der.crt in Resources */,
-				CF48A47B18FE70310062057A /* ico_76x76.png in Resources */,
+				2660F39C26EB9F420013AD30 /* Media.xcassets in Resources */,
 				CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */,
 				3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */,
-				3BAFBA491F30C5E200E5F92F /* TEST_of_ESTEID-SK_2015.pem.crt in Resources */,
-				CF48A47E18FE70310062057A /* icon_57.png in Resources */,
 				CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -713,7 +671,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF657DA818A1269F002C2394 /* Crypto.m in Sources */,
-				CF8AF4AF189A884400E19FB3 /* NSString+URLEncoding.m in Sources */,
 				EA10E6C21E5C63A800411179 /* Bdoc.m in Sources */,
 				EA10E6BD1E549B8200411179 /* ElgamalPub.m in Sources */,
 				CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */,
@@ -732,7 +689,6 @@
 				CF8AF46C1898EFFB00E19FB3 /* AppDelegate.m in Sources */,
 				CF8AF49B18994E6600E19FB3 /* UIColor+Hex.m in Sources */,
 				EA2BD0771E49FB150056055C /* JsonRpc.m in Sources */,
-				EAAF61D21F1CE2ED006D077E /* PkixNonce.c in Sources */,
 				EA86C7361F26252100816BFE /* NSMutableArray+Shuffle.m in Sources */,
 				EA61A7AD1F01352000165678 /* PkixHelper.m in Sources */,
 				EA2BD0741E4884960056055C /* TlsSocket.m in Sources */,
@@ -750,6 +706,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -768,6 +725,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -792,8 +750,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -803,6 +761,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -821,6 +780,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -838,7 +798,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -847,9 +807,11 @@
 		CF510B481896873400B13BAC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2.1.6;
+				DEVELOPMENT_TEAM = 5YYXE2JG54;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -863,7 +825,7 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/VVK/libs",
@@ -871,13 +833,14 @@
 					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
 					"$(PROJECT_DIR)/VVK/libs/ZipZap",
 				);
+				MARKETING_VERSION = 2.1.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 arm64 armv7s";
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -885,9 +848,11 @@
 		CF510B491896873400B13BAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2.1.6;
+				DEVELOPMENT_TEAM = 5YYXE2JG54;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -901,7 +866,7 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/VVK/libs",
@@ -909,13 +874,14 @@
 					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
 					"$(PROJECT_DIR)/VVK/libs/ZipZap",
 				);
+				MARKETING_VERSION = 2.1.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 arm64 armv7s";
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

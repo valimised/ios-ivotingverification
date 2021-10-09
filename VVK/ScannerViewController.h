@@ -7,16 +7,19 @@
 
 #import "ALCustomAlertView.h"
 
-@interface ScannerViewController : UIViewController <ALCustomAlertViewDelegate, AVCaptureMetadataOutputObjectsDelegate>
+@interface ScannerViewController : UIViewController
+    <ALCustomAlertViewDelegate, AVCaptureMetadataOutputObjectsDelegate>
 {
-    @private
-    AVCaptureSession * session;
-    AVCaptureMetadataOutput * output;
-    UIView * reticleView;
+@private
+    AVCaptureSession* session;
+#if !(TARGET_IPHONE_SIMULATOR)
+    AVCaptureMetadataOutput* output;
+#endif
+    UIView* reticleView;
     BOOL readyToScan;
     BOOL welcomeMessagePresented;
 }
 
-- (void)setScannerEnabled:(BOOL)enabled;
+- (void) setScannerEnabled:(BOOL)enabled;
 
 @end

@@ -12,7 +12,10 @@
 + (NSData*) hexToString:(NSString*)hexString;
 + (NSString*) stringToHex:(NSString*)string;
 
-+ (NSString*) decryptVote:(unsigned char*)vote voteLen:(int)len withRnd:(NSData*)rnd key:
-    (ElgamalPub*)pub;
++ (NSString*) decryptVote:(unsigned char*)vote voteLen:(int)len
+    c1Data:(unsigned char*)c1Data
+    c1Len:(int)c1len
+    withRnd:(NSData*)rnd
+    key:(ElgamalPub*)pub;
 
 @end

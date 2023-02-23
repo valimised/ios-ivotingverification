@@ -36,8 +36,8 @@
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     webView = [[WKWebView alloc] initWithFrame:self.view.frame];
     [webView loadRequest:request];
-    webView.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y,
-                               self.view.frame.size.width, self.view.frame.size.height);
+    webView.frame = CGRectMake(self.view.frame.origin.x + 5, self.view.frame.origin.y,
+                               self.view.frame.size.width - 50, self.view.frame.size.height);
     [self.view addSubview:webView];
 }
 

@@ -99,32 +99,49 @@ static unsigned char* BN_to_binary(BIGNUM* b, unsigned int* len)
     return ret;
 }
 
-+ (NSString*) decryptVote:(unsigned char*)vote voteLen:(int)len withRnd:(NSData*)rnd key:
-    (ElgamalPub*)pub
++ (NSString*) decryptVote:(unsigned char*)vote
+              voteLen:(int)len
+              c1Data:(unsigned char*)c1Data
+              c1Len:(int)c1Len
+              withRnd:(NSData*)rnd
+              key:(ElgamalPub*)pub
 {
     // DLog(@"Vote: %@", vote);
     // DLog(@"Seed: %@", seed);
     BIGNUM* voteBN = NULL;
+    BIGNUM* c1BN = NULL;
     BIGNUM* rndBN = NULL;
     BN_CTX* ctx = NULL;
+    BN_CTX* ctxc1 = NULL;
     BIGNUM* factor = NULL;
     BIGNUM* factorInverse = NULL;
     BIGNUM* s = NULL;
     BIGNUM* m = NULL;
     BIGNUM* tmp = NULL;
+    BIGNUM* c1check = NULL;
     NSString* ret = NULL;
     unsigned char* bin = NULL;
     unsigned int pLen = 0;
     voteBN = BN_bin2bn(vote, len, NULL);
+    c1BN = BN_bin2bn(c1Data, c1Len, NULL);
     rndBN = BN_bin2bn([rnd bytes], (int)[rnd length], NULL);
     ctx = BN_CTX_new();
+    ctxc1 = BN_CTX_new();
     factor = BN_new();
     factorInverse = BN_new();
     s = BN_new();
     tmp = BN_new();
+    c1check = BN_new();
 
     if (ctx == NULL || factor == NULL || factorInverse == NULL || s == NULL || voteBN == NULL ||
-            rndBN == NULL || tmp == NULL) {
+            rndBN == NULL || tmp == NULL || c1BN == NULL || ctxc1 == NULL || c1check == NULL) {
+        goto end;
+    }
+
+    // https://gitlab.anu.edu.au/u1113289/thomas-public-paper/-/raw/master/Estonia_IVXV_June2022.pdf
+    BN_mod_exp(c1check, pub.g, rndBN, pub.p, ctxc1);
+    if (BN_cmp(c1BN, c1check) != 0) {
+        DLog(@"c1 check failed");
         goto end;
     }
 
@@ -157,7 +174,10 @@ static unsigned char* BN_to_binary(BIGNUM* b, unsigned int* len)
 end:
     BN_clear_free(voteBN);
     BN_clear_free(rndBN);
+    BN_clear_free(c1BN);
+    BN_clear_free(c1check);
     BN_CTX_free(ctx);
+    BN_CTX_free(ctxc1);
     BN_clear_free(factor);
     BN_clear_free(factorInverse);
     BN_clear_free(s);

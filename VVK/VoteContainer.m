@@ -157,6 +157,8 @@
     for (Ballot * ballot in ballots) {
         NSString* m = [Crypto decryptVote:ballot.vote->cipher->b->data
                               voteLen:ballot.vote->cipher->b->length
+                              c1Data:ballot.vote->cipher->a->data
+                              c1Len:ballot.vote->cipher->a->length
                               withRnd:scanResult.rndSeed
                               key:publicEncryptionKey];
 
@@ -271,7 +273,7 @@
 {
     DLog("%@", addr);
     NSArray* addrParts = [addr componentsSeparatedByString:@":"];
-    voteSocket = [[TlsSocket alloc] initWithHost:@"verification.ivxv.invalid"
+    voteSocket = [[TlsSocket alloc] initWithHost:[[Config sharedInstance] getParameter:@"verification_sni"]
                                     ip:addrParts[0]
                                     port:[addrParts[1] integerValue]
                                     certStrArray:[[Config sharedInstance] getParameter:@"verification_tls"]];
@@ -358,15 +360,22 @@
     }
 
     int pday, psec;
-    ASN1_TIME_diff(&pday, &psec, ocsp_producedAt, pkix_genTime);
+    // We want PKIX to be older than OCSP
+    ASN1_TIME_diff(&pday, &psec, pkix_genTime, ocsp_producedAt);
 
-    if (psec < 0) {
-        DLog("PKIX predates OCSP");
+    if (pday != 0) {
+        DLog("PKIX and OCSP timestamps are days apart");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
     }
 
-    if (pday != 0 || psec > 60 * 15) {
+    if (psec < 0) {
+        DLog("OCSP predates PKIX");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    if (psec > 60 * 15) {
         DLog("PKIX and OCSP timestamps too far apart");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;

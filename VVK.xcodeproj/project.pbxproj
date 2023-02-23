@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		263D67A326AF57D8004E6CBC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 263D67A226AF57D8004E6CBC /* WebKit.framework */; };
 		2660F39C26EB9F420013AD30 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2660F39B26EB9F420013AD30 /* Media.xcassets */; };
+		26C55CDA29890B8E00BD3D0D /* eid2016.crt in Resources */ = {isa = PBXBuildFile; fileRef = 26C55CD929890B8E00BD3D0D /* eid2016.crt */; };
 		3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */; };
 		3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882821A5963200972490 /* esteid2018.pem.crt */; };
 		3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE786FA1F98A5B800034531 /* DNSResolver.m */; };
@@ -63,6 +64,7 @@
 /* Begin PBXFileReference section */
 		263D67A226AF57D8004E6CBC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2660F39B26EB9F420013AD30 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = SOURCE_ROOT; };
+		26C55CD929890B8E00BD3D0D /* eid2016.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid2016.crt; path = VVK/cert/eid2016.crt; sourceTree = SOURCE_ROOT; };
 		3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = VVK/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
 		3BA6882821A5963200972490 /* esteid2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = esteid2018.pem.crt; path = VVK/cert/esteid2018.pem.crt; sourceTree = SOURCE_ROOT; };
 		3BE786F91F98A5B700034531 /* DNSResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNSResolver.h; path = VVK/DNSResolver.h; sourceTree = SOURCE_ROOT; };
@@ -383,6 +385,7 @@
 		CF6F86FD1897EB630021925E /* cert */ = {
 			isa = PBXGroup;
 			children = (
+				26C55CD929890B8E00BD3D0D /* eid2016.crt */,
 				3BA6882821A5963200972490 /* esteid2018.pem.crt */,
 				EA3DDDF71F28900500D55F7B /* ESTEID-SK_2011.pem.crt */,
 				EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */,
@@ -651,6 +654,7 @@
 				CFEB5B4D18D305D2003278CD /* btn_close@2x.png in Resources */,
 				EA3DDDFA1F28900500D55F7B /* ESTEID-SK_2015.pem.crt in Resources */,
 				EA3DDDF91F28900500D55F7B /* ESTEID-SK_2011.pem.crt in Resources */,
+				26C55CDA29890B8E00BD3D0D /* eid2016.crt in Resources */,
 				CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */,
 				CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */,
 				CF8AF4761898F02300E19FB3 /* config.txt in Resources */,
@@ -810,7 +814,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.1.6;
+				CURRENT_PROJECT_VERSION = 2.1.8;
 				DEVELOPMENT_TEAM = 5YYXE2JG54;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -833,7 +837,7 @@
 					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
 					"$(PROJECT_DIR)/VVK/libs/ZipZap",
 				);
-				MARKETING_VERSION = 2.1.6;
+				MARKETING_VERSION = 2.1.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
@@ -851,7 +855,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.1.6;
+				CURRENT_PROJECT_VERSION = 2.1.8;
 				DEVELOPMENT_TEAM = 5YYXE2JG54;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -874,7 +878,7 @@
 					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
 					"$(PROJECT_DIR)/VVK/libs/ZipZap",
 				);
-				MARKETING_VERSION = 2.1.6;
+				MARKETING_VERSION = 2.1.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";

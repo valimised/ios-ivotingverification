@@ -539,10 +539,12 @@ end:
              @"/ESTEID-SK_2011.pem.crt",
              @"/ESTEID-SK_2015.pem.crt",
              @"/esteid2018.pem.crt",
+             @"/eid2016.crt",
 #ifdef DEBUG
 //             @"/TEST_of_ESTEID-SK_2011.pem.crt",
 //             @"/TEST_of_ESTEID-SK_2015.pem.crt",
 //             @"/TEST_of_ESTEID2018.pem.crt",
+//             @"/test_of_eid2016.crt",
 //             @"/cacert.pem.crt"
 #endif
          ]) {

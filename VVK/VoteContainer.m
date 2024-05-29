@@ -1,12 +1,13 @@
-//
-//  Vote.m
+//  VoteContainer.m
 //  VVK
 
 #import "VoteContainer.h"
+#import "Ballot.h"
+#import "Candidate.h"
 #import "AppDelegate.h"
 #import "QRScanResult.h"
 #import "Crypto.h"
-#import "TlsSocket.h"
+#import "IVXVRequest.h"
 #import "JsonRpc.h"
 #import "Bdoc.h"
 #import "ElgamalPub.h"
@@ -14,132 +15,54 @@
 #import "PkixHelper.h"
 #import "DNSResolver.h"
 #import "NSMutableArray+Shuffle.h"
+#import "C.h"
 
-@implementation Ballot
-
-@synthesize name;
-@synthesize vote;
-
-- (id) initWithName:(NSString*)ballotName andVote:(ELGAMAL_CIPHER*)voteCipher;
-{
-    self = [super init];
-
-    if (self) {
-        name = ballotName;
-        vote = voteCipher;
-    }
-
-    return self;
-}
-
-- (void) dealloc
-{
-    DLog(@"");
-    name = nil;
-    vote = nil;
-}
-
-@end
-
-
-
-
-@implementation Candidate
-
-@synthesize name;
-@synthesize party;
-@synthesize number;
-
-- (id) initWithComponents:(in NSArray*)components
-{
-    self = [super init];
-
-    if (self) {
-        number = components[0];
-        party = components[1];
-        name = components[2];
-    }
-
-    return self;
-}
-
-- (void) dealloc
-{
-    name = nil;
-    number = nil;
-    party = nil;
-}
-
-- (NSString*) description
-{
-    return [NSString stringWithFormat:@"<Candidate: %p> {name: %@, party: %@, number: %@}", self, name,
-                     party, number];
-}
-
-@end
-
-
-
-
-@interface VoteContainer (Private)
-
-- (void) presentError:(in NSString*)errorMessage;
-- (void) downloadComplete;
-- (void) tearDown:(TlsSocket*)stream;
-- (void) closeSocket:(TlsSocket*)stream;
-- (void) handleConnectionTimeout;
-- (void) handleConnection;
-
-@end
+typedef NS_ENUM(NSInteger, PhaseEnum) {
+    Phase1,
+    Phase2,
+    Phase3
+};
 
 @implementation VoteContainer {
-    TlsSocket* voteSocket;
+    PhaseEnum phase;
+    IVXVRequest *ivxvHandler;
     NSData* voteRpc;
-    BOOL voteDownloaded;
-    NSObject* lock;
-    NSObject* writeLock;
-    BOOL written;
-    BOOL error;
     NSMutableArray* ipArray;
     NSEnumerator* ipEnumarator;
-    NSTimer* connectionTimeoutTimer;
-    double timeoutLen;
+    int timeoutLen;
 }
 
 @synthesize ballots;
 @synthesize scanResult;
+@synthesize choiceList;
 
 #pragma mark - Initialization
 
 - (id) initWithScanResult:(QRScanResult*)result
 {
     self = [super init];
-
-    if (self) {
-        scanResult = result;
-        ballots = [[NSMutableArray alloc] init];
-    }
-
+    scanResult = result;
+    ballots = [[NSMutableArray alloc] init];
     return self;
 }
 
 - (void) dealloc
 {
-    DLog(@"");
-    [self stopConnectionTimeoutTimer];
     scanResult = nil;
     ballots = nil;
+    choiceList = nil;
 }
-
 
 #pragma mark - Public methods
 
 - (void) download
 {
-    voteDownloaded = NO;
-    error = NO;
-    written = NO;
+#if !(TARGET_APPSTORE_SCREENSHOTS)
     [self downloadVote:[scanResult sessionId] logId:[scanResult logId]];
+#else
+    [SharedDelegate hideLoader];
+    [self downloadComplete];
+#endif
 }
 
 - (NSDictionary*) ballotDecryptionWithRandomness
@@ -190,7 +113,6 @@
 
 - (void) downloadVote:(NSString*)voteId logId:(NSString*)logId
 {
-#if !(TARGET_APPSTORE_SCREENSHOTS)
     NSDictionary* params = @ {@"sessionid": logId, @"voteid": voteId};
     voteRpc = [JsonRpc createRequest:[JsonRpc METHOD_VERIFY] withParams:params];
     self->ipArray = [[NSMutableArray alloc] init];
@@ -210,83 +132,75 @@
     }
 
     [self->ipArray shuffle];
-    self->ipEnumarator = [self->ipArray objectEnumerator];
-    self->timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_1"] intValue] / 1000.0);
-    [self handleConnection];
-#else
-    [SharedDelegate hideLoader];
-    [self downloadComplete];
-#endif
+    phase = Phase1;
+    [self initNextDownloadPhase];
 }
 
-- (void) startConnectionTimeoutTimer:(NSTimeInterval)interval
+
+- (void) initNextDownloadPhase
 {
-    DLog("startcontimeout");
-    [self stopConnectionTimeoutTimer];
-    connectionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:interval
-                                      target:self
-                                      selector:@selector(handleConnection)
-                                      userInfo:nil
-                                      repeats:NO];
-}
+    switch (phase) {
 
-- (void) handleConnection
-{
-    DLog("handle");
-    [self stopConnectionTimeoutTimer];
+        case Phase1:
+            self->timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_1"] intValue] / 1000.0);
+            phase = Phase2;
+            break;
 
-    if (voteSocket != nil) {
-        [voteSocket close];
-        voteSocket = nil;
-    }
+        case Phase2:
+            self->timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_2"] intValue] / 1000.0);
+            phase = Phase3;
+            break;
 
-    NSString* addr = [ipEnumarator nextObject];
-
-    if (!addr) {
-        if (timeoutLen == ([[[Config sharedInstance] getParameter:@"con_timeout_1"] intValue] / 1000.0)) {
-            timeoutLen = ([[[Config sharedInstance] getParameter:@"con_timeout_2"] intValue] / 1000.0);
-            ipEnumarator = [ipArray objectEnumerator];
-            [self handleConnection];
-            return;
-        }
-        else {
+        case Phase3:
             DLog(@"Couldn't connect to any collector service");
             [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
             return;
-        }
     }
-    else {
-        [self connectTo:addr];
-        [self startConnectionTimeoutTimer:timeoutLen];
-    }
+
+    self->ipEnumarator = [self->ipArray objectEnumerator];
+    [self handlePhaseConnection];
 }
 
-- (void) stopConnectionTimeoutTimer
+- (void) handlePhaseConnection
 {
-    if (connectionTimeoutTimer) {
-        [connectionTimeoutTimer invalidate];
-        connectionTimeoutTimer = nil;
+    NSString* connStr = [ipEnumarator nextObject];
+    NSString *sniStr = [[Config sharedInstance] getParameter:@"verification_sni"];
+
+    DLog("%@", connStr);
+    if (!ivxvHandler) {
+        ivxvHandler = [[IVXVRequest alloc] initWithCerts:[[Config sharedInstance] getParameter:@"verification_tls"]];
+    }
+
+    [ivxvHandler resetWithTimeout:self->timeoutLen];
+
+    if (connStr) {
+        [ivxvHandler sendHandshake:connStr sniStr:sniStr completion:^(NSError * _Nullable error) {
+            if (error == nil) {
+                [self->ivxvHandler sendRequest:self->voteRpc completion:^(NSData * _Nullable responseData, NSError * _Nullable error) {
+                    [SharedDelegate hideLoader];
+                    if (!error) {
+                        [self downloadCompleteSuccess:responseData];
+                    }
+                    else {
+                        DLog(@"Couldn't connect to any collector service");
+                        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+                        return;
+                    }
+                }];
+            }
+            else {
+                [self handlePhaseConnection];
+            }
+        }];
+    } else {
+        [self initNextDownloadPhase];
     }
 }
 
-- (void) connectTo:(NSString*)addr
-{
-    DLog("%@", addr);
-    NSArray* addrParts = [addr componentsSeparatedByString:@":"];
-    voteSocket = [[TlsSocket alloc] initWithHost:[[Config sharedInstance] getParameter:@"verification_sni"]
-                                    ip:addrParts[0]
-                                    port:[addrParts[1] integerValue]
-                                    certStrArray:[[Config sharedInstance] getParameter:@"verification_tls"]];
-    [voteSocket setDelegate:self];
-    [voteSocket scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [voteSocket open];
-}
-
-- (void) downloadComplete
+- (void) downloadCompleteSuccess:(in NSData *)data
 {
 #if !(TARGET_APPSTORE_SCREENSHOTS)
-    NSDictionary* voteResp = [JsonRpc unmarshalResponse:[voteSocket data]];
-    voteSocket = NULL;
+    NSDictionary* voteResp = [JsonRpc unmarshalResponse:data];
     DLog("%@", voteResp);
 
     if (voteResp == nil) {
@@ -308,8 +222,9 @@
                                        voteResp[@"result"][@"Qualification"][@"ocsp"] options:0];
     NSData* regData = [[NSData alloc] initWithBase64EncodedString:
                                       voteResp[@"result"][@"Qualification"][@"tspreg"] options:0];
+    choiceList = [[ChoiceList alloc] initWithBase64:voteResp[@"result"][@"ChoicesList"]];
 
-    if (containerData == nil || ocspData == nil || regData == nil) {
+    if (containerData == nil || ocspData == nil || regData == nil || choiceList == nil) {
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
     }
@@ -360,8 +275,7 @@
     }
 
     int pday, psec;
-    // We want PKIX to be older than OCSP
-    ASN1_TIME_diff(&pday, &psec, pkix_genTime, ocsp_producedAt);
+    ASN1_TIME_diff(&pday, &psec, ocsp_producedAt, pkix_genTime);
 
     if (pday != 0) {
         DLog("PKIX and OCSP timestamps are days apart");
@@ -370,12 +284,12 @@
     }
 
     if (psec < 0) {
-        DLog("OCSP predates PKIX");
+        DLog("PKIX predates OCSP");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
     }
 
-    if (psec > 60 * 15) {
+    if (psec > 60 * 5) {
         DLog("PKIX and OCSP timestamps too far apart");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
@@ -383,15 +297,13 @@
 
     for (NSString * key in bdoc.votes) {
         NSData* vote = [bdoc.votes objectForKey:key];
-        BIO* cBio = BIO_new_mem_buf([vote bytes], (int)[vote length]);
-        ELGAMAL_CIPHER* cipherText = d2i_ELGAMAL_CIPHER_bio(cBio, NULL);
         NSString* questionDesc = [[Config sharedInstance] electionForKey:key];
 
         if (!questionDesc) {
             questionDesc = key;
         }
 
-        Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:cipherText];
+        Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:vote];
         [ballots addObject:ballot];
     }
 
@@ -412,8 +324,8 @@
                                                           stringByAppendingString:signer];
     ALCustomAlertView* alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewMessage:verifyMessage,
                                                           kAlertViewConfrimButtonTitle:[[Config sharedInstance] textForKey:@"btn_verify"],
-                                                          kAlertViewBackgroundColor:[[Config sharedInstance] colorForKey:@"main_window"],
-                                                          kAlertViewForegroundColor:[[Config sharedInstance] colorForKey:@"main_window_foreground"]
+                                                          kAlertViewBackgroundColor:[[C sharedInstance] mainWindow],
+                                                          kAlertViewForegroundColor:[[C sharedInstance] mainWindowForeground]
                                                                             }];
     [alert setDelegate:self];
     [alert setTag:1001];
@@ -422,7 +334,6 @@
 
 - (void) presentError:(in NSString*)errorMessage
 {
-    voteSocket = NULL;
     [SharedDelegate hideLoader];
     [SharedDelegate presentError:errorMessage];
 }
@@ -438,162 +349,21 @@
         [SharedDelegate hideLoader];
 
         if (results) {
-            [SharedDelegate presentVoteVerificationResults:results];
-            results = nil;
-        }
-    }
-}
-
-#pragma mark - NSStream delegate
-
-- (void) stream:(NSStream*)aStream handleEvent:(NSStreamEvent)eventCode
-{
-    BOOL shouldClose = NO;
-
-    switch (eventCode) {
-    case NSStreamEventEndEncountered: {
-            DLog(@"NSStreamEventEndEncountered");
-
-            if ([aStream isKindOfClass:[NSInputStream class]]) {
-                shouldClose = YES;
-
-                if (![((NSInputStream*) aStream) hasBytesAvailable]) {
-                    break;
+            __block bool success = true;
+            [results enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull value, BOOL * _Nonnull stop) {
+                if (![choiceList isValidCandidate:value]) {
+                    success = false;
                 }
-            }
-            else {
-                [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-                [aStream setDelegate:nil];
-                [aStream close];
-                break;
-            }
-        }
+            }];
 
-    case NSStreamEventHasBytesAvailable: {
-            DLog(@"NSStreamEventHasBytesAvailable");
-            NSInputStream* inStream = (NSInputStream*) aStream;
-            NSMutableData* data = [voteSocket data];
-            int len = 1024;
-            uint8_t buffer[len];
-
-            while ([inStream hasBytesAvailable]) {
-                int bytesRead = (int)[inStream read:buffer maxLength:len];
-                [data appendBytes:buffer length:bytesRead];
-            }
-
-            break;
-        }
-
-    case NSStreamEventHasSpaceAvailable: {
-            DLog(@"NSStreamEventHasSpaceAvailable");
-
-            if (!written) {
-                @synchronized (writeLock) {
-                    if (!written) {
-                        written = YES;
-                        NSOutputStream* outStream = (NSOutputStream*) aStream;
-                        SecTrustRef trust = (__bridge SecTrustRef)[outStream propertyForKey:(__bridge NSString*)
-                                                      kCFStreamPropertySSLPeerTrust];
-                        trust = addAnchorToTrust(trust, [voteSocket certs]);
-
-                        if (trust == NULL) {
-                            DLog(@"addAnchorToTrust failed");
-                            [self tearDown:voteSocket];
-                            break;
-                        }
-
-                        SecTrustResultType res = kSecTrustResultInvalid;
-
-                        if (SecTrustEvaluate(trust, &res)) {
-                            DLog(@"SecTrustEvaluate failed");
-                            [self tearDown:voteSocket];
-                            break;
-                        }
-
-                        CFArrayRef pa = SecTrustCopyProperties(trust);
-                        DLog(@"errDataRef=%@", pa);
-
-                        if (pa != nil) {
-                            CFRelease(pa);
-                        }
-
-                        if (res != kSecTrustResultProceed && res != kSecTrustResultUnspecified) {
-                            DLog(@"TrustResult not supported %d", res);
-                            [self tearDown:voteSocket];
-                        }
-                        else {
-                            NSData* outData = voteRpc;
-                            [outStream write:[outData bytes] maxLength:[outData length]];
-                        }
-                    }
-                }
-            }
-
-            break;
-        }
-
-    case NSStreamEventErrorOccurred: {
-            DLog(@"NSStreamEventErrorOccurred: %@", [aStream streamError]);
-            [self tearDown:voteSocket];
-            break;
-        }
-
-    case NSStreamEventNone: {
-            DLog(@"NSStreamEventNone");
-            break;
-        }
-
-    case NSStreamEventOpenCompleted: {
-            DLog(@"NSStreamEventOpenCompleted");
-            [self stopConnectionTimeoutTimer];
-            break;
-        }
-    }
-
-    if (shouldClose) {
-        [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [aStream setDelegate:nil];
-        [aStream close];
-        @synchronized (lock) {
-            if (!voteDownloaded && !error) {
-                voteDownloaded = YES;
-                [SharedDelegate hideLoader];
-                [self closeSocket:voteSocket];
-                [self downloadComplete];
+            if (success) {
+                [SharedDelegate presentVoteVerificationResults:results];
+                results = nil;
+            } else {
+                [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
             }
         }
     }
-}
-
-- (void) tearDown:(TlsSocket*)socket
-{
-    @synchronized (lock) {
-        error = YES;
-    }
-    [self closeSocket:socket];
-    [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-}
-
-- (void) closeSocket:(TlsSocket*)socket
-{
-    [[socket inStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [[socket inStream] setDelegate:nil];
-    [[socket inStream] close];
-    [[socket outStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [[socket outStream] setDelegate:nil];
-    [[socket outStream] close];
-}
-
-SecTrustRef addAnchorToTrust(SecTrustRef trust, NSArray* trustedCerts)
-{
-    DLog(@"%@", trustedCerts);
-    CFMutableArrayRef newAnchorArray = CFArrayCreateMutable (kCFAllocatorDefault, 0,
-                                       &kCFTypeArrayCallBacks);
-    CFArrayAppendArray(newAnchorArray, (__bridge CFArrayRef)trustedCerts,
-                       CFRangeMake(0, [trustedCerts count]));
-    OSStatus res = SecTrustSetAnchorCertificates(trust, newAnchorArray);
-    res = SecTrustSetAnchorCertificatesOnly(trust, false);
-    return trust;
 }
 
 @end

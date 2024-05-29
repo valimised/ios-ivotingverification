@@ -7,6 +7,7 @@
 #import "QRScanResult.h"
 #import "RegexMatcher.h"
 #import "AppDelegate.h"
+#import "C.h"
 
 @interface ScannerViewController (Private)
 
@@ -34,14 +35,16 @@
 {
     [super viewWillAppear:animated];
     [self setupScanner];
-    [session startRunning];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+        [self->session startRunning];
+    });
 }
 
 - (void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
-    if (readyToScan == NO && [[Config sharedInstance] isLoaded] && welcomeMessagePresented == NO) {
+    if (readyToScan == NO && [[Config sharedInstance] isLoaded]) {
         [self showWelcomeMessage];
     }
 }
@@ -117,28 +120,27 @@
 
 - (void) showWelcomeMessage
 {
-    if ([SharedDelegate currentVoteContainer] || welcomeMessagePresented || readyToScan ||
+    if ([SharedDelegate currentVoteContainer] || readyToScan ||
             [SharedDelegate error]) {
         return;
     }
 
-    welcomeMessagePresented = YES;
     NSArray* appURL = [[Config sharedInstance] getParameter:@"verification_url"];
     ALCustomAlertView* alert;
 
     if (appURL == nil || [appURL count] == 0) {
         alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewMessage:[[Config sharedInstance] textForKey:@"welcome_message"],
                                            kAlertViewCancelButtonTitle:[[Config sharedInstance] textForKey:@"btn_more"],
-                                           kAlertViewBackgroundColor:[[Config sharedInstance] colorForKey:@"main_window"],
-                                           kAlertViewForegroundColor:[[Config sharedInstance] colorForKey:@"main_window_foreground"]
+                                           kAlertViewBackgroundColor:[[C sharedInstance] mainWindow],
+                                           kAlertViewForegroundColor:[[C sharedInstance] mainWindowForeground]
                                                              }];
     }
     else {
         alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewMessage:[[Config sharedInstance] textForKey:@"welcome_message"],
                                            kAlertViewCancelButtonTitle:[[Config sharedInstance] textForKey:@"btn_more"],
                                            kAlertViewConfrimButtonTitle:[[Config sharedInstance] textForKey:@"btn_next"],
-                                           kAlertViewBackgroundColor:[[Config sharedInstance] colorForKey:@"main_window"],
-                                           kAlertViewForegroundColor:[[Config sharedInstance] colorForKey:@"main_window_foreground"]
+                                           kAlertViewBackgroundColor:[[C sharedInstance] mainWindow],
+                                           kAlertViewForegroundColor:[[C sharedInstance] mainWindowForeground]
                                                              }];
     }
 
@@ -266,8 +268,6 @@
 
 - (void) alertView:(ALCustomAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    welcomeMessagePresented = NO;
-
     if (buttonIndex == 0) {
         [SharedDelegate presentHelpScreen];
     }

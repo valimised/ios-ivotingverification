@@ -68,7 +68,7 @@
         switch (data[0]) {
         case 0x00:
             data++;
-            tmp = [[NSString alloc] initWithBytes:data length:len - i encoding:NSUTF8StringEncoding];
+            tmp = [[NSString alloc] initWithBytes:data length:len - (i + 1) encoding:NSUTF8StringEncoding];
             return tmp;
 
         case 0xff:

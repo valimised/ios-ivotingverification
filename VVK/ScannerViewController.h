@@ -17,9 +17,6 @@
 #endif
     UIView* reticleView;
     BOOL readyToScan;
-    BOOL welcomeMessagePresented;
 }
-
-- (void) setScannerEnabled:(BOOL)enabled;
 
 @end

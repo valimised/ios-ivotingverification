@@ -7,6 +7,7 @@
 #import "VoteVerificationResultsViewController.h"
 #import "HelpViewController.h"
 #import "UIColor+Hex.h"
+#import "C.h"
 
 #define TAG_GENERAL_ERROR 1000
 #define TAG_CONFIGURATION_REQUEST_ERROR 1002
@@ -94,8 +95,8 @@
                 DLog(@"%@", errorMessage);
                 ALCustomAlertView* alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewMessage:errorMessage,
                                                                       kAlertViewConfrimButtonTitle:[[Config sharedInstance] textForKey:@"btn_next"],
-                                                                      kAlertViewBackgroundColor:[[Config sharedInstance] colorForKey:@"error_window"],
-                                                                      kAlertViewForegroundColor:[[Config sharedInstance] colorForKey:@"error_window_foreground"]
+                                                                      kAlertViewBackgroundColor:[[C sharedInstance] errorWindow],
+                                                                      kAlertViewForegroundColor:[[C sharedInstance] errorWindowForeground]
                                                                                         }];
                 [alert setDelegate:self];
                 [alert setTag:TAG_GENERAL_ERROR];
@@ -115,8 +116,8 @@
                 DLog(@"%@", errorMessage);
                 ALCustomAlertView* alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewTitle:@"Viga",
                                                                       kAlertViewMessage:errorMessage,
-                                                                      kAlertViewBackgroundColor:[UIColor colorWithHexString:@"#FF0000"],
-                                                                      kAlertViewForegroundColor:[UIColor colorWithHexString:@"#FFFFFF"]
+                                                                      kAlertViewBackgroundColor:[[C sharedInstance] errorWindow],
+                                                                      kAlertViewForegroundColor:[[C sharedInstance] errorWindowForeground]
                                                                                         }];
                 [alert setDelegate:self];
                 [alert show];
@@ -131,8 +132,8 @@
     ALCustomAlertView* alert = [[ALCustomAlertView alloc] initWithOptions:@ {kAlertViewTitle:@"Viga",
                                                           kAlertViewMessage:@"Konfiguratsiooni laadimine ebaõnnestus.",
                                                           kAlertViewConfrimButtonTitle:@"Proovi uuesti",
-                                                          kAlertViewBackgroundColor:[UIColor colorWithHexString:@"#FF0000"],
-                                                          kAlertViewForegroundColor:[UIColor colorWithHexString:@"#FFFFFF"]
+                                                          kAlertViewBackgroundColor:[[C sharedInstance] errorWindow],
+                                                          kAlertViewForegroundColor:[[C sharedInstance] errorWindowForeground]
                                                                             }];
     [alert setDelegate:self];
     [alert setTag:TAG_CONFIGURATION_REQUEST_ERROR];
@@ -144,8 +145,8 @@
     ALCustomAlertView* alert = [[ALCustomAlertView alloc] initWithOptions:@ {
                                                         kAlertViewMessage:[[Config sharedInstance] errorMessageForKey:@"bad_version_message"],
                                              kAlertViewConfrimButtonTitle:[[Config sharedInstance] textForKey:@"btn_next"],
-                                                kAlertViewBackgroundColor:[[Config sharedInstance] colorForKey:@"error_window"],
-                                                kAlertViewForegroundColor:[[Config sharedInstance] colorForKey:@"error_window_foreground"]
+                                                kAlertViewBackgroundColor:[[C sharedInstance] errorWindow],
+                                                kAlertViewForegroundColor:[[C sharedInstance] errorWindowForeground]
                                                                                         }];
     [alert setDelegate:self];
     [alert setTag:TAG_VERSION_ERROR];
@@ -184,7 +185,7 @@
     UIView* loaderContainer = [[UIView alloc] initWithFrame:loaderRect];
 
     if (clearStyle == NO) {
-        loaderContainer.backgroundColor = [[Config sharedInstance] colorForKey:@"main_window"];
+        loaderContainer.backgroundColor = [[C sharedInstance] mainWindow];
     }
     else {
         loaderContainer.backgroundColor = [UIColor clearColor];
@@ -216,7 +217,7 @@
         loaderText.text = [[Config sharedInstance] textForKey:@"loading"];
         loaderText.textAlignment = NSTextAlignmentCenter;
         loaderText.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18.0];
-        loaderText.textColor = [[Config sharedInstance] colorForKey:@"main_window_foreground"];
+        loaderText.textColor = [[C sharedInstance] mainWindowForeground];
         [loaderContainer addSubview:loaderText];
     }
 
@@ -248,17 +249,14 @@
 
 - (void) didLoadConfigurationFile
 {
-    UIColor* navBarColor = [[Config sharedInstance] colorForKey:@"main_window"];
+    UIColor* navBarColor = [[C sharedInstance] mainWindow];
     [[UINavigationBar appearance] setTitleTextAttributes:@ {
-                             NSForegroundColorAttributeName:[[Config sharedInstance] colorForKey:@"main_window_foreground"]
+                             NSForegroundColorAttributeName:[[C sharedInstance] mainWindowForeground]
                                  }];
     [[UINavigationBar appearance] setBarTintColor:navBarColor];
-    resultContainerNavigationController.navigationBar.tintColor = [[Config sharedInstance] colorForKey:
-                                    @"main_window_foreground"];
-    helpContainerNavigationController.navigationBar.tintColor = [[Config sharedInstance] colorForKey:
-                                    @"main_window_foreground"];
+    resultContainerNavigationController.navigationBar.tintColor = [[C sharedInstance] mainWindowForeground];
+    helpContainerNavigationController.navigationBar.tintColor = [[C sharedInstance] mainWindowForeground];
 }
-
 
 #pragma mark - Custom alert view delegate
 
@@ -272,7 +270,7 @@
             [resultContainerNavigationController dismissViewControllerAnimated:YES completion:nil];
         }
 
-        [scannerViewController setScannerEnabled:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:shouldRestartApplicationState object:nil];
     }
 
     // Retry configuration loading

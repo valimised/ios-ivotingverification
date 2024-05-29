@@ -84,6 +84,7 @@
 {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration
             defaultSessionConfiguration];
+    sessionConfiguration.TLSMinimumSupportedProtocolVersion = tls_protocol_version_TLSv13;
     NSURLSession* session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self
                                           delegateQueue:[NSOperationQueue mainQueue]];
     [[session dataTaskWithRequest:request] resume];

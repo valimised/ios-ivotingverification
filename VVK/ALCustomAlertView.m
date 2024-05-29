@@ -95,7 +95,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
     UIColor* separatorViewColor     = [UIColor colorWithRed:0.9f green:0.9f blue:0.9f alpha:0.3f];
     UIFont* titleFont               = [UIFont boldSystemFontOfSize:17.0f];
     UIFont* buttonFont              = [UIFont boldSystemFontOfSize:15.0f];
-    UIActivityIndicatorViewStyle spinnerStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    UIActivityIndicatorViewStyle spinnerStyle = UIActivityIndicatorViewStyleLarge;
     mCustomView = _customView;
     mKeyboardAdjustType = VisibleCustomView;
     bool createCancelButton = !(_cancelButtonText == nil || _cancelButtonText.length < 1);
@@ -539,7 +539,19 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
 
 - (CGRect) alertViewFrameForAdjustingKeyboard
 {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+    CGRect statusBarFrame = CGRectZero;
+
+    NSSet<UIScene *> *connectedScenes =  [UIApplication sharedApplication].connectedScenes;
+    for (UIScene *scene in connectedScenes) {
+        if ([scene isKindOfClass:[UIWindowScene class]]) {
+            UIWindowScene *windowScene = (UIWindowScene *)scene;
+            orientation = windowScene.interfaceOrientation;
+            statusBarFrame = windowScene.statusBarManager.statusBarFrame;
+            break;
+        }
+    }
+
     float keyboardY = 0.0f;
 
     if (UIInterfaceOrientationLandscapeLeft == orientation) {
@@ -555,8 +567,7 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         keyboardY = [UIScreen mainScreen].bounds.size.height - mKeyboardEndFrame.size.height;
     }
 
-    float statusBarHeight = ([[UIApplication sharedApplication] statusBarFrame].size.height > 0.0f) ?
-                            20.0f : 0.0f;
+    float statusBarHeight = (statusBarFrame.size.height > 0.0f) ? 20.0f : 0.0f;
     keyboardY -= (mAlertView.frame.size.height + statusBarHeight) - mButtonsHeight;
 
     if (mKeyboardAdjustType == VisibleButtons) {
@@ -668,7 +679,17 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         masterView = [[[UIApplication sharedApplication] delegate] window];
     }
 
-    [self changeFrameForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
+    NSSet<UIScene *> *connectedScenes =  [UIApplication sharedApplication].connectedScenes;
+    for (UIScene *scene in connectedScenes) {
+        if ([scene isKindOfClass:[UIWindowScene class]]) {
+            UIWindowScene *windowScene = (UIWindowScene *)scene;
+            orientation = windowScene.interfaceOrientation;
+            break;
+        }
+    }
+
+    [self changeFrameForOrientation:orientation];
 
     if (mDelegate != nil && [mDelegate respondsToSelector:@selector(willShow:)]) {
         [mDelegate willShow:self];

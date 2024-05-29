@@ -24,6 +24,8 @@ static xmlChar* const ATTR_ALGORITHM = (xmlChar*)"Algorithm";
 static xmlChar* const NUMBER_SIGN = (xmlChar*)"#";
 static xmlChar* const SIGNATUREMETHOD_ECDSASHA256 = (xmlChar*)
         "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256";
+static xmlChar* const SIGNATUREMETHOD_ECDSASHA384 = (xmlChar*)
+        "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384";
 static xmlChar* const SIGNATUREMETHOD_RSASHA256 = (xmlChar*)
         "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
 static NSString* const XPATH_TEMPLATE_NODE_BY_ID =
@@ -437,12 +439,15 @@ end:
     unsigned char* sigData = NULL;
     int total = 0;
     EVP_MD_CTX* md_ctx = EVP_MD_CTX_create();
+    char* digestName;
 
     if (sigAlg == NULL) {
         DLog(@"No signature algorithm found in xml");
         goto end;
     }
-    else if (xmlStrEqual(sigAlg, SIGNATUREMETHOD_ECDSASHA256)) {
+    else if (xmlStrEqual(sigAlg, SIGNATUREMETHOD_ECDSASHA256) || xmlStrEqual(sigAlg, SIGNATUREMETHOD_ECDSASHA384)) {
+        if (xmlStrEqual(sigAlg, SIGNATUREMETHOD_ECDSASHA256)) digestName = "SHA256";
+        else digestName = "SHA384";
         total = [self asn1WrapSignature:sigDataRaw out:&sigData];
 
         if (total == -1) {
@@ -450,6 +455,7 @@ end:
         }
     }
     else if (xmlStrEqual(sigAlg, SIGNATUREMETHOD_RSASHA256)) {
+        digestName = "SHA256";
         sigData = (unsigned char*)[sigDataRaw bytes];
         total = (int)[sigDataRaw length];
     }
@@ -458,7 +464,7 @@ end:
         goto end;
     }
 
-    if (EVP_DigestVerifyInit(md_ctx, NULL, EVP_get_digestbyname("SHA256"), NULL, key) != 1) {
+    if (EVP_DigestVerifyInit(md_ctx, NULL, EVP_get_digestbyname(digestName), NULL, key) != 1) {
         DLog(@"Couldn't init digest verify");
         goto end;
     }
@@ -536,7 +542,6 @@ end:
     }
 
     for (NSString * path in @[
-             @"/ESTEID-SK_2011.pem.crt",
              @"/ESTEID-SK_2015.pem.crt",
              @"/esteid2018.pem.crt",
              @"/eid2016.crt",

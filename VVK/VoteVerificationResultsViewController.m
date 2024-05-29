@@ -3,10 +3,11 @@
 //  VVK
 
 #import "VoteVerificationResultsViewController.h"
-#import "VoteContainer.h"
+#import "Candidate.h"
 #import "AppDelegate.h"
 #import "UIColor+Hex.h"
 #import "VerificationResultCandidateCell.h"
+#import "C.h"
 
 @interface VoteVerificationResultsViewController ()
 
@@ -35,11 +36,10 @@
     [super viewDidLoad];
     self.navigationItem.title = [[Config sharedInstance] textForKey:@"lbl_choice"];
     self.navigationItem.hidesBackButton = YES;
-    contentTableView.backgroundColor = [UIColor colorWithHexString:@"#f8f8f8"];
+    contentTableView.backgroundColor = [UIColor whiteColor];
     contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    timerCellBackgroundView.backgroundColor = [[Config sharedInstance] colorForKey:
-                                    @"lbl_close_timeout_background_center"];
-    timerCellLabel.textColor = [[Config sharedInstance] colorForKey:@"lbl_close_timeout_foreground"];
+    timerCellBackgroundView.backgroundColor = [[C sharedInstance] lblCloseTimeoutBackgroundCenter];
+    timerCellLabel.textColor = [[C sharedInstance] lblCloseTimeoutForeground];
     timerCellBackgroundView.layer.cornerRadius = 5.0f;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:
                                                                     @"btn_close.png"] style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
@@ -95,11 +95,11 @@
     }
 
     VerificationResultCandidateCell* cell = [tableView dequeueReusableCellWithIdentifier:
-                                                      @"VerificationResultCandidateCell"];
+                                             @"VerificationResultCandidateCell"];
 
     if (cell == nil) {
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"VerificationResultCandidateCell"
-                                                          owner:self options:nil];
+                                                                 owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
         [cell setBackgroundView:nil];
         [cell setBackgroundColor:[UIColor clearColor]];
@@ -111,10 +111,15 @@
     NSArray* candidates = groups[key];
     Candidate* candidate = candidates[indexPath.row];
     cell.nameLabel.text = candidate.name;
+    cell.nameLabel.textColor = [[C sharedInstance] lblInnerContainerForeground];
     cell.partyLabel.text = candidate.party;
+    cell.partyLabel.textColor = [[C sharedInstance] lblInnerContainerForeground];
     cell.numberLabel.text = [NSString stringWithFormat:@"#%@", [candidate.number
-                                      componentsSeparatedByString:@"."][1]];
-    cell.numberLabel.textColor = [[Config sharedInstance] colorForKey:@"main_window"];
+                                                                componentsSeparatedByString:@"."][1]];
+    cell.numberLabel.backgroundColor = [[C sharedInstance] lblBackground];
+    cell.numberLabel.textColor = [[C sharedInstance] lblForeground];
+    cell.contentView.layer.borderWidth = 1.5;
+    cell.contentView.layer.borderColor = [[C sharedInstance] lblOuterInnerContainerDivider].CGColor;
     return cell;
 }
 
@@ -190,7 +195,7 @@
     UIView* headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, w, 30)];
     headerView.backgroundColor = tableView.backgroundColor;
     UIView* bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 5, w - 20, 30)];
-    bgView.backgroundColor = [UIColor colorWithHexString:@"#f1f1f1"];
+    bgView.backgroundColor = [[C sharedInstance] lblOuterContainerBackground];
     UIBezierPath* maskPath = [UIBezierPath bezierPathWithRoundedRect:bgView.bounds byRoundingCorners:
                                            (UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(5.0, 5.0)];
     CAShapeLayer* maskLayer = [CAShapeLayer layer];
@@ -198,10 +203,12 @@
     maskLayer.path = maskPath.CGPath;
     bgView.layer.mask = maskLayer;
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, w - 20, 30)];
+    titleLabel.center = bgView.center;
+    titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:14.0];
     titleLabel.text = [groups allKeys][section - 1];
-    titleLabel.textColor = [UIColor colorWithHexString:@"#717171"];
+    titleLabel.textColor = [[C sharedInstance] lblOuterContainerForeground];
     [headerView addSubview:bgView];
     [bgView addSubview:titleLabel];
     return headerView;

@@ -74,7 +74,8 @@
 
 - (UIColor*) colorForKey:(NSString*)key
 {
-    return [UIColor colorWithHexString:config[kConfigRootKey][kConfigColorsKey][key]];
+    NSString* hexString = config[kConfigRootKey][kConfigColorsKey][key];
+    return hexString != nil ? [UIColor colorWithHexString: hexString] : UIColor.clearColor;
 }
 
 - (id) getParameter:(NSString*)key

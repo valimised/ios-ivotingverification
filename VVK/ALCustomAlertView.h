@@ -39,6 +39,8 @@ const static NSString* kAlertViewCancelButtonTitle = @"cancelTitle";
 const static NSString* kAlertViewConfrimButtonTitle = @"confirmTitle";
 const static NSString* kAlertViewForegroundColor = @"FGColor";
 const static NSString* kAlertViewBackgroundColor = @"BGColor";
+const static float alertViewHeight = 265.f;
+const static float alertViewWidth = 265.f;
 
 @interface ALCustomAlertView : UIView
 {
@@ -48,7 +50,6 @@ const static NSString* kAlertViewBackgroundColor = @"BGColor";
     UIActivityIndicatorView*     mSpinner;
     UIView*                      mAlertView;
     UIView*                      mCustomView;
-    UIView*                      mButtonSeparatorView;
     float                       mButtonsHeight;
     id                          mCancelCallbackTarget;
     SEL                         mCancelCallback;
@@ -69,30 +70,7 @@ const static NSString* kAlertViewBackgroundColor = @"BGColor";
            getter = keyboardAdjustmentType) enum UICustomAlertViewKeyboardAdjustType mKeyboardAdjustType;
 @property (nonatomic, retain, readonly, getter = mainView) UIView             * mAlertView;
 
-// Initialize with activity indicator
-- (id) initWithTitle:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText;
-
 - (id) initWithOptions:(NSDictionary*)options;
-
-- (id) initWithCustomView:(UIView*)_customView withTitleText:(NSString*)_title withCancelButtonText
-    :(NSString*)_cancelButtonText withConfirmButtonText:(NSString*)_confirmButtonText;
-
-- (id) initWithCustomView:(UIView*)_customView withPaddingInfo:(CAViewPaddingInfo)_paddingInfo
-    withTitleText:(NSString*)_title withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText;
-
-- (id) initWithTitle:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare;
-
-- (id) initWithCustomView:(UIView*)_customView withTitleText:(NSString*)_title withCancelButtonText
-    :(NSString*)_cancelButtonText withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:
-    (BOOL)makeSquare;
-
-- (id) initWithCustomView:(UIView*)_customView withPaddingInfo:(CAViewPaddingInfo)_paddingInfo
-    withTitleText:(NSString*)_title withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare;
-
 
 // show with animation (scale + fade in)
 - (void) show;

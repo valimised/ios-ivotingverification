@@ -11,6 +11,8 @@
 #import "JsonRpc.h"
 #import "Bdoc.h"
 #import "ElgamalPub.h"
+#import "Scalar.h"
+#import "Group.h"
 #import "OcspHelper.h"
 #import "PkixHelper.h"
 #import "DNSResolver.h"
@@ -73,37 +75,45 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
                                                           publicKey]];
 
     if (!publicEncryptionKey) {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        DLog("Public key alloc failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_config_message"]];
         return nil;
     }
 
-    for (Ballot * ballot in ballots) {
-        NSString* m = [Crypto decryptVote:ballot.vote->cipher->b->data
-                              voteLen:ballot.vote->cipher->b->length
-                              c1Data:ballot.vote->cipher->a->data
-                              c1Len:ballot.vote->cipher->a->length
-                              withRnd:scanResult.rndSeed
-                              key:publicEncryptionKey];
+    Scalar *randomness = [[Scalar alloc] initWithBytes:scanResult.rndSeed
+                                                 group:publicEncryptionKey.group];
 
+    for (Ballot * ballot in ballots) {
+
+        Element* m = [publicEncryptionKey decryptBallot:ballot
+                                             randomness:randomness];
         // TODO - should continue and show errors later
         if (m == NULL) {
+            DLog("Ballot decryption failed");
             [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
             return nil;
         }
 
-        NSArray* choiceSplit = [m componentsSeparatedByString:@"\x1F"];
+        NSString *decoded = [m decode];
+
+        if (decoded == NULL) {
+            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
+            return nil;
+        }
+
 #else
-        NSString* m = @"0.101;Üksikkandidaadid;NIMI NIMESTE";
-        NSArray* choiceSplit = [m componentsSeparatedByString:@";"];
+        NSString* m = @"000.101";
 #endif
 
-        if ([choiceSplit count] != 3) {
+        Candidate *cand = [choiceList findCandidate:decoded];
+
+        if (!cand) {
+            DLog("Choice not in choices list");
             [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_verification_message"]];
             return nil;
         }
 
-        [decryptedBallotPreferences setObject:[[Candidate alloc] initWithComponents:choiceSplit] forKey:
-                                    ballot.name];
+        [decryptedBallotPreferences setObject:cand forKey:ballot.name];
     }
 
     return decryptedBallotPreferences;
@@ -153,7 +163,7 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
 
         case Phase3:
             DLog(@"Couldn't connect to any collector service");
-            [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+            [self presentError:[[Config sharedInstance] errorMessageForKey:@"send_server_request_message"]];
             return;
     }
 
@@ -183,12 +193,13 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
                     }
                     else {
                         DLog(@"Couldn't connect to any collector service");
-                        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+                        [self presentError:[[Config sharedInstance] errorMessageForKey:@"send_server_request_message"]];
                         return;
                     }
                 }];
             }
             else {
+                DLog(@"ERROR: %@", error);
                 [self handlePhaseConnection];
             }
         }];
@@ -225,7 +236,8 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
     choiceList = [[ChoiceList alloc] initWithBase64:voteResp[@"result"][@"ChoicesList"]];
 
     if (containerData == nil || ocspData == nil || regData == nil || choiceList == nil) {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        DLog("Vote data invalid");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_config_message"]];
         return;
     }
 
@@ -233,13 +245,15 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
                                                           publicKey]];
 
     if (!publicEncryptionKey) {
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        DLog("Public key alloc failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_config_message"]];
         return;
     }
 
     Bdoc* bdoc = [[Bdoc alloc] initWithData:containerData electionId:[publicEncryptionKey elId]];
 
     if (![bdoc validateBdoc]) {
+        DLog("Bdoc validation failed");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
     }
@@ -250,9 +264,15 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
         ocspCerts = [NSArray new];
     }
 
-    ASN1_GENERALIZEDTIME* ocsp_producedAt = nil;
-    BOOL res = [OcspHelper verifyResp:ocspData responderCertData:ocspCerts requestedCert:bdoc.cert
-                           issuerCert:bdoc.issuer producedAt:ocsp_producedAt];
+    OcspHelper* ocsp = [[OcspHelper alloc] initWithData:ocspData];
+
+    if (ocsp == nil) {
+        DLog("OCSP alloc failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    BOOL res = [ocsp verifyResp:ocspCerts requestedCert:bdoc.cert issuerCert:bdoc.issuer];
 
     if (!res) {
         DLog("Ocsp response verification failed");
@@ -264,9 +284,16 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
                                                  :NSUTF8StringEncoding];
     NSData* collectorRegCert = [[[Config sharedInstance] getParameter:@"tspreg_client_cert"]
                                                          dataUsingEncoding:NSUTF8StringEncoding];
-    ASN1_GENERALIZEDTIME* pkix_genTime = nil;
-    res = [PkixHelper verifyResp:regData collectorRegCert:collectorRegCert pkixCert:pkixCert data:[bdoc
-                       signatureValue] genTime:pkix_genTime];
+
+    PkixHelper* pkix = [[PkixHelper alloc] initWithData:regData];
+
+    if (pkix == nil) {
+        DLog("PKIX alloc failed");
+        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
+        return;
+    }
+
+    res = [pkix verifyResp:collectorRegCert pkixCert:pkixCert data:[bdoc signatureValue]];
 
     if (!res) {
         DLog("Pkix response verification failed");
@@ -274,23 +301,10 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
         return;
     }
 
-    int pday, psec;
-    ASN1_TIME_diff(&pday, &psec, ocsp_producedAt, pkix_genTime);
+    res = [ pkix compareWithOCSP:ocsp maxdiff:15 ];
 
-    if (pday != 0) {
+    if (!res) {
         DLog("PKIX and OCSP timestamps are days apart");
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        return;
-    }
-
-    if (psec < 0) {
-        DLog("PKIX predates OCSP");
-        [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-        return;
-    }
-
-    if (psec > 60 * 5) {
-        DLog("PKIX and OCSP timestamps too far apart");
         [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
         return;
     }
@@ -303,7 +317,8 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
             questionDesc = key;
         }
 
-        Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:vote];
+        Ballot* ballot = [publicEncryptionKey.group decodeBallotWithName:questionDesc
+                                                              ciphertext:vote];
         [ballots addObject:ballot];
     }
 
@@ -328,7 +343,7 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
                                                           kAlertViewForegroundColor:[[C sharedInstance] mainWindowForeground]
                                                                             }];
     [alert setDelegate:self];
-    [alert setTag:1001];
+    [alert setTag:TAG_VOTE_SIGNER_WINDOW];
     [alert show];
 }
 
@@ -349,19 +364,8 @@ typedef NS_ENUM(NSInteger, PhaseEnum) {
         [SharedDelegate hideLoader];
 
         if (results) {
-            __block bool success = true;
-            [results enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull value, BOOL * _Nonnull stop) {
-                if (![choiceList isValidCandidate:value]) {
-                    success = false;
-                }
-            }];
-
-            if (success) {
-                [SharedDelegate presentVoteVerificationResults:results];
-                results = nil;
-            } else {
-                [self presentError:[[Config sharedInstance] errorMessageForKey:@"bad_server_response_message"]];
-            }
+            [SharedDelegate presentVoteVerificationResults:results];
+            results = nil;
         }
     }
 }

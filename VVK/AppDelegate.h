@@ -22,6 +22,7 @@
     BOOL error;
     VoteContainer* currentVoteContainer;
     UIView* loaderBG;
+    UIView* loaderContainer;
     NSTimeInterval backgroundStartTime;
 }
 
@@ -37,8 +38,6 @@
 
 - (void) presentError:(in NSString*)errorMessage;
 
-- (void) presentDefaultError:(in NSString*)errorMessage;
-
 - (void) presentVoteVerificationResults:(in NSDictionary*)results;
 
 - (void) showLoaderWithClearStyle:(BOOL)clearStyle;
@@ -46,6 +45,8 @@
 - (void) hideLoader;
 
 - (void) handleConfigurationRequestError;
+
+- (void) handleNetworkError;
 
 - (void) handleVersionError;
 

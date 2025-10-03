@@ -8,72 +8,85 @@
 #import "RegexMatcher.h"
 #import "AppDelegate.h"
 #import "C.h"
+#import "AccessibilityUtil.h"
 
 @interface ScannerViewController (Private)
 
 - (void) setupScanner;
+- (void) startPreview;
+- (void) stopPreview;
 - (void) showWelcomeMessage;
 - (void) shouldRestartApplicationState;
-- (void) setReticleVisible:(BOOL)visible;
 - (void) verifyQrString:(NSString*)qrStr;
+- (void) setOrientationObserver;
 
 @end
 
 @implementation ScannerViewController
 
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    // Only portrait is supported because it locks and prevents the camera preview to rotate when device orientation changes
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-
-    if (self) {
-    }
-
+    session = nil;
+#if !(TARGET_IPHONE_SIMULATOR)
+    output = nil;
+#endif
+    readyToScan = FALSE;
     return self;
+}
+
+- (void) startPreview
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+        if (![self->session isRunning]) {
+            [self->session startRunning];
+        }
+    });
+}
+
+- (void) stopPreview
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+        if ([self->session isRunning]) {
+            [self->session stopRunning];
+        }
+    });
 }
 
 - (void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self setupScanner];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
-        [self->session startRunning];
-    });
-}
-
-- (void) viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-
-    if (readyToScan == NO && [[Config sharedInstance] isLoaded]) {
-        [self showWelcomeMessage];
-    }
+    [self startPreview];
 }
 
 - (void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [session stopRunning];
+    [self stopPreview];
+}
+
+- (void) dealloc {
+    [self stopPreview];
 }
 
 - (void) viewDidLoad
 {
     [super viewDidLoad];
+    [self setupScanner];
     readyToScan = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(
                                               showWelcomeMessage) name:didLoadConfigurationFile object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(
                                               shouldRestartApplicationState) name:shouldRestartApplicationState object:nil];
-    const float reticleSize = 175.0f;
-    CGRect screenBounds = [[UIScreen screens][0] bounds];
-    CGRect rect = CGRectMake((screenBounds.size.width - reticleSize) * 0.5f,
-                             (screenBounds.size.height - reticleSize) * 0.5f, reticleSize, reticleSize);
-    reticleView = [[UIView alloc] initWithFrame:rect];
-    reticleView.backgroundColor = [UIColor clearColor];
-    reticleView.layer.borderColor = [UIColor whiteColor].CGColor;
-    reticleView.layer.borderWidth = 1.0f;
-    reticleView.layer.cornerRadius = 16.f;
-    reticleView.alpha = 0.0f;
-    [self.view addSubview:reticleView];
 }
 
 - (void) didReceiveMemoryWarning
@@ -89,32 +102,31 @@
 #if !(TARGET_IPHONE_SIMULATOR)
     session = [[AVCaptureSession alloc] init];
     AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+
+    if (!session || !device) {
+        [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"bad_device_message"]];
+        return;
+    }
+
     NSError* error = nil;
     AVCaptureDeviceInput* input = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
 
-    if (input) {
-        // Add the input to the session
-        [session addInput:input];
-    }
-    else {
+    if (!input) {
         NSLog(@"error: %@", error);
-        NSString* err = [[Config sharedInstance] errorMessageForKey:@"bad_device_message"];
-
-        if (!err) {
-            err = @"Kaamera kasutamine ebaõnnestus. Palun taaskäivitage rakendus.";
-        }
-
-        [SharedDelegate presentDefaultError:err];
+        [SharedDelegate presentError:[[Config sharedInstance] errorMessageForKey:@"bad_device_message"]];
         return;
     }
+
+    [session addInput:input];
 
     AVCaptureVideoPreviewLayer* _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:session];
     _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     _previewLayer.bounds = self.view.bounds;
     _previewLayer.position = CGPointMake(CGRectGetMidX(self.view.bounds),
                                          CGRectGetMidY(self.view.bounds));
+    _previewLayer.frame = self.view.frame;
     [self.view.layer addSublayer:_previewLayer];
-    [session startRunning];
+    [self startPreview];
 #endif
 }
 
@@ -124,7 +136,7 @@
             [SharedDelegate error]) {
         return;
     }
-
+    
     NSArray* appURL = [[Config sharedInstance] getParameter:@"verification_url"];
     ALCustomAlertView* alert;
 
@@ -154,21 +166,24 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 
     if (enabled == YES) {
-        [self setReticleVisible:YES];
-        output = [[AVCaptureMetadataOutput alloc] init];
+        [[AccessibilityUtil sharedInstance] sendQRViewAnnouncment];
 
+        if (!output) {
+            output = [[AVCaptureMetadataOutput alloc] init];
+        }
         if (!output) {
             NSString* err = [[Config sharedInstance] errorMessageForKey:@"bad_device_message"];
             [SharedDelegate presentError:err];
             return;
         }
 
-        [session addOutput:output];
-        [output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]];
-        [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+        if (![session.outputs containsObject:output]) {
+            [session addOutput:output];
+            [output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]];
+            [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+        }
     }
     else {
-        [self setReticleVisible:NO];
         [session removeOutput:output];
     }
 
@@ -182,31 +197,8 @@
 - (void) shouldRestartApplicationState
 {
     readyToScan = NO;
-    reticleView.hidden = YES;
-    reticleView.alpha = 0.0f;
     [SharedDelegate setCurrentVoteContainer:nil];
     [[Config sharedInstance] requestRemoteConfigurationFile];
-}
-
-- (void) setReticleVisible:(BOOL)visible
-{
-    if (visible == YES) {
-        reticleView.hidden = NO;
-        reticleView.alpha = 0.0f;
-        [UIView animateWithDuration:0.4 animations:^ {
-                   self->reticleView.alpha = 1.0f;
-               } completion: ^ (BOOL finished) {
-        }];
-    }
-    else {
-        reticleView.hidden = NO;
-        reticleView.alpha = 1.0f;
-        [UIView animateWithDuration:0.4 animations:^ {
-                   self->reticleView.alpha = 0.0f;
-               } completion: ^ (BOOL finished) {
-            self->reticleView.hidden = YES;
-        }];
-    }
 }
 
 - (void) verifyQrString:(NSString*)qrStr

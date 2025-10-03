@@ -26,6 +26,7 @@ static NSString* shouldRestartApplicationState = @"VVK_shouldRestartApplicationS
 @interface Config : NSObject <RequestDelegate, ALCustomAlertViewDelegate>
 {
     __strong NSDictionary* config;
+    __strong NSDictionary* defaultErrorKeyValues;
 @private
     BOOL isLoaded;
     BOOL isRequesting;
@@ -39,6 +40,7 @@ static NSString* shouldRestartApplicationState = @"VVK_shouldRestartApplicationS
 - (void) requestRemoteConfigurationFile;
 
 - (UIColor*) colorForKey:(NSString*)key;
+- (NSString*) errorTitleForKey:(NSString*)key;
 - (NSString*) errorMessageForKey:(NSString*)key;
 - (NSString*) textForKey:(NSString*)key;
 - (id) getParameter:(NSString*)key;

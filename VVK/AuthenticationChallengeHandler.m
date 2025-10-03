@@ -19,34 +19,40 @@
 
 #pragma mark - Request authentication delegate
 
-- (NSURLCredential*) analyzeChallenge:(NSURLAuthenticationChallenge*)challenge request:
-    (Request*)request
+- (NSURLCredential*)analyzeChallenge:(NSURLAuthenticationChallenge*)challenge request:(Request*)request
 {
     NSURLProtectionSpace* protectionSpace  = challenge.protectionSpace;
-    SecTrustRef trust = protectionSpace.serverTrust;
-    CFArrayRef certs = SecTrustCopyCertificateChain(trust);
+    SecTrustRef serverTrust = protectionSpace.serverTrust;
 
-    SecPolicyRef policy = SecPolicyCreateSSL(true, (request.validHost ? (__bridge CFStringRef)request.validHost : NULL));
-
-    OSStatus err = SecTrustCreateWithCertificates(certs, policy, &trust);
-    CFRelease(policy);
-
-    if (err != noErr) {
+    CFArrayRef certs = SecTrustCopyCertificateChain(serverTrust);
+    if (!certs) {
         return nil;
     }
 
-    NSURLCredential* credential = [NSURLCredential credentialForTrust:trust];
+    SecPolicyRef policy = SecPolicyCreateSSL(true, (request.validHost ? (__bridge CFStringRef)request.validHost : NULL));
 
-    CFErrorRef *error = nil;
-    BOOL isTrusted = SecTrustEvaluateWithError(trust, error);
+    SecTrustRef newTrust = NULL;
+    OSStatus err = SecTrustCreateWithCertificates(certs, policy, &newTrust);
 
-    CFRelease(trust);
+    CFRelease(certs);
+    CFRelease(policy);
 
-    if (isTrusted) {
-        return credential;
+    if (err != noErr || newTrust == NULL) {
+        return nil;
     }
 
-    return nil;
+    NSURLCredential* credential = [NSURLCredential credentialForTrust:newTrust];
+
+    CFErrorRef error = NULL;
+    BOOL isTrusted = SecTrustEvaluateWithError(newTrust, &error);
+
+    if (error) {
+        CFRelease(error);
+    }
+
+    CFRelease(newTrust);
+
+    return isTrusted ? credential : nil;
 }
 
 - (void) request:(Request*)request didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge

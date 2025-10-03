@@ -6,7 +6,7 @@
 
 #import "ChoiceList.h"
 
-NSString *choiceListEncoded = @"ew0KICAgICAgICAgICAgIktlbGxlIHZhbGlkIEV1cm9vcGEgUGFybGFtZW50aT8iOiB7DQogICAgICAgICAgICAgICAgIjAwMDAuMTAxIjogIkhlcm1lcyIsDQogICAgICAgICAgICAgICAgIjAwMDAuMTAyIjogIkhlcGhhZXN0dXMiLA0KICAgICAgICAgICAgICAgICIwMDAwLjEwMyI6ICJBcmVzIiwNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDQiOiAiQ3Jvbm9zIg0KICAgICAgICAgICAgfQ0KICAgICAgICB9";
+NSString *choiceListEncoded = @"ew0KIkVyYWtvbmQgQSI6IHsNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDEiOiAiSGVybWVzIiwNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDIiOiAiSGVwaGFlc3R1cyIsDQogICAgICAgICAgICAgICAgIjAwMDAuMTAzIjogIkFyZXMiLA0KICAgICAgICAgICAgICAgICIwMDAwLjEwNCI6ICJDcm9ub3MiDQogICAgICAgICAgICB9LA0KIkVyYWtvbmQgQiI6IHsNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDUiOiAiSnV1ZGl0IiwNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDYiOiAiT2xvdmVybmVzIiwNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDciOiAiRGVzZGVtb25hIiwNCiAgICAgICAgICAgICAgICAiMDAwMC4xMDgiOiAiU2lzeXBob3MiDQp9DQp9DQo=";
 
 
 @interface ChoiceListTests : XCTestCase
@@ -21,11 +21,30 @@ NSString *choiceListEncoded = @"ew0KICAgICAgICAgICAgIktlbGxlIHZhbGlkIEV1cm9vcGEg
 - (void)tearDown {
 }
 
-- (bool) doTestCandidateList:(ChoiceList*)choiceList candidate:(NSString*)candidate
+- (bool) doTestCandidateList:(ChoiceList*)choiceList
+                   candidate:(NSString*)candidate
+                       party:(NSString*)party
+                        name:(NSString*)name
 {
-    Candidate *c1 = [[Candidate alloc] initWithComponents:[candidate componentsSeparatedByString:@";"]];
+    Candidate *c1 = [choiceList findCandidate:candidate];
 
-    return [choiceList isValidCandidate:c1];
+    if (!c1) {
+        return NO;
+    }
+
+    if (![c1.number isEqualToString:candidate]) {
+        return NO;
+    }
+
+    if (![c1.name isEqualToString:name]) {
+        return NO;
+    }
+
+    if (![c1.party isEqualToString:party]) {
+        return NO;
+    }
+
+    return YES;
 }
 
 
@@ -36,31 +55,40 @@ NSString *choiceListEncoded = @"ew0KICAgICAgICAgICAgIktlbGxlIHZhbGlkIEV1cm9vcGEg
 
     bool res;
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.101;Kelle valid Euroopa Parlamenti?;Hermes"];
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.101" party:@"Erakond A" name:@"Hermes"];
     XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.102;Kelle valid Euroopa Parlamenti?;Hephaestus"];
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.102" party:@"Erakond A" name:@"Hephaestus"];
     XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.102;Kelle valid Euroopa Parlamenti?;Hermes"];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.103" party:@"Erakond A" name:@"Ares"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.101;Kelle valid Euroopa Parlamenti?;Dionysus "];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.104" party:@"Erakond A" name:@"Cronos"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"1337.101;Kelle valid Euroopa Parlamenti?;Hermes"];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.105" party:@"Erakond B" name:@"Juudit"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.666;Kelle valid Euroopa Parlamenti?;Hermes"];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.106" party:@"Erakond B" name:@"Olovernes"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.101;Kelle valid Olümpose mäele?;Hermes"];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.107" party:@"Erakond B" name:@"Desdemona"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.101;Kelle valid Euroopa Parlamenti?;HermeS"];
-    XCTAssertFalse(res);
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.108" party:@"Erakond B" name:@"Sisyphos"];
+    XCTAssertTrue(res);
 
-    res = [self doTestCandidateList:choiceList candidate:@"0000.101;Kelle valid Euroopa parlamenti?;Hermes"];
+    res = [self doTestCandidateList:choiceList
+                          candidate:@"0000.109" party:@"Erakond C" name:@"Athena"];
     XCTAssertFalse(res);
 }
 

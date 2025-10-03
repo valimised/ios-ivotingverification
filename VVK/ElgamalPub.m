@@ -3,153 +3,300 @@
 //  VVK
 
 #import "ElgamalPub.h"
+#import "Ballot.h"
+#import "GroupECC.h"
+#import "GroupModP.h"
 #import <openssl/asn1.h>
-
+#import <openssl/x509.h>
 
 #define BEGIN_KEY @"-----BEGIN PUBLIC KEY-----"
 #define END_KEY @"-----END PUBLIC KEY-----"
 
 // oid: 1.3.6.1.4.1.3029.2.1
-#define ELGAMAL_OID "\x2b\x6\x1\x4\x1\x97\x55\x2\x1"
+#define MODP_ELGAMAL_OID "\x2b\x06\x01\x04\x01\x97\x55\x02\x01"
+#define ECC_ELGAMAL_OID "\x2b\x06\x01\x04\x01\x86\x8d\x1f\x01"
 
 @implementation ElgamalPub
 
-@synthesize p;
-@synthesize q;
-@synthesize g;
+@synthesize group;
 @synthesize y;
 @synthesize elId;
 
-- (id) initWithPemString:(NSString*)pemStr
-{
-    self = [super init];
+// MARK: - Helper Methods
 
-    if (self) {
-        pemStr = [pemStr stringByReplacingOccurrencesOfString:BEGIN_KEY withString:@""];
-        pemStr = [pemStr stringByReplacingOccurrencesOfString:END_KEY withString:@""];
-        NSData* data = [[NSData alloc] initWithBase64EncodedString:pemStr options:
-                                       NSDataBase64DecodingIgnoreUnknownCharacters];
-        const unsigned char* stream = (const unsigned char*)[data bytes];
-        long len;
-        int tag, xclass = 0;
-        int j;
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+- (NSString *)preprocessPemString:(NSString *)pemStr {
+    pemStr = [pemStr stringByReplacingOccurrencesOfString:BEGIN_KEY withString:@""];
+    pemStr = [pemStr stringByReplacingOccurrencesOfString:END_KEY withString:@""];
+    return pemStr.length > 0 ? pemStr : nil;
+}
 
-        if (j == 0x80 || tag != V_ASN1_SEQUENCE) {
-            return nil;
-        }
+- (BOOL)readASN1Object:(const unsigned char **)stream
+                length:(long *)len
+                exptag:(int)exptag
+            dataLength:(NSUInteger)dataLength {
+    int tag, xclass = 0;
+    int status = ASN1_get_object(stream, len, &tag, &xclass, dataLength);
+    return !(status == 0x80 || tag != exptag);
+}
 
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+- (id)initializeModPGroupWithStream:(const unsigned char **)stream
+                         dataLength:(NSUInteger)dataLength {
+    long len = 0;
+    BIGNUM *p = NULL;
+    BIGNUM *g = NULL;
+    ModPGroup *modpGroup = nil;
 
-        if (j == 0x80 || tag != V_ASN1_SEQUENCE) {
-            return nil;
-        }
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:dataLength]) goto error;
 
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_INTEGER
+                   dataLength:dataLength]) goto error;
 
-        if (j == 0x80 || tag != V_ASN1_OBJECT) {
-            return nil;
-        }
+    p = BN_bin2bn(*stream, (int)len, NULL);
+    if (!p) goto error;
+    *stream += len;
 
-        char oid[len];
-        memcpy(oid, stream, len);
-        stream = stream + len;
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_INTEGER
+                   dataLength:dataLength]) goto error;
 
-        if (strncmp(oid, ELGAMAL_OID, len) != 0) {
-            return nil;
-        }
+    g = BN_bin2bn(*stream, (int)len, NULL);
+    if (!g) goto error;
+    *stream += len;
 
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+    modpGroup = [[ModPGroup alloc] initWithParams:p generator:g];
+    if (modpGroup == nil) goto error;
 
-        if (j == 0x80 || tag != V_ASN1_SEQUENCE) {
-            return nil;
-        }
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_GENERALSTRING
+                   dataLength:dataLength]) goto error;
 
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+    elId = [[NSString alloc] initWithBytes:*stream length:len encoding:NSUTF8StringEncoding];
+    *stream += len;
 
-        if (j == 0x80 || tag != V_ASN1_INTEGER) {
-            return nil;
-        }
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_BIT_STRING
+                   dataLength:dataLength]) goto error;
 
-        p = BN_bin2bn(stream, (int)len, NULL);
+    if ((*stream)[0] != 0) goto error; // Validate leading zero
 
-        if (p == nil) {
-            return nil;
-        }
+    (*stream)++;
 
-        BIGNUM* tmp = BN_new();
-        q = BN_new();
-        BN_sub(tmp, p, BN_value_one());
-        BN_rshift1(q, tmp);
-        BN_clear_free(tmp);
-        stream = stream + len;
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:dataLength]) goto error;
 
-        if (j == 0x80 || tag != V_ASN1_INTEGER) {
-            return nil;
-        }
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_INTEGER
+                   dataLength:dataLength]) goto error;
 
-        g = BN_bin2bn(stream, (int)len, NULL);
+    y = [[ModPElement alloc] initWithModPBytes:*stream length:len group:modpGroup];
+    if (!y) goto error;
 
-        if (g == nil) {
-            return nil;
-        }
+    group = modpGroup;
 
-        stream = stream + len;
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
+error:
+    BN_free(p);
+    BN_free(g);
 
-        if (j == 0x80 || tag != V_ASN1_GENERALSTRING) {
-            return nil;
-        }
-
-        elId = [[NSString alloc] initWithBytes:stream length:len encoding:NSUTF8StringEncoding];
-        stream = stream + len;
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
-
-        if (j == 0x80 || tag != V_ASN1_BIT_STRING) {
-            return nil;
-        }
-
-        // ASN1 Integer encoding of y has an 0 byte prepeneded
-        if (stream[0] != 0) {
-            return nil;
-        }
-
-        stream++;
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
-
-        if (j == 0x80 || tag != V_ASN1_SEQUENCE) {
-            return nil;
-        }
-
-        j = ASN1_get_object(&stream, &len, &tag, &xclass, [data length]);
-
-        if (j == 0x80 || tag != V_ASN1_INTEGER) {
-            return nil;
-        }
-
-        y = BN_bin2bn(stream, (int)len, NULL);
+    if (group) {
+        return self;
     }
 
+    return nil;
+}
+
+- (id)initializeECCGroupWithStream:(const unsigned char **)stream
+                        dataLength:(NSUInteger)dataLength {
+    long len = 0;
+    NSString *curveName = nil;
+    ECCGroup *eccGroup = nil;
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:dataLength]) goto error;
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_GENERALSTRING
+                   dataLength:dataLength]) goto error;
+
+    curveName = [[NSString alloc] initWithBytes:*stream
+                                         length:len
+                                       encoding:NSUTF8StringEncoding];
+    *stream += len;
+
+    eccGroup = [[ECCGroup alloc] initWithName:curveName];
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_GENERALSTRING
+                   dataLength:dataLength]) goto error;
+
+    elId = [[NSString alloc] initWithBytes:*stream
+                                    length:len
+                                  encoding:NSUTF8StringEncoding];
+    *stream += len;
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_BIT_STRING
+                   dataLength:dataLength]) goto error;
+
+    if ((*stream)[0] != 0) goto error; // Validate leading zero
+
+    (*stream)++;
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:dataLength]) goto error;
+
+    if (![self readASN1Object:stream
+                       length:&len
+                       exptag:V_ASN1_OCTET_STRING
+                   dataLength:dataLength]) goto error;
+
+    y = [[ECCElement alloc] initWithECCBytes:*stream length:len group:eccGroup];
+    if (!y) goto error;
+
+    group = eccGroup;
+
+error:
+
+    if (group) {
+        return self;
+    }
+
+    return nil;
+}
+
+// MARK: - ElgamalPub methods
+
+- (id) init
+{
+    group = nil;
+    y = nil;
+    elId = nil;
     return self;
+}
+
+- (id)initWithPemString:(NSString *)pemStr {
+    self = [super init];
+    if (!self) return nil;
+
+    NSString *cleanedPemStr = [self preprocessPemString:pemStr];
+    if (!cleanedPemStr) return nil;
+
+    NSDataBase64DecodingOptions options = NSDataBase64DecodingIgnoreUnknownCharacters;
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:cleanedPemStr
+                                                       options:options];
+    if (!data) return nil;
+
+    const unsigned char *stream = (const unsigned char *)[data bytes];
+    long len = 0;
+
+    if (![self readASN1Object:&stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:[data length]]) return nil;
+
+    if (![self readASN1Object:&stream
+                       length:&len
+                       exptag:V_ASN1_SEQUENCE
+                   dataLength:[data length]]) return nil;
+
+    if (![self readASN1Object:&stream
+                       length:&len
+                       exptag:V_ASN1_OBJECT
+                   dataLength:[data length]]) return nil;
+
+    char oid[len];
+    memcpy(oid, stream, len);
+    stream += len;
+
+    BOOL isModP = strncmp(oid, MODP_ELGAMAL_OID, len) == 0;
+    BOOL isECC = strncmp(oid, ECC_ELGAMAL_OID, len) == 0;
+
+    if (isModP) {
+        return [self initializeModPGroupWithStream:&stream dataLength:[data length]];
+    } else if (isECC) {
+        return [self initializeECCGroupWithStream:&stream dataLength:[data length]];
+    }
+
+    return nil;
+}
+
+- (Element*) decryptBallot:(Ballot*)ballot
+                randomness:(Scalar*)randomness
+{
+    return [self decryptCiphertextvBlindedMsg:ballot.vBlindedMsg
+                                       uBlind:ballot.uBlind
+                                   randomness:randomness];
+}
+
+- (Element*) decryptCiphertextvBlindedMsg:(Element*)vBlindedMsg
+                                   uBlind:(Element*)uBlind
+                               randomness:(Scalar*)randomness
+{
+    Element * generator = nil;
+    Element *gr = nil;
+    Element *factor = nil;
+    Element* factorInverse = nil;
+    Element* ret = nil;
+
+    if ((vBlindedMsg == nil) || (uBlind == nil) || (randomness == nil)) {
+        goto end;
+    }
+
+    // https://gitlab.anu.edu.au/u1113289/thomas-public-paper/-/raw/master/Estonia_IVXV_June2022.pdf
+    generator = [group generator];
+    if (generator == nil) {
+        goto end;
+    }
+
+    gr = [generator scaleWithScalar:randomness];
+    if (gr == nil) {
+        goto end;
+    }
+
+    if (![uBlind equalsWithElement:gr]) {
+        DLog(@"uBLind randomness check failed");
+        goto end;
+    }
+
+    factor = [y scaleWithScalar:randomness];
+    if (factor == nil) {
+        goto end;
+    }
+
+    factorInverse = [factor inverse];
+    if (factorInverse == nil) {
+        goto end;
+    }
+
+    ret = [factorInverse operationWithElement:vBlindedMsg];
+
+end:
+    return ret;
 }
 
 - (void) dealloc
 {
     DLog(@"key dealloc");
-    BN_clear_free(p);
-    p = NULL;
-    BN_clear_free(g);
-    g = NULL;
-    BN_clear_free(y);
-    y = NULL;
-    BN_clear_free(q);
-    q = NULL;
+    group = nil;
+    y = nil;
     elId = nil;
 }
 
-- (NSString*) description
-{
-    return [NSString stringWithFormat:@"%@: {p:%@, g:%@, y:%@}", elId, p, g, y];
-}
 @end

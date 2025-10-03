@@ -6,18 +6,20 @@
 
 @implementation Candidate
 
-@synthesize name;
-@synthesize party;
-@synthesize number;
+@synthesize name=_name;
+@synthesize party=_party;
+@synthesize number=_number;
 
-- (id) initWithComponents:(in NSArray*)components
+- (id) initWithNumber:(NSString*)number
+                party:(NSString*)party
+                 name:(NSString*)name
 {
     self = [super init];
 
     if (self) {
-        number = components[0];
-        party = components[1];
-        name = components[2];
+        _number = number;
+        _party = party;
+        _name = name;
     }
 
     return self;
@@ -25,15 +27,14 @@
 
 - (void) dealloc
 {
-    name = nil;
-    number = nil;
-    party = nil;
+    _name = nil;
+    _number = nil;
+    _party = nil;
 }
 
 - (NSString*) description
 {
-    return [NSString stringWithFormat:@"<Candidate: %p> {name: %@, party: %@, number: %@}", self, name,
-                     party, number];
+    return [NSString stringWithFormat:@"<Candidate: %p> {name: %@, party: %@, number: %@}", self, _name, _party, _number];
 }
 
 @end

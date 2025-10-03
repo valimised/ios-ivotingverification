@@ -13,6 +13,6 @@
 
 - (id) initWithBase64:(NSString*)base64;
 
-- (bool)isValidCandidate:(Candidate*)candidate;
+- (Candidate*)findCandidate:(NSString*)number;
 
 @end

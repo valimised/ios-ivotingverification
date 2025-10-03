@@ -545,7 +545,13 @@ end:
              @"/ESTEID-SK_2015.pem.crt",
              @"/esteid2018.pem.crt",
              @"/eid2016.crt",
+             @"/eid_q_2024e.crt",
+             @"/eid_q_2024r.crt",
+             @"/eid_q_2021e.crt",
+             @"/eid_q_2021r.crt",
 #ifdef DEBUG
+//             @"/eid_nq_2021e.crt",
+//             @"/eid_nq_2021r.crt",
 //             @"/TEST_of_ESTEID-SK_2011.pem.crt",
 //             @"/TEST_of_ESTEID-SK_2015.pem.crt",
 //             @"/TEST_of_ESTEID2018.pem.crt",

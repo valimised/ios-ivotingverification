@@ -4,9 +4,9 @@
 
 @interface Candidate : NSObject
 {
-    __strong NSString* name;
-    __strong NSString* party;
-    __strong NSString* number;
+    NSString* _name;
+    NSString* _party;
+    NSString* _number;
 }
 
 #pragma mark - Properties
@@ -17,6 +17,6 @@
 
 #pragma mark - Methods
 
-- (id) initWithComponents:(NSArray*)components;
+- (id) initWithNumber:(NSString*)number party:(NSString*) party name:(NSString*) name;
 
 @end

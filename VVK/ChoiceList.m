@@ -32,20 +32,16 @@
     return self;
 }
 
-- (bool)isValidCandidate:(Candidate*)candidate
+- (Candidate*)findCandidate:(NSString*)number
 {
-    if ([choiceList[candidate.party] isKindOfClass:[NSDictionary class]]) {
-        NSString* nameInList = choiceList[candidate.party][candidate.number];
-        if (nameInList != nil) {
-            NSComparisonResult res = [nameInList compare:candidate.name options:NSLiteralSearch];
-            if (res == NSOrderedSame) {
-                return true;
-            }
+    for (NSString *party in choiceList) {
+        NSDictionary *members = choiceList[party];
+        if (members[number]) {
+            return [[Candidate alloc] initWithNumber:number party:party name:members[number]];
         }
     }
-    return false;
+    return nil;
 }
-
 
 - (void) dealloc
 {

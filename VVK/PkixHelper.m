@@ -10,12 +10,54 @@
 
 @implementation PkixHelper
 
-+ (BOOL) verifyResp:(NSData*)respData collectorRegCert:(NSData*)collectorRegCert
-    pkixCert:(NSData*)pkixCert data:(NSData*)data genTime:(ASN1_GENERALIZEDTIME*)genTime
+
+- (id) initWithData:(NSData*)respData
+{
+    self = [super init];
+    if (!self) return nil;
+
+    token = NULL;
+    tst_info = NULL;
+
+    BIO* inBufReg = BIO_new_mem_buf([respData bytes], (int)[respData length]);
+
+    if (!inBufReg) {
+        DLog(@"Couldn't read pkix respData into BIO");
+        return nil;
+    }
+
+    token = d2i_PKCS7_bio(inBufReg, NULL);
+
+    BIO_free(inBufReg);
+
+    if (!token) {
+        DLog(@"Couldn't read pkix response");
+        return nil;
+    }
+
+    tst_info = PKCS7_to_TS_TST_INFO(token);
+
+    if (!tst_info) {
+        DLog(@"Couldn't get tst info obj from pkcs7 obj");
+        return nil;
+    }
+
+    return self;
+
+}
+
+
+- (ASN1_GENERALIZEDTIME*) getTime
+{
+    return ASN1_GENERALIZEDTIME_dup(TS_TST_INFO_get_time(tst_info));
+}
+
+
+- (BOOL) verifyResp:(NSData*)collectorRegCert
+    pkixCert:(NSData*)pkixCert data:(NSData*)data
 {
     BOOL ret = NO;
     TS_VERIFY_CTX* verify_ctx = NULL;
-    PKCS7* token = NULL;
     BIO* inBufData = NULL;
     BIO* inBufPkixCert = NULL;
     X509* pkix = NULL;
@@ -26,21 +68,8 @@
     BIO* inBufCollectorCert = NULL;
     X509* collectorRegX509 = NULL;
     EVP_PKEY* collectorPub = NULL;
-    TS_TST_INFO* tst_info = NULL;
     EVP_MD_CTX* md_ctx = NULL;
-    BIO* inBufReg = BIO_new_mem_buf([respData bytes], (int)[respData length]);
 
-    if (!inBufReg) {
-        DLog(@"Couldn't read pkix respData into BIO");
-        goto end;
-    }
-
-    token = d2i_PKCS7_bio(inBufReg, NULL);
-
-    if (!token) {
-        DLog(@"Couldn't read pkix response");
-        goto end;
-    }
 
     verify_ctx = TS_VERIFY_CTX_new();
     int f = TS_VFY_VERSION | TS_VFY_SIGNER | TS_VFY_DATA | TS_VFY_SIGNATURE;
@@ -100,16 +129,9 @@
         goto end;
     }
 
-    tst_info = PKCS7_to_TS_TST_INFO(token);
-
-    if (!tst_info) {
-        DLog(@"Couldn't get tst info obj from pkcs7 obj");
-        goto end;
-    }
-
     inBufCollectorCert = BIO_new_mem_buf([collectorRegCert bytes], (int)[collectorRegCert length]);
 
-    if (!inBufReg) {
+    if (!inBufCollectorCert) {
         DLog(@"Couldn't read collector reg cert data into BIO");
         goto end;
     }
@@ -128,7 +150,6 @@
         goto end;
     }
 
-    // TODO: remove d2i_PKIX_NONCE
     ASN1_INTEGER* nonce = ASN1_INTEGER_dup(TS_TST_INFO_get_nonce(tst_info));
     unsigned char* tmp = nonce->data;
     X509_SIG* xsig = d2i_X509_SIG(NULL, (const unsigned char**) &tmp, nonce->length);
@@ -154,11 +175,8 @@
         return NO;
     }
 
-    genTime = (ASN1_GENERALIZEDTIME*) TS_TST_INFO_get_time(tst_info);
     ret =  YES;
 end:
-    BIO_free(inBufReg);
-    PKCS7_free(token);
     TS_VERIFY_CTX_free(verify_ctx);
     BIO_free(inBufPkixCert);
     BIO_free(inBufCollectorCert);
@@ -167,4 +185,64 @@ end:
     EVP_MD_CTX_destroy(md_ctx);
     return ret;
 }
+
+
+- (BOOL) compareWithOCSP:(OcspHelper*)ocsp maxdiff:(int)maxdiff
+{
+
+    BOOL ret = NO;
+
+    ASN1_GENERALIZEDTIME *pkix_gen_time = NULL;
+    ASN1_GENERALIZEDTIME *ocsp_produced_at = NULL;
+
+    int pday = 0;
+    int psec = 0;
+
+    if (!ocsp) {
+        goto error;
+    }
+
+    ocsp_produced_at = [ocsp getProducedAt];
+    if (ocsp_produced_at == NULL) {
+        goto error;
+    }
+
+    pkix_gen_time = [self getTime];
+    if (pkix_gen_time == NULL) {
+        goto error;
+    }
+
+    if (!ASN1_TIME_diff(&pday, &psec, pkix_gen_time, ocsp_produced_at)) {
+        goto error;
+    }
+
+    if (pday != 0) {
+        goto error;
+    }
+
+    if (psec < 0) {
+        goto error;
+    }
+
+    if (psec > maxdiff) {
+        goto error;
+    }
+
+    ret = YES;
+
+error:
+
+    ASN1_GENERALIZEDTIME_free(ocsp_produced_at);
+    ASN1_GENERALIZEDTIME_free(pkix_gen_time);
+
+    return ret;
+}
+
+
+- (void) dealloc
+{
+    PKCS7_free(token);
+    TS_TST_INFO_free(tst_info);
+}
+
 @end

@@ -8,29 +8,23 @@
 #import <openssl/pem.h>
 #import <openssl/err.h>
 
-@interface OcspHelper()
-+ (int) checkAIAresponder:(OCSP_BASICRESP*)resp issuer:(X509*)issuer;
-@end
 
 @implementation OcspHelper
 
-+ (BOOL) verifyResp:(NSData*)respData responderCertData:(NSArray*)responderCerts
-    requestedCert:(X509*)requestedCert issuerCert:(X509*)issuerCert
-    producedAt:(ASN1_GENERALIZEDTIME*)producedAt
+
+- (id) initWithData:(NSData*)respData
 {
-    BOOL ret = NO;
+    self = [super init];
+    if (!self) return nil;
+
+    bs = NULL;
+
     OCSP_RESPONSE* resp = NULL;
-    X509* cert = NULL;
-    STACK_OF(X509)* trustedCerts = NULL;
-    OCSP_BASICRESP* bs = NULL;
-    OCSP_CERTID* reqCertId  = NULL;
-    BIO* certBio = NULL;
-    // Read and init ocsp response
     BIO* respBio = BIO_new_mem_buf([respData bytes], (int)[respData length]);
 
     if (respBio == NULL) {
         DLog(@"Couldn't read respData into BIO");
-        goto end;
+        return nil;
     }
 
     resp = d2i_OCSP_RESPONSE_bio(respBio, NULL);
@@ -38,8 +32,40 @@
 
     if (resp == NULL) {
         DLog(@"Couldn't parse OCSP response");
-        goto end;
+        return nil;
     }
+
+    int i = OCSP_response_status(resp);
+    bs = OCSP_response_get1_basic(resp);
+    OCSP_RESPONSE_free(resp);
+
+    if (i != OCSP_RESPONSE_STATUS_SUCCESSFUL) {
+        DLog(@"OCSP response not successful: %s", OCSP_response_status_str(i));
+        return nil;
+    }
+
+    if (!bs) {
+        DLog(@"Couldn't init Basic OCSP response");
+        return nil;
+    }
+
+    return self;
+}
+
+- (ASN1_GENERALIZEDTIME*) getProducedAt
+{
+    return ASN1_GENERALIZEDTIME_dup(OCSP_resp_get0_produced_at(bs));
+}
+
+
+- (BOOL) verifyResp:(NSArray*)responderCerts
+    requestedCert:(X509*)requestedCert issuerCert:(X509*)issuerCert
+{
+    BOOL ret = NO;
+    X509* cert = NULL;
+    STACK_OF(X509)* trustedCerts = NULL;
+    OCSP_CERTID* reqCertId  = NULL;
+    BIO* certBio = NULL;
 
     trustedCerts = sk_X509_new_null();
 
@@ -70,25 +96,11 @@
         sk_X509_push(trustedCerts, cert);
     }
 
-    int i;
-    i = OCSP_response_status(resp);
 
-    if (i != OCSP_RESPONSE_STATUS_SUCCESSFUL) {
-        DLog(@"OCSP response not successful: %s", OCSP_response_status_str(i));
-        goto end;
-    }
-
-    bs = OCSP_response_get1_basic(resp);
-
-    if (!bs) {
-        DLog(@"Couldn't init Basic OCSP response");
-        goto end;
-    }
-
-    i = OCSP_basic_verify(bs, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
+    int i = OCSP_basic_verify(bs, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
 
     if (i <= 0) {
-        i = [self checkAIAresponder:bs issuer:issuerCert];
+        i = [self checkAIAresponder:issuerCert];
     }
 
     if (i <= 0) {
@@ -123,17 +135,14 @@
     }
 
     ret = YES;
-    OCSP_resp_get0_produced_at(bs);
 end:
-    OCSP_RESPONSE_free(resp);
     //X509_free(cert);
     sk_X509_pop_free(trustedCerts, X509_free);
-    OCSP_BASICRESP_free(bs);
     OCSP_CERTID_free(reqCertId);
     return ret;
 }
 
-+ (int) checkAIAresponder:(OCSP_BASICRESP*)resp issuer:(X509*)issuer
+- (int) checkAIAresponder:(X509*)issuer
 {
     int ret = 0;
     STACK_OF(X509)* trustedCerts = sk_X509_new_null();
@@ -143,15 +152,15 @@ end:
         goto end;
     }
 
-    for (int i = 0; i < sk_X509_num(OCSP_resp_get0_certs(resp)); i++) {
-        X509* responderCert = sk_X509_value(OCSP_resp_get0_certs(resp), i);
+    for (int i = 0; i < sk_X509_num(OCSP_resp_get0_certs(bs)); i++) {
+        X509* responderCert = sk_X509_value(OCSP_resp_get0_certs(bs), i);
         // is signed by same issuer as the cert whose ocsp we are checking
         int retval = X509_check_issued(issuer, responderCert);
 
         if (retval == X509_V_OK) {
             // and has proper signature of the responder
             sk_X509_push(trustedCerts, responderCert);
-            int res = OCSP_basic_verify(resp, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
+            int res = OCSP_basic_verify(bs, trustedCerts, NULL, OCSP_TRUSTOTHER | OCSP_NOINTERN);
             sk_X509_pop(trustedCerts);
 
             if (res > 0) {
@@ -167,6 +176,12 @@ end:
 end:
     sk_X509_free(trustedCerts);
     return ret;
+}
+
+
+- (void) dealloc
+{
+    OCSP_BASICRESP_free(bs);
 }
 
 @end

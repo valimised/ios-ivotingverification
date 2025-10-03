@@ -1,0 +1,6 @@
+
+GNUstep library helps us to compile objective-c on Linux.
+
+sudo apt install gobjc gnustep gnustep-devel
+in bashrc: . /usr/share/GNUstep/Makefiles/GNUstep.sh
+

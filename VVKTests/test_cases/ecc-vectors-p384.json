@@ -1,0 +1,16 @@
+{
+    "election_id": "TESTELECTIONRK",
+    "public_key": "MIGOMCQGCSsGAQQBho0fATAXGwVQLTM4NBsOVEVTVEVMRUNUSU9OUksDZgAwYwRhBHnzKfEZ91U6\ntcaeQU9GIx5UloRzGqHeVkWeZcgwotDht3nlLCC4omWWDQJgYW4mdHqjtufCopcbycSWEpFMVAFW\nTikaz3XZhftw5CDMom9wfPnwxptMKod08jekS4Q2bA==",
+    "private_key": [
+        "MGgEBAAAAAEEYDBeAgEAMCQGCSsGAQQBho0fATAXGwVQLTM4NBsOVEVTVEVMRUNUSU9OUksEMwQxAJ/ThZMtaexGKbYo/u4LUDN7FEjxqTuomazodGvB/wINbY56A52MXQP0WnM96T0j+w=="
+    ],
+    "encryptions": [
+        {
+            "ciphertext": "MIHWMAsGCSsGAQQBho0fATCBxgRhBH0yNjNCM5FzPQAcX8marZbpkvecFpHEyj3q/gNZDfmqwNgNBXURTg2CMKgR52Oen15MCg0LD7LGpC4Y67z1wS27Zu4SrocGAgraZKwek07sZxADXtgTc1i5Z3AQF6llWgRhBKI9kfEhBAMbpKnIrWCaUcJ892+ETKrlY5n3ASd0OUkg33XCoKZMYTHcbsiPd3KUSGrgb3okgn6Pmec8mvVoltusvjjikPzCyoj76SK10HpArS16nTZ8v11+mhB1VBr3Pg==",
+            "random": "SWtZEcnGb+BdayzyEIrhDAto7K7anlPIA/+Cj29gBdw2RvwTnsU1by1mTsb6IXoF",
+            "plaintext_raw": "0000.121",
+            "plaintext_encoded": "BGEEf//////////////////////////////////////////////////4wMDAwLjEyMQAKkj2uqnkgL6E10Db2KHgzJWjSD6DM858PLg1RlcIWSGTJof8qnw9G4wkmOhFi/mL",
+            "proof": "MIH5BGEEIu9wfAkJjq0BRoinY9Dq4K9MPMomXrRrNUgKJkQYawpinjnrUXjtPrBGPCpG0latJ+5RP6ehIGJCb838k71bRYfJNKtK+Ox610cWmgFnhxhmP21iLikUYgUpqv/WaexZBGEEqYpXUMv8aXcwmPNUay6xny40p7iZ38K0UT5cnlQ9TMcccWLfjxzWKDSbaSx8HRAIk6UiqC4R3+/mNOV3LqvEW2XhmtItiewQ4QCm9/1i5pZ1W35208lUawjDGFLtdu9oAjEAnjvI8CozICimqllyRzAkouoGlVLxH719tQIdCwcVfk+RE84gyj4rFHB+jz8Q5UHf"
+        }
+    ]
+}

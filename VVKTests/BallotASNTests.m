@@ -4,7 +4,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "Ballot.h"
+#import "ElgamalPub.h"
+#import "GroupModP.h"
 
 NSString *correctVoteEncoded = @"MIIDGjALBgkrBgEEAZdVAgEwggMJAoIBgFsd8EkKe2dSHgjIzoM5a3Wk+XlpwmGygFOD31eVSSg8\n"
         "xMiZ8u4e1RL2pYoF/EmpxiR7d9veMb3cNaMr65WnM6iGIOklPHMvBS2VsepXK90wWUbpNTk1y5bS\n"
@@ -57,9 +58,9 @@ NSString *incorrectVoteEncoded = @"MIIENzCCAicGCSsGAQQBl1UCATCCAhgCggEBAPWeqWgtF
 
     NSData *data = [[NSData alloc] initWithBase64EncodedString:correctVoteEncoded options:NSDataBase64DecodingIgnoreUnknownCharacters];
     XCTAssertNotNil(data, "data must exist");
-
+    ModPGroup *group = [[ModPGroup alloc] init];
     NSString *questionDesc = @"test";
-    Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:data];
+    Ballot* ballot = [group decodeBallotWithName:questionDesc ciphertext:data];
     XCTAssertNotNil(ballot, "ballot must decode");
 
 }
@@ -68,9 +69,9 @@ NSString *incorrectVoteEncoded = @"MIIENzCCAicGCSsGAQQBl1UCATCCAhgCggEBAPWeqWgtF
 
     NSData *data = [[NSData alloc] initWithBase64EncodedString:incorrectVoteEncoded options:NSDataBase64DecodingIgnoreUnknownCharacters];
     XCTAssertNotNil(data, "data must exist");
-
+    ModPGroup *group = [[ModPGroup alloc] init];
     NSString *questionDesc = @"test";
-    Ballot* ballot = [[Ballot alloc] initWithName:questionDesc andVote:data];
+    Ballot* ballot = [group decodeBallotWithName:questionDesc ciphertext:data];
     XCTAssertNil(ballot, "ballot must not decode");
 }
 

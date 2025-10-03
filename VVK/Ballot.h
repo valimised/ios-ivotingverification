@@ -2,22 +2,28 @@
 //  Ballot.h
 //  VVK
 
-#import "ElGamalCiphertext.h"
+#import <Foundation/Foundation.h>
+
+@class Element;
 
 @interface Ballot : NSObject
 {
 @private
-    __strong NSString* name;
-    ELGAMAL_CIPHER* vote;
+    __strong NSString* _name;
+    Element *_uBlind;
+    Element *_vBlindedMsg;
 }
 
-#pragma mark - Properties
+// MARK: - Properties
 
 @property (nonatomic, readonly) NSString* name;
-@property (nonatomic, readonly) ELGAMAL_CIPHER* vote;
+@property (atomic, readonly) Element* uBlind;
+@property (atomic, readonly) Element* vBlindedMsg;
 
-#pragma mark - Methods
+// MARK: - Methods
 
-- (id) initWithName:(NSString*)ballotName andVote:(NSData*)vote;
+- (id) initWithName:(NSString*)ballotName
+             uBlind:(Element*)uBlind
+        vBlindedMsg:(Element*)vBlindedMsg;
 
 @end

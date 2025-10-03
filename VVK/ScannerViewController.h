@@ -11,11 +11,11 @@
     <ALCustomAlertViewDelegate, AVCaptureMetadataOutputObjectsDelegate>
 {
 @private
+
     AVCaptureSession* session;
 #if !(TARGET_IPHONE_SIMULATOR)
     AVCaptureMetadataOutput* output;
 #endif
-    UIView* reticleView;
     BOOL readyToScan;
 }
 

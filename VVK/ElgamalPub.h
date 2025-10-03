@@ -3,23 +3,32 @@
 //  VVK
 
 #import <Foundation/Foundation.h>
-#import <openssl/bn.h>
+
+@class Ballot;
+@class Group;
+@class Element;
+@class Scalar;
 
 @interface ElgamalPub : NSObject
 {
-    BIGNUM* p;
-    BIGNUM* q;
-    BIGNUM* g;
-    BIGNUM* y;
+    Group* group;
+    Element* y;
     NSString* elId;
 }
 
-@property (atomic, readonly) BIGNUM* p;
-@property (atomic, readonly) BIGNUM* q;
-@property (atomic, readonly) BIGNUM* g;
-@property (atomic, readonly) BIGNUM* y;
+@property (atomic, readonly) Group* group;
+@property (atomic, readonly) Element* y;
 @property (atomic, readonly) NSString* elId;
 
+- (id) init;
+
 - (id) initWithPemString:(NSString*)pemStr;
+
+- (Element*) decryptBallot:(Ballot*)ballot
+                randomness:(Scalar*)randomness;
+
+- (Element*) decryptCiphertextvBlindedMsg:(Element*)vBlindedMsg
+                                   uBlind:(Element*)uBlind
+                               randomness:(Scalar*)randomness;
 
 @end

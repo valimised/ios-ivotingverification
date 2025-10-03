@@ -21,5 +21,5 @@
 @property (nonatomic, readonly) BOOL presentedModally;
 
 - (void) handleResults:(in NSDictionary*)results;
-
+- (IBAction)dismiss:(id)sender;
 @end

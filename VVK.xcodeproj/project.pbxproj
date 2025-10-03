@@ -15,13 +15,28 @@
 		263415E12BAAFC22004D0823 /* Ballot.m in Sources */ = {isa = PBXBuildFile; fileRef = 263415E02BAAFC22004D0823 /* Ballot.m */; };
 		263D67A326AF57D8004E6CBC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 263D67A226AF57D8004E6CBC /* WebKit.framework */; };
 		2660F39C26EB9F420013AD30 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2660F39B26EB9F420013AD30 /* Media.xcassets */; };
+		26678B7C2CF9AFBC005CF100 /* Scalar.m in Sources */ = {isa = PBXBuildFile; fileRef = 26678B7B2CF9AFBC005CF100 /* Scalar.m */; };
+		26678B7F2CF9D2FC005CF100 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 26678B7E2CF9D2FC005CF100 /* Group.m */; };
+		26678B822CF9E143005CF100 /* GroupModP.m in Sources */ = {isa = PBXBuildFile; fileRef = 26678B812CF9E143005CF100 /* GroupModP.m */; };
+		26678B852CF9EF0D005CF100 /* GroupECC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26678B842CF9EF0D005CF100 /* GroupECC.m */; };
+		2678452D2CF89E2C00CE7E23 /* test_cases in Resources */ = {isa = PBXBuildFile; fileRef = 2678452C2CF89DC800CE7E23 /* test_cases */; };
 		269721C62BD147670036BB88 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 269721C52BD147670036BB88 /* PrivacyInfo.xcprivacy */; };
 		269721C72BD147670036BB88 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 269721C52BD147670036BB88 /* PrivacyInfo.xcprivacy */; };
 		26C55CDA29890B8E00BD3D0D /* eid2016.crt in Resources */ = {isa = PBXBuildFile; fileRef = 26C55CD929890B8E00BD3D0D /* eid2016.crt */; };
+		26EFC4F82CF894E1003300B8 /* DecryptionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EFC4F72CF894E1003300B8 /* DecryptionTest.m */; };
 		3B05526F2BD7B3F500F75224 /* C.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B05526E2BD7B3F500F75224 /* C.m */; };
 		3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */; };
 		3BA6882B21A5963300972490 /* esteid2018.pem.crt in Resources */ = {isa = PBXBuildFile; fileRef = 3BA6882821A5963200972490 /* esteid2018.pem.crt */; };
 		3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE786FA1F98A5B800034531 /* DNSResolver.m */; };
+		3BEE2A382CBFA8D200257017 /* DoRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BEE2A372CBFA8D200257017 /* DoRotation.m */; };
+		3BEE2A3B2CE2175300257017 /* AccessibilityUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BEE2A3A2CE2175300257017 /* AccessibilityUtil.m */; };
+		3BEE2A3E2CE75B5F00257017 /* ScaledFonts.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BEE2A3D2CE75B5F00257017 /* ScaledFonts.m */; };
+		5793C98F2D9D39A500DF6EF3 /* tsaocsp in Resources */ = {isa = PBXBuildFile; fileRef = 5793C98E2D9D399F00DF6EF3 /* tsaocsp */; };
+		5793C9912D9D39DE00DF6EF3 /* TsaOcspTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5793C9902D9D39DE00DF6EF3 /* TsaOcspTests.m */; };
+		57DBC2B62DAE5E5100B1BDA6 /* eid_q_2024e.crt in Resources */ = {isa = PBXBuildFile; fileRef = 57DBC2B52DAE5E5100B1BDA6 /* eid_q_2024e.crt */; };
+		57DBC2B82DAE5E5800B1BDA6 /* eid_q_2024r.crt in Resources */ = {isa = PBXBuildFile; fileRef = 57DBC2B72DAE5E5800B1BDA6 /* eid_q_2024r.crt */; };
+		57DBC2C02DBA265D00B1BDA6 /* eid_q_2021e.crt in Resources */ = {isa = PBXBuildFile; fileRef = 57DBC2BF2DBA265D00B1BDA6 /* eid_q_2021e.crt */; };
+		57DBC2C22DBA266300B1BDA6 /* eid_q_2021r.crt in Resources */ = {isa = PBXBuildFile; fileRef = 57DBC2C12DBA266300B1BDA6 /* eid_q_2021r.crt */; };
 		CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3718ACFF6200EDAD25 /* ico_note.png */; };
 		CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */; };
 		CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */ = {isa = PBXBuildFile; fileRef = CF39BE3918ACFF6200EDAD25 /* spinner.png */; };
@@ -32,7 +47,6 @@
 		CF657DA1189FC5BC002C2394 /* VoteVerificationResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF657D9F189FC5BC002C2394 /* VoteVerificationResultsViewController.m */; };
 		CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF657DA0189FC5BC002C2394 /* VoteVerificationResultsViewController.xib */; };
 		CF657DA518A10D81002C2394 /* QRScanResult.m in Sources */ = {isa = PBXBuildFile; fileRef = CF657DA418A10D80002C2394 /* QRScanResult.m */; };
-		CF657DA818A1269F002C2394 /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = CF657DA718A1269F002C2394 /* Crypto.m */; };
 		CF6F86EF1897B29D0021925E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F86EE1897B29D0021925E /* AVFoundation.framework */; };
 		CF8AF46C1898EFFB00E19FB3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF46A1898EFFB00E19FB3 /* AppDelegate.m */; };
 		CF8AF4701898F00800E19FB3 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = CF8AF46F1898F00800E19FB3 /* Request.m */; };
@@ -92,14 +106,36 @@
 		263415E02BAAFC22004D0823 /* Ballot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Ballot.m; path = VVK/Ballot.m; sourceTree = SOURCE_ROOT; };
 		263D67A226AF57D8004E6CBC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2660F39B26EB9F420013AD30 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = SOURCE_ROOT; };
+		26678B7A2CF9AFBC005CF100 /* Scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scalar.h; path = VVK/Scalar.h; sourceTree = SOURCE_ROOT; };
+		26678B7B2CF9AFBC005CF100 /* Scalar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scalar.m; path = VVK/Scalar.m; sourceTree = SOURCE_ROOT; };
+		26678B7D2CF9D2FC005CF100 /* Group.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Group.h; path = VVK/Group.h; sourceTree = SOURCE_ROOT; };
+		26678B7E2CF9D2FC005CF100 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Group.m; path = VVK/Group.m; sourceTree = SOURCE_ROOT; };
+		26678B802CF9E143005CF100 /* GroupModP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroupModP.h; path = VVK/GroupModP.h; sourceTree = SOURCE_ROOT; };
+		26678B812CF9E143005CF100 /* GroupModP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupModP.m; path = VVK/GroupModP.m; sourceTree = SOURCE_ROOT; };
+		26678B832CF9EF0D005CF100 /* GroupECC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroupECC.h; path = VVK/GroupECC.h; sourceTree = SOURCE_ROOT; };
+		26678B842CF9EF0D005CF100 /* GroupECC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupECC.m; path = VVK/GroupECC.m; sourceTree = SOURCE_ROOT; };
+		2678452C2CF89DC800CE7E23 /* test_cases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_cases; sourceTree = "<group>"; };
 		269721C52BD147670036BB88 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		26C55CD929890B8E00BD3D0D /* eid2016.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid2016.crt; path = VVK/cert/eid2016.crt; sourceTree = SOURCE_ROOT; };
-		3B05526E2BD7B3F500F75224 /* C.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = C.m; sourceTree = SOURCE_ROOT; };
-		3B0552702BD7B41F00F75224 /* C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C.h; sourceTree = SOURCE_ROOT; };
+		26EFC4F72CF894E1003300B8 /* DecryptionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecryptionTest.m; sourceTree = "<group>"; };
+		3B05526E2BD7B3F500F75224 /* C.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = C.m; path = VVK/C.m; sourceTree = SOURCE_ROOT; };
+		3B0552702BD7B41F00F75224 /* C.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = C.h; path = VVK/C.h; sourceTree = SOURCE_ROOT; };
 		3B24686D21AEB706001FC9A3 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = VVK/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
 		3BA6882821A5963200972490 /* esteid2018.pem.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = esteid2018.pem.crt; path = VVK/cert/esteid2018.pem.crt; sourceTree = SOURCE_ROOT; };
 		3BE786F91F98A5B700034531 /* DNSResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNSResolver.h; path = VVK/DNSResolver.h; sourceTree = SOURCE_ROOT; };
 		3BE786FA1F98A5B800034531 /* DNSResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DNSResolver.m; path = VVK/DNSResolver.m; sourceTree = SOURCE_ROOT; };
+		3BEE2A362CBFA8D200257017 /* DoRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DoRotation.h; path = VVK/DoRotation.h; sourceTree = SOURCE_ROOT; };
+		3BEE2A372CBFA8D200257017 /* DoRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DoRotation.m; path = VVK/DoRotation.m; sourceTree = SOURCE_ROOT; };
+		3BEE2A392CE2175300257017 /* AccessibilityUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccessibilityUtil.h; path = VVK/AccessibilityUtil.h; sourceTree = SOURCE_ROOT; };
+		3BEE2A3A2CE2175300257017 /* AccessibilityUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccessibilityUtil.m; path = VVK/AccessibilityUtil.m; sourceTree = SOURCE_ROOT; };
+		3BEE2A3C2CE75B5F00257017 /* ScaledFonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScaledFonts.h; path = VVK/ScaledFonts.h; sourceTree = SOURCE_ROOT; };
+		3BEE2A3D2CE75B5F00257017 /* ScaledFonts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScaledFonts.m; path = VVK/ScaledFonts.m; sourceTree = SOURCE_ROOT; };
+		5793C98E2D9D399F00DF6EF3 /* tsaocsp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tsaocsp; sourceTree = "<group>"; };
+		5793C9902D9D39DE00DF6EF3 /* TsaOcspTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TsaOcspTests.m; sourceTree = "<group>"; };
+		57DBC2B52DAE5E5100B1BDA6 /* eid_q_2024e.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid_q_2024e.crt; path = VVK/cert/eid_q_2024e.crt; sourceTree = SOURCE_ROOT; };
+		57DBC2B72DAE5E5800B1BDA6 /* eid_q_2024r.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid_q_2024r.crt; path = VVK/cert/eid_q_2024r.crt; sourceTree = SOURCE_ROOT; };
+		57DBC2BF2DBA265D00B1BDA6 /* eid_q_2021e.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid_q_2021e.crt; path = VVK/cert/eid_q_2021e.crt; sourceTree = SOURCE_ROOT; };
+		57DBC2C12DBA266300B1BDA6 /* eid_q_2021r.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = eid_q_2021r.crt; path = VVK/cert/eid_q_2021r.crt; sourceTree = SOURCE_ROOT; };
 		CF39BE3718ACFF6200EDAD25 /* ico_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ico_note.png; path = VVK/images/ico_note.png; sourceTree = SOURCE_ROOT; };
 		CF39BE3818ACFF6200EDAD25 /* ico_note@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ico_note@2x.png"; path = "VVK/images/ico_note@2x.png"; sourceTree = SOURCE_ROOT; };
 		CF39BE3918ACFF6200EDAD25 /* spinner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spinner.png; path = VVK/images/spinner.png; sourceTree = SOURCE_ROOT; };
@@ -113,8 +149,6 @@
 		CF657DA0189FC5BC002C2394 /* VoteVerificationResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VoteVerificationResultsViewController.xib; path = VVK/VoteVerificationResultsViewController.xib; sourceTree = SOURCE_ROOT; };
 		CF657DA318A10D80002C2394 /* QRScanResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRScanResult.h; path = VVK/QRScanResult.h; sourceTree = SOURCE_ROOT; };
 		CF657DA418A10D80002C2394 /* QRScanResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QRScanResult.m; path = VVK/QRScanResult.m; sourceTree = SOURCE_ROOT; };
-		CF657DA618A1269F002C2394 /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Crypto.h; path = VVK/Crypto.h; sourceTree = SOURCE_ROOT; };
-		CF657DA718A1269F002C2394 /* Crypto.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = Crypto.m; path = VVK/Crypto.m; sourceTree = SOURCE_ROOT; };
 		CF657DB018A392EF002C2394 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = VVK/libs/openssl/lib/libcrypto.a; sourceTree = "<group>"; };
 		CF657DB118A392EF002C2394 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = VVK/libs/openssl/lib/libssl.a; sourceTree = "<group>"; };
 		CF6F86EE1897B29D0021925E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -279,8 +313,12 @@
 		2608F7412BC56CF400E6BF5C /* VVKTests */ = {
 			isa = PBXGroup;
 			children = (
+				5793C98E2D9D399F00DF6EF3 /* tsaocsp */,
 				261EF1942BD680F000A80111 /* ChoiceListTests.m */,
 				2608F7422BC56CF400E6BF5C /* BallotASNTests.m */,
+				26EFC4F72CF894E1003300B8 /* DecryptionTest.m */,
+				2678452C2CF89DC800CE7E23 /* test_cases */,
+				5793C9902D9D39DE00DF6EF3 /* TsaOcspTests.m */,
 			);
 			path = VVKTests;
 			sourceTree = "<group>";
@@ -435,6 +473,10 @@
 				26C55CD929890B8E00BD3D0D /* eid2016.crt */,
 				3BA6882821A5963200972490 /* esteid2018.pem.crt */,
 				EA3DDDF81F28900500D55F7B /* ESTEID-SK_2015.pem.crt */,
+				57DBC2B52DAE5E5100B1BDA6 /* eid_q_2024e.crt */,
+				57DBC2B72DAE5E5800B1BDA6 /* eid_q_2024r.crt */,
+				57DBC2BF2DBA265D00B1BDA6 /* eid_q_2021e.crt */,
+				57DBC2C12DBA266300B1BDA6 /* eid_q_2021r.crt */,
 			);
 			name = cert;
 			sourceTree = "<group>";
@@ -481,18 +523,30 @@
 			children = (
 				CF8AF4B1189BB72A00E19FB3 /* RegexMatcher.h */,
 				CF8AF4B2189BB72A00E19FB3 /* RegexMatcher.m */,
-				CF657DA618A1269F002C2394 /* Crypto.h */,
-				CF657DA718A1269F002C2394 /* Crypto.m */,
 				EA10E6BB1E549B8200411179 /* ElgamalPub.h */,
 				EA10E6BC1E549B8200411179 /* ElgamalPub.m */,
 				EA10E6C01E5C63A700411179 /* Bdoc.h */,
 				EA10E6C11E5C63A700411179 /* Bdoc.m */,
+				26678B7A2CF9AFBC005CF100 /* Scalar.h */,
+				26678B7B2CF9AFBC005CF100 /* Scalar.m */,
+				26678B7D2CF9D2FC005CF100 /* Group.h */,
+				26678B7E2CF9D2FC005CF100 /* Group.m */,
+				26678B832CF9EF0D005CF100 /* GroupECC.h */,
+				26678B842CF9EF0D005CF100 /* GroupECC.m */,
+				26678B802CF9E143005CF100 /* GroupModP.h */,
+				26678B812CF9E143005CF100 /* GroupModP.m */,
 				EA415AAF1EEACF5F00A19F92 /* OcspHelper.h */,
 				EA415AB01EEACF5F00A19F92 /* OcspHelper.m */,
 				EA61A7AB1F01351F00165678 /* PkixHelper.h */,
 				EA61A7AC1F01352000165678 /* PkixHelper.m */,
 				3B05526E2BD7B3F500F75224 /* C.m */,
 				3B0552702BD7B41F00F75224 /* C.h */,
+				3BEE2A372CBFA8D200257017 /* DoRotation.m */,
+				3BEE2A362CBFA8D200257017 /* DoRotation.h */,
+				3BEE2A392CE2175300257017 /* AccessibilityUtil.h */,
+				3BEE2A3A2CE2175300257017 /* AccessibilityUtil.m */,
+				3BEE2A3C2CE75B5F00257017 /* ScaledFonts.h */,
+				3BEE2A3D2CE75B5F00257017 /* ScaledFonts.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -725,6 +779,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5793C98F2D9D39A500DF6EF3 /* tsaocsp in Resources */,
+				2678452D2CF89E2C00CE7E23 /* test_cases in Resources */,
 				269721C72BD147670036BB88 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -737,9 +793,12 @@
 				CF39BE3D18ACFF6200EDAD25 /* spinner.png in Resources */,
 				CF39BE3B18ACFF6200EDAD25 /* ico_note.png in Resources */,
 				CFCA4A1418ABA4560017C2ED /* VerificationResultCandidateCell.xib in Resources */,
+				57DBC2C02DBA265D00B1BDA6 /* eid_q_2021e.crt in Resources */,
+				57DBC2B82DAE5E5800B1BDA6 /* eid_q_2024r.crt in Resources */,
 				CFEB5B4D18D305D2003278CD /* btn_close@2x.png in Resources */,
 				EA3DDDFA1F28900500D55F7B /* ESTEID-SK_2015.pem.crt in Resources */,
 				26C55CDA29890B8E00BD3D0D /* eid2016.crt in Resources */,
+				57DBC2B62DAE5E5100B1BDA6 /* eid_q_2024e.crt in Resources */,
 				CFCA4A1D18ACC0110017C2ED /* HelpViewController.xib in Resources */,
 				269721C62BD147670036BB88 /* PrivacyInfo.xcprivacy in Resources */,
 				CFEB5B4C18D305D2003278CD /* btn_close.png in Resources */,
@@ -749,6 +808,7 @@
 				2660F39C26EB9F420013AD30 /* Media.xcassets in Resources */,
 				CF39BE3C18ACFF6200EDAD25 /* ico_note@2x.png in Resources */,
 				3B24686E21AEB706001FC9A3 /* LaunchScreen.xib in Resources */,
+				57DBC2C22DBA266300B1BDA6 /* eid_q_2021r.crt in Resources */,
 				CF657DA2189FC5BC002C2394 /* VoteVerificationResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -761,6 +821,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				261EF1952BD680F000A80111 /* ChoiceListTests.m in Sources */,
+				5793C9912D9D39DE00DF6EF3 /* TsaOcspTests.m in Sources */,
+				26EFC4F82CF894E1003300B8 /* DecryptionTest.m in Sources */,
 				2608F7432BC56CF400E6BF5C /* BallotASNTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -769,10 +831,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BEE2A382CBFA8D200257017 /* DoRotation.m in Sources */,
 				263415E12BAAFC22004D0823 /* Ballot.m in Sources */,
-				CF657DA818A1269F002C2394 /* Crypto.m in Sources */,
 				263415DB2BAAF7A4004D0823 /* IVXVRequest.m in Sources */,
 				EA10E6C21E5C63A800411179 /* Bdoc.m in Sources */,
+				3BEE2A3B2CE2175300257017 /* AccessibilityUtil.m in Sources */,
 				EA10E6BD1E549B8200411179 /* ElgamalPub.m in Sources */,
 				CF8AF4AC189A877B00E19FB3 /* VoteContainer.m in Sources */,
 				3BE786FB1F98A5B900034531 /* DNSResolver.m in Sources */,
@@ -780,10 +843,12 @@
 				CF8AF4821898F05200E19FB3 /* main.m in Sources */,
 				CF8AF4701898F00800E19FB3 /* Request.m in Sources */,
 				CF8AF47E1898F03500E19FB3 /* Config.m in Sources */,
+				26678B822CF9E143005CF100 /* GroupModP.m in Sources */,
 				CFCA4A1C18ACC0110017C2ED /* HelpViewController.m in Sources */,
 				EA415AB11EEACF6000A19F92 /* OcspHelper.m in Sources */,
 				CF657DA518A10D81002C2394 /* QRScanResult.m in Sources */,
 				261EF1932BD680D600A80111 /* ChoiceList.m in Sources */,
+				26678B7C2CF9AFBC005CF100 /* Scalar.m in Sources */,
 				EA10E6301E4DC74B00411179 /* NSData+Hex.m in Sources */,
 				CFCA4A1218ABA4320017C2ED /* VerificationResultCandidateCell.m in Sources */,
 				CFCA4A1718ABC4630017C2ED /* AuthenticationChallengeHandler.m in Sources */,
@@ -796,7 +861,10 @@
 				3B05526F2BD7B3F500F75224 /* C.m in Sources */,
 				CF8AF47A1898F02C00E19FB3 /* ScannerViewController.m in Sources */,
 				CF8AF4B3189BB72A00E19FB3 /* RegexMatcher.m in Sources */,
+				26678B7F2CF9D2FC005CF100 /* Group.m in Sources */,
+				26678B852CF9EF0D005CF100 /* GroupECC.m in Sources */,
 				CF8AF49218990F4000E19FB3 /* ALCustomAlertView.m in Sources */,
+				3BEE2A3E2CE75B5F00257017 /* ScaledFonts.m in Sources */,
 				263415DD2BAAFC00004D0823 /* Candidate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -833,8 +901,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs/openssl/include",
-					"$(SRCROOT)/VVK/libs/ZipZap/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/ZipZap/include",
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
@@ -873,8 +941,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs/openssl/include",
-					"$(SRCROOT)/VVK/libs/ZipZap/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/ZipZap/include",
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
@@ -999,8 +1067,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.1.14;
-				DEVELOPMENT_TEAM = 5YYXE2JG54;
+				CURRENT_PROJECT_VERSION = 2.1.20;
+				DEVELOPMENT_TEAM = 4H6DFL625A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1009,25 +1077,29 @@
 				GCC_PREFIX_HEADER = "VVK/VVK-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs/openssl/include",
-					"$(SRCROOT)/VVK/libs/ZipZap/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/include/**",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/ZipZap/include",
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs",
-					"$(SRCROOT)/VVK/libs/openssl/lib",
-					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
-					"$(PROJECT_DIR)/VVK/libs/ZipZap",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/lib",
+					"$(PROJECT_DIR)/VVK/libs-$(PLATFORM_NAME)/openssl/lib",
+					"$(PROJECT_DIR)/VVK/libs-$(PLATFORM_NAME)/ZipZap",
 				);
-				MARKETING_VERSION = 2.1.14;
+				MARKETING_VERSION = 2.1.20;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
@@ -1040,8 +1112,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.1.14;
-				DEVELOPMENT_TEAM = 5YYXE2JG54;
+				CURRENT_PROJECT_VERSION = 2.1.20;
+				DEVELOPMENT_TEAM = 4H6DFL625A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1050,25 +1122,29 @@
 				GCC_PREFIX_HEADER = "VVK/VVK-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs/openssl/include",
-					"$(SRCROOT)/VVK/libs/ZipZap/include",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/include/**",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/ZipZap/include",
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "VVK/VVK-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/VVK/libs",
-					"$(SRCROOT)/VVK/libs/openssl/lib",
-					"$(PROJECT_DIR)/VVK/libs/openssl/lib",
-					"$(PROJECT_DIR)/VVK/libs/ZipZap",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)",
+					"$(SRCROOT)/VVK/libs-$(PLATFORM_NAME)/openssl/lib",
+					"$(PROJECT_DIR)/VVK/libs-$(PLATFORM_NAME)/openssl/lib",
+					"$(PROJECT_DIR)/VVK/libs-$(PLATFORM_NAME)/ZipZap",
 				);
-				MARKETING_VERSION = 2.1.14;
+				MARKETING_VERSION = 2.1.20;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ee.cyber.ivote.verify;
 				PRODUCT_NAME = "EH kontrollrakendus";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;

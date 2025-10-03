@@ -29,6 +29,7 @@
 
     if (self) {
         isLoaded = NO;
+        defaultErrorKeyValues = [self setDefaultErrorValues];
     }
 
     return self;
@@ -56,9 +57,14 @@
     return;
 }
 
+- (NSString*) errorTitleForKey:(NSString*)key
+{
+    return config[kConfigRootKey][kConfigErrorsKey][key] ?: defaultErrorKeyValues[key];
+}
+
 - (NSString*) errorMessageForKey:(NSString*)key
 {
-    return config[kConfigRootKey][kConfigErrorsKey][key];
+    return config[kConfigRootKey][kConfigErrorsKey][key] ?: defaultErrorKeyValues[key];
 }
 
 - (NSString*) textForKey:(NSString*)key
@@ -117,7 +123,11 @@
     [SharedDelegate hideLoader];
 
     if (error != nil) {
-        [SharedDelegate handleConfigurationRequestError];
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [SharedDelegate handleNetworkError];
+        } else {
+            [SharedDelegate handleConfigurationRequestError];
+        }
     }
     else {
         NSError* parserError = nil;
@@ -139,6 +149,25 @@
             }
         }
     }
+}
+
+#pragma mark - Private methods
+
+- (NSDictionary *) setDefaultErrorValues
+{
+    return @{
+        @"no_network_message": @"Palun veenduge, et nutiseadme internetiühendus on aktiivne",
+        @"get_config_message": @"Seadistuse laadimine ebaõnnestus",
+        @"problem_qrcode_message": @"QR-koodi ei õnnestunud tuvastada",
+        @"bad_server_response_message": @"Tehniline viga, palun teavitage valimiste korraldajat abi@valimised.ee",
+        @"bad_device_message": @"Seadmel puudub kaamera, verifitseerimist ei ole võimalik läbi viia",
+        @"bad_verification_message": @"Valiku tuvastamine ebaõnnestus",
+        @"bad_config_message": @"Seadistuse viga",
+        @"bad_version_message": @"Rakenduse versioon ei ole ajakohane, palun uuendage oma rakendust",
+        @"send_server_request_message": @"Serveriga ühendumine ebaõnnestus, kontrollige internetiühendust või teavitage valimiste korraldajat abi@valimised.ee",
+        @"error_title_default": @"Viga",
+        @"error_title_bad_version": @"Rakenduse versiooni viga",
+    };
 }
 
 @end

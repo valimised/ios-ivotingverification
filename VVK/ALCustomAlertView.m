@@ -3,7 +3,9 @@
 //  v 1.0
 
 #import "ALCustomAlertView.h"
+#import "DoRotation.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ScaledFonts.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -77,289 +79,53 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
     return self;
 }
 
-- (id) initWithTitleText:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withCustomView:(UIView*)_customView withPaddingInfo:(CAViewPaddingInfo)_paddingInfo
-    withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare
-{
-    self = [self initWithFrame:[[UIScreen mainScreen] bounds]];
-    UIColor* bgColor                = [UIColor colorWithWhite:0.0f alpha:0.2f];
-    UIColor* alertViewBgColor = nil;
-    UIColor* titleColor = nil;
-    alertViewBgColor = [UIColor colorWithWhite:0.0f alpha:0.9f];
-    titleColor = [UIColor whiteColor];
-    UIColor* titleBgColor           = [UIColor colorWithWhite:0.0f alpha:0.0f];
-    UIColor* cancelButtonBgColor    = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.1f];
-    UIColor* confirmButtonBgColor   = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.1f];
-    UIColor* cancelButtonTitleColor = [UIColor colorWithRed:0.9f green:0.9f blue:0.9f alpha:1.0f];
-    UIColor* confirmButtonTitleColor = [UIColor colorWithRed:0.9f green:0.9f blue:0.9f alpha:1.0f];
-    UIColor* separatorViewColor     = [UIColor colorWithRed:0.9f green:0.9f blue:0.9f alpha:0.3f];
-    UIFont* titleFont               = [UIFont boldSystemFontOfSize:17.0f];
-    UIFont* buttonFont              = [UIFont boldSystemFontOfSize:15.0f];
-    UIActivityIndicatorViewStyle spinnerStyle = UIActivityIndicatorViewStyleLarge;
-    mCustomView = _customView;
-    mKeyboardAdjustType = VisibleCustomView;
-    bool createCancelButton = !(_cancelButtonText == nil || _cancelButtonText.length < 1);
-    bool createConfirmButton = !(_confirmButtonText == nil || _confirmButtonText.length < 1);
-    bool createBothButtons = (createCancelButton && createConfirmButton);
-    self.backgroundColor = bgColor;
-    self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    float alertViewHeight = 0.0f;
-    float alertViewWidth = 0.0f;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-    CGSize titleTextSize = [_titleText sizeWithFont:titleFont];
-    CGSize cancelButtonTextSize = [_cancelButtonText sizeWithFont:buttonFont];
-    CGSize confirmButtonTextSize = [_confirmButtonText sizeWithFont:buttonFont];
-#pragma clang diagnostic pop
-    float titleHeight = titleTextSize.height * 2.3f;
-    float buttonsHeight = 0.0f;
-    {
-        float cancelButtonHeight = (createCancelButton) ? (cancelButtonTextSize.height * 2.4f) : 0.0f;
-        float confirmButtonHeight = (createConfirmButton) ? (confirmButtonTextSize.height * 2.4f) : 0.0f;
-        buttonsHeight = MAX(cancelButtonHeight, confirmButtonHeight);
-    }
-    mButtonsHeight = buttonsHeight;
-    float middleViewHeight = 0.0f;
-    float titleWidth = ( titleTextSize.width + 30.0f );
-    float cancelButtonWidth = (createCancelButton) ? ( MAX(cancelButtonTextSize.width + 30.0f,
-                              confirmButtonTextSize.width + 30.0f ) ) : 0.0f;
-    float confirmButtonWidth = (createConfirmButton) ? ( MAX(confirmButtonTextSize.width + 30.0f,
-                               cancelButtonTextSize.width + 30.0f ) ) : 0.0f;
-    float buttonsWidth = cancelButtonWidth + confirmButtonWidth;
-
-    if (createBothButtons) {
-        buttonsWidth += 1; // additional 1 point for the separator
-    }
-
-    float middleViewWidth = 0.0f;
-
-    if (mCustomView == nil) {
-        mSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:spinnerStyle];
-        _paddingInfo.top = mSpinner.frame.size.height / 2.0f;
-        _paddingInfo.bottom = _paddingInfo.top;
-        _paddingInfo.left = 0.0f;
-        _paddingInfo.right = 0.0f;
-        middleViewHeight = mSpinner.frame.size.height;
-        middleViewWidth = mSpinner.frame.size.width;
-    }
-    else {
-        middleViewHeight = mCustomView.frame.size.height;
-        middleViewWidth = mCustomView.frame.size.width;
-    }
-
-    middleViewHeight += _paddingInfo.bottom + _paddingInfo.top;
-    alertViewHeight = ( titleHeight + middleViewHeight + buttonsHeight );
-    alertViewWidth = MAX(MAX(titleWidth, (middleViewWidth + _paddingInfo.left + _paddingInfo.right)),
-                         buttonsWidth );
-
-    if (makeSquare && alertViewWidth < alertViewHeight) {
-        alertViewWidth = alertViewHeight;
-    }
-
-    if (buttonsWidth < alertViewWidth) {
-        float widthLeftover = (alertViewWidth - buttonsWidth);
-
-        if (createCancelButton) {
-            cancelButtonWidth += ( createConfirmButton ) ? ( widthLeftover / 2.0f ) : widthLeftover;
-        }
-
-        if (createConfirmButton) {
-            confirmButtonWidth += ( createCancelButton ) ? ( widthLeftover / 2.0f ) : widthLeftover;
-        }
-    }
-
-    mAlertView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, alertViewWidth, alertViewHeight)];
-    CGRect frame = mAlertView.frame;
-    frame.origin.x = [self center].x - alertViewWidth / 2.0f;
-    frame.origin.y = [self center].y - alertViewHeight / 2.0f;
-    mAlertView.frame = frame;
-    mAlertView.layer.cornerRadius = 10.0f;
-    mAlertView.clipsToBounds = YES;
-    mAlertView.backgroundColor = alertViewBgColor;
-
-    if (createCancelButton) {
-        mCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, titleHeight + middleViewHeight,
-                                          cancelButtonWidth, buttonsHeight)];
-        [mCancelButton setTitle:_cancelButtonText forState:UIControlStateNormal];
-        [mCancelButton setTitleColor:cancelButtonTitleColor forState:UIControlStateNormal];
-        [mCancelButton setBackgroundColor:cancelButtonBgColor];
-        [mCancelButton.titleLabel setFont:buttonFont];
-        [mCancelButton addTarget:self action:@selector(_internalCancelCallback) forControlEvents:
-                       UIControlEventTouchUpInside];
-    }
-
-    if (createConfirmButton) {
-        float x = ( createCancelButton ) ? ( cancelButtonWidth + 1.0f ) : 0.0f;
-        mConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(x, titleHeight + middleViewHeight,
-                                           confirmButtonWidth, buttonsHeight)];
-        [mConfirmButton setTitle:_confirmButtonText forState:UIControlStateNormal];
-        [mConfirmButton setTitleColor:confirmButtonTitleColor forState:UIControlStateNormal];
-        [mConfirmButton setBackgroundColor:confirmButtonBgColor];
-        [mConfirmButton.titleLabel setFont:buttonFont];
-        [mConfirmButton addTarget:self action:@selector(_internalConfirmCallback) forControlEvents:
-                        UIControlEventTouchUpInside];
-    }
-
-    if (createBothButtons) {
-        mButtonSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(cancelButtonWidth,
-                                               titleHeight + middleViewHeight, 1.0f, buttonsHeight)];
-        [mButtonSeparatorView setBackgroundColor:separatorViewColor];
-    }
-
-    if (_customView == nil) {
-        CGRect spinnerFrame = mSpinner.frame;
-        spinnerFrame.origin.x = mAlertView.frame.size.width / 2.0f - spinnerFrame.size.width / 2.0f;
-        spinnerFrame.origin.y = titleHeight + _paddingInfo.top;
-        [mSpinner setFrame:spinnerFrame];
-        [mSpinner startAnimating];
-    }
-    else {
-        mCustomView = _customView;
-        CGRect customViewFrame = mCustomView.frame;
-        customViewFrame.origin.y = titleHeight + _paddingInfo.top;
-        customViewFrame.origin.x = (alertViewWidth / 2.0f) - (customViewFrame.size.width / 2.0f);
-        mCustomView.frame = customViewFrame;
-    }
-
-    mTitle = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, alertViewWidth, titleHeight)];
-    [mTitle setLineBreakMode:NSLineBreakByWordWrapping];
-    [mTitle setNumberOfLines:2];
-    [mTitle setFont:titleFont];
-    [mTitle setText:_titleText];
-    [mTitle setTextColor:titleColor];
-    [mTitle setBackgroundColor:titleBgColor];
-    [mTitle setTextAlignment:NSTextAlignmentCenter];
-
-    if (createCancelButton) {
-        [mAlertView addSubview:mCancelButton];
-    }
-
-    if (createConfirmButton) {
-        [mAlertView addSubview:mConfirmButton];
-    }
-
-    if (createBothButtons) {
-        [mAlertView addSubview:mButtonSeparatorView];
-    }
-
-    if (mCustomView == nil) {
-        [mAlertView addSubview:mSpinner];
-    }
-    else {
-        [mAlertView addSubview:mCustomView];
-    }
-
-    [mAlertView addSubview:mTitle];
-    [self addSubview:mAlertView];
-    self.hidden = YES;
-    return self;
-}
-
 - (id) initWithOptions:(NSDictionary*)options
 {
+    self = [self initWithFrame:[[UIScreen mainScreen] bounds]];
+
     NSString* message = options[kAlertViewMessage];
     NSString* title = options[kAlertViewTitle];
     NSString* cancelButtonText = options[kAlertViewCancelButtonTitle];
     NSString* confirmButtonText = options[kAlertViewConfrimButtonTitle];
     UIColor* foregroundColor = options[kAlertViewForegroundColor];
     UIColor* backgroundColor = options[kAlertViewBackgroundColor];
-    UILabel* contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 260, 0)];
-    NSAttributedString* attributedText =
-        [[NSAttributedString alloc] initWithString:message
-                                    attributes:@ {NSFontAttributeName:contentLabel.font}];
-    CGRect rect = [attributedText boundingRectWithSize:(CGSize) {
-                       contentLabel.bounds.size.width, MAXFLOAT
-                   }
-                   options: NSStringDrawingUsesLineFragmentOrigin
-                   context: nil];
-    CGSize textSize = rect.size;
-    CGRect labelFrame = CGRectMake(0, 0, contentLabel.bounds.size.width, textSize.height);
-
-    if (foregroundColor) {
-        contentLabel.textColor = foregroundColor;
-    }
-    else {
-        contentLabel.textColor = [UIColor whiteColor];
-    }
-
-    contentLabel.text = message;
-    contentLabel.frame = labelFrame;
-    contentLabel.numberOfLines = 0;
-    contentLabel.textAlignment = NSTextAlignmentCenter;
-    contentLabel.backgroundColor = [UIColor clearColor];
-    CAViewPaddingInfo paddingInfo = CAViewPaddingInfoCreate(8.f, 8.f, (title != nil) ? 0.f : 16.f,
-                                    20.f);
-    self = [self initWithFrame:[[UIScreen mainScreen] bounds]];
+    UIColor* textColor = foregroundColor ?: [UIColor whiteColor];
     // Darkened bacground of the alert view overlay
     UIColor* bgColor = [UIColor colorWithWhite:0.0f alpha:0.30f];
-    UIColor* alertViewBgColor = nil;
-    UIColor* titleColor = nil;
+    UIColor* alertViewBgColor = backgroundColor ?: [UIColor colorWithWhite:0.0f alpha:0.8f];
+    UIFont* titleFont = [UIFont boldSystemFontOfSize:20.0f];
+    UIFont* messageFont = [UIFont systemFontOfSize:16.0f];
 
-    if (backgroundColor) {
-        alertViewBgColor = backgroundColor;
-    }
-    else {
-        alertViewBgColor = [UIColor colorWithWhite:0.0f alpha:0.8f];
-    }
+    CAViewPaddingInfo paddingInfo = CAViewPaddingInfoCreate(8.f, 8.f, 8.f, 8.f);
+    float contentWidth = alertViewWidth - paddingInfo.left - paddingInfo.right;
 
-    if (foregroundColor) {
-        titleColor = foregroundColor;
-    }
-    else {
-        titleColor = [UIColor whiteColor];
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentWidth, 0)];
+    mCustomView = [self scaledLabel:[[UILabel alloc] initWithFrame:label.frame] withFont:messageFont withText:message withColor:textColor];
+    if (title != nil) {
+        mTitle = [self scaledLabel:[[UILabel alloc] initWithFrame:label.frame] withFont:titleFont withText:title withColor:textColor];
     }
 
-    UIColor* titleBgColor           = [UIColor colorWithWhite:0.0f alpha:0.0f];
-    UIColor* cancelButtonBgColor    = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.9f];
-    UIColor* confirmButtonBgColor   = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.9f];
-    UIColor* cancelButtonTitleColor = [UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:1.0f];
-    UIColor* confirmButtonTitleColor = [UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:1.0f];
-    // UIColor *separatorViewColor     = [UIColor colorWithRed:0.9f green:0.9f blue:0.9f alpha:0.3f];
-    UIFont* titleFont               = [UIFont boldSystemFontOfSize:16.0f];
-    UIFont* buttonFont              = [UIFont systemFontOfSize:15.0f];
-    mCustomView = contentLabel;
+    self.backgroundColor = bgColor;
+    self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
     mKeyboardAdjustType = VisibleCustomView;
     bool createCancelButton = !(cancelButtonText == nil || cancelButtonText.length < 1);
     bool createConfirmButton = !(confirmButtonText == nil || confirmButtonText.length < 1);
     bool createBothButtons = (createCancelButton && createConfirmButton);
-    self.backgroundColor = bgColor;
-    self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    float alertViewHeight = 0.0f;
-    float alertViewWidth = 0.0f;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-    CGSize titleTextSize = [title sizeWithFont:titleFont];
-    CGSize cancelButtonTextSize = [cancelButtonText sizeWithFont:buttonFont];
-    CGSize confirmButtonTextSize = [confirmButtonText sizeWithFont:buttonFont];
-#pragma clang diagnostic pop
-    float titleHeight = titleTextSize.height * 2.3f;
-    float buttonsHeight = 0.0f;
-    {
-        float cancelButtonHeight = (createCancelButton) ? (cancelButtonTextSize.height * 2.4f) : 0.0f;
-        float confirmButtonHeight = (createConfirmButton) ? (confirmButtonTextSize.height * 2.4f) : 0.0f;
-        buttonsHeight = MAX(cancelButtonHeight, confirmButtonHeight);
-    }
-    mButtonsHeight = buttonsHeight;
-    float middleViewHeight = 0.0f;
-    float titleWidth = ( titleTextSize.width + 30.0f );
-    float cancelButtonWidth = (createCancelButton) ? ( MAX(cancelButtonTextSize.width + 30.0f,
-                              confirmButtonTextSize.width + 30.0f ) ) : 0.0f;
-    float confirmButtonWidth = (createConfirmButton) ? ( MAX(confirmButtonTextSize.width + 30.0f,
-                               cancelButtonTextSize.width + 30.0f ) ) : 0.0f;
+
+    float titleHeight = mTitle.frame.size.height;
+    mButtonsHeight = 48.f;
+    float middleViewHeight = 180.f + paddingInfo.bottom + paddingInfo.top - mTitle.frame.size.height;
+
+    float cancelButtonWidth = (createCancelButton) ? (alertViewWidth / 2) - paddingInfo.left - paddingInfo.right : 0.0f;
+    float confirmButtonWidth = (createConfirmButton) ? (alertViewWidth / 2) - paddingInfo.left - paddingInfo.right : 0.0f;
     float buttonsWidth = cancelButtonWidth + confirmButtonWidth;
 
     if (createBothButtons) {
         buttonsWidth += 1; // additional 1 point for the separator
     }
 
-    float middleViewWidth = 0.0f;
-    middleViewHeight = mCustomView.frame.size.height;
-    middleViewWidth = mCustomView.frame.size.width;
-    middleViewHeight += paddingInfo.bottom + paddingInfo.top;
     float buttonPadding = 8.f;
-    alertViewHeight = ( titleHeight + middleViewHeight + buttonsHeight + buttonPadding );
-    alertViewWidth = MAX(MAX(titleWidth, (middleViewWidth + paddingInfo.left + paddingInfo.right)),
-                         buttonsWidth );
 
     if (buttonsWidth < alertViewWidth) {
         float widthLeftover = (alertViewWidth - buttonsWidth);
@@ -386,14 +152,8 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         mCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f + buttonPadding,
                                           titleHeight + middleViewHeight,
                                           cancelButtonWidth - buttonPadding - (buttonPadding * 0.5f * (createConfirmButton ? 1 : 2)),
-                                          buttonsHeight)];
-        [mCancelButton setTitle:cancelButtonText forState:UIControlStateNormal];
-        [mCancelButton setTitleColor:cancelButtonTitleColor forState:UIControlStateNormal];
-        [mCancelButton setBackgroundColor:cancelButtonBgColor];
-        [mCancelButton.titleLabel setFont:buttonFont];
-        [mCancelButton addTarget:self action:@selector(_internalCancelCallback) forControlEvents:
-                       UIControlEventTouchUpInside];
-        [[mCancelButton layer] setCornerRadius:5.0f];
+                                          mButtonsHeight)];
+        [self setupButton:mCancelButton withText:cancelButtonText withAction:@selector(_internalCancelCallback)];
     }
 
     if (createConfirmButton) {
@@ -401,32 +161,14 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
                   buttonPadding;
         float widthAdjust = (!createCancelButton ? (buttonPadding * 0.5f) : 0.f);
         mConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(x, titleHeight + middleViewHeight,
-                                           confirmButtonWidth - buttonPadding - (buttonPadding * 0.5f) - widthAdjust, buttonsHeight)];
-        [mConfirmButton setTitle:confirmButtonText forState:UIControlStateNormal];
-        [mConfirmButton setTitleColor:confirmButtonTitleColor forState:UIControlStateNormal];
-        [mConfirmButton setBackgroundColor:confirmButtonBgColor];
-        [mConfirmButton.titleLabel setFont:buttonFont];
-        [mConfirmButton addTarget:self action:@selector(_internalConfirmCallback) forControlEvents:
-                        UIControlEventTouchUpInside];
-        [[mConfirmButton layer] setCornerRadius:5.0f];
+                                           confirmButtonWidth - buttonPadding - (buttonPadding * 0.5f) - widthAdjust, mButtonsHeight)];
+        [self setupButton:mConfirmButton withText:confirmButtonText withAction:@selector(_internalConfirmCallback)];
     }
 
-    /*if(createBothButtons) {
-        mButtonSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(cancelButtonWidth, titleHeight + middleViewHeight, 1.0f, buttonsHeight)];
-        [mButtonSeparatorView setBackgroundColor:separatorViewColor];
-    }*/
     CGRect customViewFrame = mCustomView.frame;
     customViewFrame.origin.y = titleHeight + paddingInfo.top;
     customViewFrame.origin.x = (alertViewWidth / 2.0f) - (customViewFrame.size.width / 2.0f);
     mCustomView.frame = customViewFrame;
-    mTitle = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, alertViewWidth, titleHeight)];
-    [mTitle setLineBreakMode:NSLineBreakByWordWrapping];
-    [mTitle setNumberOfLines:2];
-    [mTitle setFont:titleFont];
-    [mTitle setText:title];
-    [mTitle setTextColor:titleColor];
-    [mTitle setBackgroundColor:titleBgColor];
-    [mTitle setTextAlignment:NSTextAlignmentCenter];
 
     if (createCancelButton) {
         [mAlertView addSubview:mCancelButton];
@@ -436,77 +178,93 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         [mAlertView addSubview:mConfirmButton];
     }
 
-    if (createBothButtons) {
-        [mAlertView addSubview:mButtonSeparatorView];
-    }
-
     if (mCustomView == nil) {
         [mAlertView addSubview:mSpinner];
     }
     else {
-        [mAlertView addSubview:mCustomView];
+        float scrollViewHeight = alertViewHeight - paddingInfo.top - paddingInfo.bottom - mButtonsHeight - 2*buttonPadding - 5.f;
+        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 10, alertViewWidth, scrollViewHeight)];
+        if (UIAccessibilityIsVoiceOverRunning() || mCustomView.frame.size.height > 200) {
+            mCustomView.accessibilityRespondsToUserInteraction = true;
+        }
+        if (mTitle != nil) {
+            [scrollView addSubview: mTitle];
+            CGFloat dividerY = CGRectGetMaxY(mTitle.frame) + paddingInfo.top;
+            UIView *divider = [[UIView alloc] initWithFrame:CGRectMake(paddingInfo.left, dividerY, contentWidth, 1.0f)];
+            divider.backgroundColor = UIColor.whiteColor;
+            [scrollView addSubview: divider];
+            CGFloat customViewY = CGRectGetMaxY(divider.frame) + paddingInfo.top;
+            CGRect customFrame = mCustomView.frame;
+            customFrame.origin.y = customViewY;
+            mCustomView.frame = customFrame;
+        }
+        [scrollView addSubview: mCustomView];
+        scrollView.contentSize = CGSizeMake(contentWidth, mTitle.frame.size.height + mCustomView.frame.size.height * 1.1);
+        scrollView.bounces = NO;
+        scrollView.backgroundColor = [UIColor clearColor];
+        [mAlertView addSubview:scrollView];
     }
 
-    [mAlertView addSubview:mTitle];
     [self addSubview:mAlertView];
     self.hidden = YES;
+    [[ScaledFonts sharedInstance] applyScaledFontToSubviewsOfView:mAlertView];
     return self;
 }
 
-// initialize with activity indicator
-- (id) initWithTitle:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText
+# pragma mark - Private methods
+
+- (UILabel*) scaledLabel:(UILabel*)label withFont:(UIFont*)font withText:(NSString*)text withColor:(UIColor*) textColor
 {
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:nil
-                 withPaddingInfo:CAViewPaddingInfoCreate(0.0f, 0.0f, 0.0f,
-                    0.0f) withConfirmButtonText:_confirmButtonText withMakeSquare:NO];
+    label.font = font;
+    [[ScaledFonts sharedInstance] applyScaledFontToUILabel:(UILabel*)label];
+    NSAttributedString* attributedText =
+        [[NSAttributedString alloc] initWithString:text
+                                    attributes:@ {NSFontAttributeName:label.font}];
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize) {
+                       label.bounds.size.width, MAXFLOAT
+                   }
+                   options: NSStringDrawingUsesLineFragmentOrigin
+                   context: nil];
+    CGSize textSize = rect.size;
+    CGRect labelFrame = CGRectMake(0, 0, label.bounds.size.width, textSize.height);
+
+    label.text = text;
+    label.frame = labelFrame;
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = textColor;
+    return label;
 }
 
-// initialize with custom view
-- (id) initWithCustomView:(UIView*)_customView withTitleText:(NSString*)_titleText
-    withCancelButtonText:(NSString*)_cancelButtonText withConfirmButtonText:
-    (NSString*)_confirmButtonText
+- (void) setupButton:(UIButton*)button withText:(NSString*)text withAction:(SEL)action
 {
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:
-                 _customView withPaddingInfo:CAViewPaddingInfoCreate(0.0f, 0.0f, 0.0f,
-                    0.0f) withConfirmButtonText:_confirmButtonText withMakeSquare:NO];
+    UIColor* buttonBgColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.9f];
+    UIColor* buttonTitleColor = [UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:1.0f];
+    UIFont* buttonFont = [UIFont systemFontOfSize:15.0f];
+    [button setTitle:text forState:UIControlStateNormal];
+    [button setTitleColor:buttonTitleColor forState:UIControlStateNormal];
+    [button setBackgroundColor:buttonBgColor];
+    [button.titleLabel setFont:buttonFont];
+    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    [[button layer] setCornerRadius:5.0f];
 }
 
-- (id) initWithCustomView:(UIView*)_customView withPaddingInfo:(CAViewPaddingInfo)_paddingInfo
-    withTitleText:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText
-{
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:
-                 _customView withPaddingInfo:_paddingInfo withConfirmButtonText:_confirmButtonText withMakeSquare:
-                 NO];
-}
+- (CGFloat)heightForText:(NSString *)text
+                    font:(UIFont *)font {
+    if (text.length == 0 || font == nil) return 0;
 
-// initialize with activity indicator
-- (id) initWithTitle:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare
-{
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:nil
-                 withPaddingInfo:CAViewPaddingInfoCreate(0.0f, 0.0f, 0.0f,
-                    0.0f) withConfirmButtonText:_confirmButtonText withMakeSquare:makeSquare];
-}
+    UIFont *scaledFont = [[UIFontMetrics defaultMetrics] scaledFontForFont:font];
+    NSDictionary *attributes = @{ NSFontAttributeName: scaledFont };
 
-// initialize with custom view
-- (id) initWithCustomView:(UIView*)_customView withTitleText:(NSString*)_titleText
-    withCancelButtonText:(NSString*)_cancelButtonText withConfirmButtonText:
-    (NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare
-{
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:
-                 _customView withPaddingInfo:CAViewPaddingInfoCreate(0.0f, 0.0f, 0.0f,
-                    0.0f) withConfirmButtonText:_confirmButtonText withMakeSquare:makeSquare];
-}
+    CGSize maxSize = CGSizeMake(260, CGFLOAT_MAX);
+    CGRect boundingRect = [text boundingRectWithSize:maxSize
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:attributes
+                                              context:nil];
 
-- (id) initWithCustomView:(UIView*)_customView withPaddingInfo:(CAViewPaddingInfo)_paddingInfo
-    withTitleText:(NSString*)_titleText withCancelButtonText:(NSString*)_cancelButtonText
-    withConfirmButtonText:(NSString*)_confirmButtonText withMakeSquare:(BOOL)makeSquare
-{
-    return [self initWithTitleText:_titleText withCancelButtonText:_cancelButtonText withCustomView:
-                 _customView withPaddingInfo:_paddingInfo withConfirmButtonText:_confirmButtonText withMakeSquare:
-                 makeSquare];
+    return ceil(boundingRect.size.height);
 }
 
 #pragma mark - Keyboard
@@ -591,6 +349,8 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
                                               keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(
                                               keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(
+                                              orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
 }
 
 - (void) willRemoveSubview:(UIView*)subview
@@ -612,17 +372,10 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
     mConfirmCallbackTarget = _target;
 }
 
-- (void) changeFrameForOrientation:(UIInterfaceOrientation)orientation
+- (void) orientationChanged:(NSNotification*)note
 {
-    UIView* masterView = [[[[[UIApplication sharedApplication] delegate] window] rootViewController]
-                                                               view];
-
-    if (UIInterfaceOrientationIsLandscape(orientation)) {
-        CGRect frame = self.frame;
-        frame.size.width = masterView.frame.size.height;
-        frame.size.height = masterView.frame.size.width;
-        self.frame = frame;
-    }
+    UIDevice* device = note.object;
+    [[DoRotation sharedInstance] changeFrameForOrientation:device.orientation forView:mAlertView];
 }
 
 - (void) showWithAnimation
@@ -679,24 +432,13 @@ CAViewPaddingInfo CAViewPaddingInfoCreate(float _left, float _right, float _top,
         masterView = [[[UIApplication sharedApplication] delegate] window];
     }
 
-    UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
-    NSSet<UIScene *> *connectedScenes =  [UIApplication sharedApplication].connectedScenes;
-    for (UIScene *scene in connectedScenes) {
-        if ([scene isKindOfClass:[UIWindowScene class]]) {
-            UIWindowScene *windowScene = (UIWindowScene *)scene;
-            orientation = windowScene.interfaceOrientation;
-            break;
-        }
-    }
-
-    [self changeFrameForOrientation:orientation];
-
     if (mDelegate != nil && [mDelegate respondsToSelector:@selector(willShow:)]) {
         [mDelegate willShow:self];
     }
 
     [masterView addSubview:self];
     [self showWithAnimation];
+    [[DoRotation sharedInstance] rotateViewIfNeeded:mAlertView];
 }
 
 - (void) hide
